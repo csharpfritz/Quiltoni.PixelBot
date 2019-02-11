@@ -1,0 +1,93 @@
+﻿@page
+@model Quiltoni.PixelBot.Pages.IndexModel
+@{
+}
+
+<style>
+	fieldset {
+		width: 300px;
+		float: left;
+	}
+</style>
+
+<h1>PixelBot Configuration</h1>
+
+<h3><a href="/Animations">Animations</a></h3>
+
+@using (Html.BeginForm())
+{
+
+	<fieldset>
+		<legend>Twitch Configuration</legend>
+
+		<dl>
+			<dt>Bot User Name:</dt>
+			<dd><input type="text" name="BotName" value="@Model.Config.Twitch.UserName" /></dd>
+			<dt>Twitch Channel (eg: quiltoni):</dt>
+			<dd><input type="text" name="Channel" value="@Model.Config.Twitch.Channel" /></dd>
+			<dt>Access Token (<a href="https://twitchtokengenerator.com" target="_blank">fetch instructions</a>)</dt>
+			<dd><input type="text" name="TwitchAccessToken" value="@Model.Config.Twitch.AccessToken" /></dd>
+		</dl>
+
+	</fieldset>
+
+	<fieldset>
+		<legend>Currency Configuration</legend>
+
+		<dl>
+			<dt>Currency Name:</dt>
+			<dd>
+				<input type="text" asp-for="CurrencyName" />
+			</dd>
+			<dt>The "My" Command (mypixels)</dt>
+			<dd>
+				<input type="text" name="@nameof(Model.MyCurrencyCommand)" value="@Model.Config.Currency.MyCommand" />
+			</dd>
+			<dt>Sheet Format Type:</dt>
+			<dd>
+				<select asp-for="SheetProxyType" asp-items="Model.AvailableGoogleProxy">
+				</select>
+			</dd>
+		</dl>
+
+	</fieldset>
+
+	<fieldset>
+		<legend>Optional Commands</legend>
+
+		<table>
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Activated?</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>GuessTime</td>
+					<td><input type="radio" asp-for="EnableGuessCommand" value="true" />Yes</td>
+					<td><input type="radio" asp-for="EnableGuessCommand" value="false" />No</td>
+				</tr>
+				<tr>
+					<td>DrinkMe</td>
+					<td><input type="radio" asp-for="EnableDrinkMeCommand" value="true" />Yes</td>
+					<td><input type="radio" asp-for="EnableDrinkMeCommand" value="false" />No</td>
+				</tr>
+			</tbody>
+		</table>
+
+	</fieldset>
+
+	<fieldset>
+		<legend>Google Configuration</legend>
+
+		<dl>
+			<dt>Sheet Id (fetch instructions)</dt>
+			<dd><input type="text" name="SheetId" value="@Model.Config.Google.SheetId" /></dd>
+		</dl>
+
+	</fieldset>
+	<br/>
+	<input type="submit" style="float: left;clear: both" />
+
+}

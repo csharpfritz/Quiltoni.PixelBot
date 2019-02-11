@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <LangVersion>7.3</LangVersion>
+    <ApplicationInsightsResourceId>/subscriptions/5375802b-f892-427b-8ab0-d5f1b29a4ada/resourcegroups/quiltoni_resources/providers/microsoft.insights/components/quiltonirelay</ApplicationInsightsResourceId>
+    <ApplicationInsightsAnnotationResourceId>/subscriptions/5375802b-f892-427b-8ab0-d5f1b29a4ada/resourcegroups/quiltoni_resources/providers/microsoft.insights/components/quiltonirelay</ApplicationInsightsAnnotationResourceId>
+    <UserSecretsId>023140a5-1e16-4e3a-ad84-644175e876ab</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.5.1" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Quiltoni.PixelBot.Core\Quiltoni.PixelBot.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services" />
+  </ItemGroup>
+
+</Project>

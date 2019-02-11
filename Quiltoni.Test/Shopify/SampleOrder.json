@@ -1,0 +1,495 @@
+{
+	"id": 882391154752,
+	"email": "TestEmail@TestGmail.COM",
+	"closed_at": null,
+	"created_at": "2019-03-25T21:38:59-04:00",
+	"updated_at": "2019-03-25T21:39:16-04:00",
+	"number": 36,
+	"note": "",
+	"token": "c95927558aaaa3283c73b9b862a1073b",
+	"gateway": "shopify_payments",
+	"test": false,
+	"total_price": "38.98",
+	"subtotal_price": "35.70",
+	"total_weight": 128,
+	"total_tax": "0.00",
+	"taxes_included": false,
+	"currency": "USD",
+	"financial_status": "paid",
+	"confirmed": true,
+	"total_discounts": "6.30",
+	"total_line_items_price": "42.00",
+	"cart_token": "19ee5d6b8fa439856f2e5f44dbc15fbc",
+	"buyer_accepts_marketing": false,
+	"name": "#1036",
+	"referring_site": "",
+	"landing_site": "\/",
+	"cancelled_at": null,
+	"cancel_reason": null,
+	"total_price_usd": "38.98",
+	"checkout_token": "227968fec88d955c9d0236eab4b908cf",
+	"reference": null,
+	"user_id": null,
+	"location_id": null,
+	"source_identifier": null,
+	"source_url": null,
+	"processed_at": "2019-03-25T21:38:58-04:00",
+	"device_id": null,
+	"phone": null,
+	"customer_locale": "en",
+	"app_id": 580111,
+	"browser_ip": "123.123.123.123",
+	"landing_site_ref": null,
+	"order_number": 1036,
+	"discount_applications": [
+		{
+			"type": "discount_code",
+			"value": "15.0",
+			"value_type": "percentage",
+			"allocation_method": "across",
+			"target_selection": "all",
+			"target_type": "line_item",
+			"code": "Who"
+		}
+	],
+	"discount_codes": [
+		{
+			"code": "Who",
+			"amount": "6.30",
+			"type": "percentage"
+		}
+	],
+	"note_attributes": [],
+	"payment_gateway_names": [ "shopify_payments" ],
+	"processing_method": "direct",
+	"checkout_id": 5709597212736,
+	"source_name": "web",
+	"fulfillment_status": "partial",
+	"tax_lines": [],
+	"tags": "",
+	"contact_email": "TestEmail@TestGmail.COM",
+	"order_status_url": "https:\/\/quiltoni.com",
+	"presentment_currency": "USD",
+	"total_line_items_price_set": {
+		"shop_money": {
+			"amount": "42.00",
+			"currency_code": "USD"
+		},
+		"presentment_money": {
+			"amount": "42.00",
+			"currency_code": "USD"
+		}
+	},
+	"total_discounts_set": {
+		"shop_money": {
+			"amount": "6.30",
+			"currency_code": "USD"
+		},
+		"presentment_money": {
+			"amount": "6.30",
+			"currency_code": "USD"
+		}
+	},
+	"total_shipping_price_set": {
+		"shop_money": {
+			"amount": "3.28",
+			"currency_code": "USD"
+		},
+		"presentment_money": {
+			"amount": "3.28",
+			"currency_code": "USD"
+		}
+	},
+	"subtotal_price_set": {
+		"shop_money": {
+			"amount": "35.70",
+			"currency_code": "USD"
+		},
+		"presentment_money": {
+			"amount": "35.70",
+			"currency_code": "USD"
+		}
+	},
+	"total_price_set": {
+		"shop_money": {
+			"amount": "38.98",
+			"currency_code": "USD"
+		},
+		"presentment_money": {
+			"amount": "38.98",
+			"currency_code": "USD"
+		}
+	},
+	"total_tax_set": {
+		"shop_money": {
+			"amount": "0.00",
+			"currency_code": "USD"
+		},
+		"presentment_money": {
+			"amount": "0.00",
+			"currency_code": "USD"
+		}
+	},
+	"total_tip_received": "0.0",
+	"line_items": [
+		{
+			"id": 1895009943616,
+			"variant_id": 23536045293632,
+			"title": "Star Trek \/ Star Wars Mats of Holding",
+			"quantity": 1,
+			"price": "30.00",
+			"sku": "",
+			"variant_title": "Black Star Trek",
+			"vendor": "Quiltoni",
+			"fulfillment_service": "manual",
+			"product_id": 2518161424448,
+			"requires_shipping": true,
+			"taxable": false,
+			"gift_card": false,
+			"name": "Star Trek \/ Star Wars Mats of Holding - Black Star Trek",
+			"variant_inventory_management": "shopify",
+			"properties": [],
+			"product_exists": true,
+			"fulfillable_quantity": 1,
+			"grams": 128,
+			"total_discount": "0.00",
+			"fulfillment_status": null,
+			"price_set": {
+				"shop_money": {
+					"amount": "30.00",
+					"currency_code": "USD"
+				},
+				"presentment_money": {
+					"amount": "30.00",
+					"currency_code": "USD"
+				}
+			},
+			"total_discount_set": {
+				"shop_money": {
+					"amount": "0.00",
+					"currency_code": "USD"
+				},
+				"presentment_money": {
+					"amount": "0.00",
+					"currency_code": "USD"
+				}
+			},
+			"discount_allocations": [
+				{
+					"amount": "4.50",
+					"discount_application_index": 0,
+					"amount_set": {
+						"shop_money": {
+							"amount": "4.50",
+							"currency_code": "USD"
+						},
+						"presentment_money": {
+							"amount": "4.50",
+							"currency_code": "USD"
+						}
+					}
+				}
+			],
+			"tax_lines": [],
+			"origin_location": {
+				"id": 969259024448,
+				"country_code": "US",
+				"province_code": "MD",
+				"name": "Quiltoni",
+				"address1": "1 Main St",
+				"address2": "",
+				"city": "Springfield",
+				"zip": "21000"
+			}
+		},
+		{
+			"id": 1895009976384,
+			"variant_id": 22489308430400,
+			"title": "Happy Painter Lap Quilt Pattern",
+			"quantity": 1,
+			"price": "12.00",
+			"sku": "",
+			"variant_title": "",
+			"vendor": "Quiltoni",
+			"fulfillment_service": "manual",
+			"product_id": 2412230246464,
+			"requires_shipping": false,
+			"taxable": false,
+			"gift_card": false,
+			"name": "Happy Painter Lap Quilt Pattern",
+			"variant_inventory_management": "shopify",
+			"properties": [],
+			"product_exists": true,
+			"fulfillable_quantity": 0,
+			"grams": 0,
+			"total_discount": "0.00",
+			"fulfillment_status": "fulfilled",
+			"price_set": {
+				"shop_money": {
+					"amount": "12.00",
+					"currency_code": "USD"
+				},
+				"presentment_money": {
+					"amount": "12.00",
+					"currency_code": "USD"
+				}
+			},
+			"total_discount_set": {
+				"shop_money": {
+					"amount": "0.00",
+					"currency_code": "USD"
+				},
+				"presentment_money": {
+					"amount": "0.00",
+					"currency_code": "USD"
+				}
+			},
+			"discount_allocations": [
+				{
+					"amount": "1.80",
+					"discount_application_index": 0,
+					"amount_set": {
+						"shop_money": {
+							"amount": "1.80",
+							"currency_code": "USD"
+						},
+						"presentment_money": {
+							"amount": "1.80",
+							"currency_code": "USD"
+						}
+					}
+				}
+			],
+			"tax_lines": [],
+			"origin_location": {
+				"id": 969259024448,
+				"country_code": "US",
+				"province_code": "MD",
+				"name": "Quiltoni",
+				"address1": "1 Main St",
+				"address2": "",
+				"city": "Springfield",
+				"zip": "21000"
+			}
+		}
+	],
+	"shipping_lines": [
+		{
+			"id": 745435430976,
+			"title": "First Class Package",
+			"price": "3.28",
+			"code": "FirstPackage",
+			"source": "usps",
+			"phone": null,
+			"requested_fulfillment_service_id": null,
+			"delivery_category": null,
+			"carrier_identifier": null,
+			"discounted_price": "3.28",
+			"price_set": {
+				"shop_money": {
+					"amount": "3.28",
+					"currency_code": "USD"
+				},
+				"presentment_money": {
+					"amount": "3.28",
+					"currency_code": "USD"
+				}
+			},
+			"discounted_price_set": {
+				"shop_money": {
+					"amount": "3.28",
+					"currency_code": "USD"
+				},
+				"presentment_money": {
+					"amount": "3.28",
+					"currency_code": "USD"
+				}
+			},
+			"discount_allocations": [],
+			"tax_lines": []
+		}
+	],
+	"billing_address": {
+		"first_name": "Jon",
+		"address1": "1 First St",
+		"phone": null,
+		"city": "Springfield",
+		"zip": "63000",
+		"province": "Missouri",
+		"country": "United States",
+		"last_name": "Doe",
+		"address2": "",
+		"company": null,
+		"latitude": 38.5517243,
+		"longitude": -90.3311616,
+		"name": "Jon Doe",
+		"country_code": "US",
+		"province_code": "MO"
+	},
+	"shipping_address": {
+		"first_name": "Jon",
+		"address1": "1 First St",
+		"phone": null,
+		"city": "Springfield",
+		"zip": "63000",
+		"province": "Missouri",
+		"country": "United States",
+		"last_name": "Doe",
+		"address2": "",
+		"company": null,
+		"latitude": 38.0,
+		"longitude": -90.0,
+		"name": "Jon Doe",
+		"country_code": "US",
+		"province_code": "MO"
+	},
+	"fulfillments": [
+		{
+			"id": 802193965120,
+			"order_id": 882391154752,
+			"status": "success",
+			"created_at": "2019-03-25T21:39:16-04:00",
+			"service": "manual",
+			"updated_at": "2019-03-25T21:39:16-04:00",
+			"tracking_company": null,
+			"shipment_status": null,
+			"location_id": 26639106112,
+			"tracking_number": null,
+			"tracking_numbers": [],
+			"tracking_url": null,
+			"tracking_urls": [],
+			"receipt": {},
+			"name": "#1036.1",
+			"line_items": [
+				{
+					"id": 1895009976384,
+					"variant_id": 22489308430400,
+					"title": "Happy Painter Lap Quilt Pattern",
+					"quantity": 1,
+					"price": "12.00",
+					"sku": "",
+					"variant_title": "",
+					"vendor": "Quiltoni",
+					"fulfillment_service": "manual",
+					"product_id": 2412230246464,
+					"requires_shipping": false,
+					"taxable": false,
+					"gift_card": false,
+					"name": "Happy Painter Lap Quilt Pattern",
+					"variant_inventory_management": "shopify",
+					"properties": [],
+					"product_exists": true,
+					"fulfillable_quantity": 0,
+					"grams": 0,
+					"total_discount": "0.00",
+					"fulfillment_status": "fulfilled",
+					"price_set": {
+						"shop_money": {
+							"amount": "12.00",
+							"currency_code": "USD"
+						},
+						"presentment_money": {
+							"amount": "12.00",
+							"currency_code": "USD"
+						}
+					},
+					"total_discount_set": {
+						"shop_money": {
+							"amount": "0.00",
+							"currency_code": "USD"
+						},
+						"presentment_money": {
+							"amount": "0.00",
+							"currency_code": "USD"
+						}
+					},
+					"discount_allocations": [
+						{
+							"amount": "1.80",
+							"discount_application_index": 0,
+							"amount_set": {
+								"shop_money": {
+									"amount": "1.80",
+									"currency_code": "USD"
+								},
+								"presentment_money": {
+									"amount": "1.80",
+									"currency_code": "USD"
+								}
+							}
+						}
+					],
+					"tax_lines": [],
+					"origin_location": {
+						"id": 969259024448,
+						"country_code": "US",
+						"province_code": "MD",
+						"name": "Quiltoni",
+						"address1": "1 Main St",
+						"address2": "",
+						"city": "Springfield",
+						"zip": "21000"
+					}
+				}
+			]
+		}
+	],
+	"client_details": {
+		"browser_ip": "71.81.133.123",
+		"accept_language": "en-us",
+		"user_agent": "Mozilla\/5.0 (iPad; CPU OS 12_1 like Mac OS X) AppleWebKit\/605.1.15 (KHTML, like Gecko) CriOS\/73.0.3683.68 Mobile\/15E148 Safari\/605.1",
+		"session_hash": null,
+		"browser_width": 1024,
+		"browser_height": 659
+	},
+	"refunds": [],
+	"payment_details": {
+		"credit_card_bin": "123456",
+		"avs_result_code": "Y",
+		"cvv_result_code": "M",
+		"credit_card_number": "1234 5678 9876 4321",
+		"credit_card_company": "Visa"
+	},
+	"customer": {
+		"id": 1576613904448,
+		"email": "TestEmail@TestGmail.COM",
+		"accepts_marketing": false,
+		"created_at": "2019-03-25T21:37:56-04:00",
+		"updated_at": "2019-03-25T21:38:59-04:00",
+		"first_name": "Jon",
+		"last_name": "Doe",
+		"orders_count": 1,
+		"state": "disabled",
+		"total_spent": "38.98",
+		"last_order_id": 882391154752,
+		"note": null,
+		"verified_email": true,
+		"multipass_identifier": null,
+		"tax_exempt": false,
+		"phone": null,
+		"tags": "",
+		"last_order_name": "#1036",
+		"currency": "USD",
+		"accepts_marketing_updated_at": "2019-03-25T21:37:56-04:00",
+		"marketing_opt_in_level": null,
+		"default_address": {
+			"id": 1696918700096,
+			"customer_id": 1576613904448,
+			"first_name": "Jon",
+			"last_name": "Doe",
+			"company": null,
+			"address1": "1 First St",
+			"address2": "",
+			"city": "Springfield",
+			"province": "Missouri",
+			"country": "United States",
+			"zip": "63000",
+			"phone": null,
+			"name": "Jon Doe",
+			"province_code": "MO",
+			"country_code": "US",
+			"country_name": "United States",
+			"default": true
+		}
+	}
+}
