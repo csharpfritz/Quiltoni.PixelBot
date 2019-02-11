@@ -1,0 +1,36 @@
+﻿@page
+@model Quiltoni.PixelBot.Pages.IndexModel
+@{
+}
+
+<h1>PixelBot Configuration</h1>
+
+@using (Html.BeginForm()) {
+
+<fieldset>
+	<legend>Twitch Configuration</legend>
+
+	<dl>
+		<dt>Bot User Name:</dt>
+		<dd><input type="text" name="BotName" value="@Model.Config.Twitch.UserName" /></dd>
+		<dt>Twitch Channel (eg: quiltoni):</dt>
+		<dd><input type="text" name="Channel" value="@Model.Config.Twitch.Channel" /></dd>
+		<dt>Access Token (<a href="https://twitchtokengenerator.com" target="_blank">fetch instructions</a>)</dt>
+		<dd><input type="text" name="TwitchAccessToken" value="@Model.Config.Twitch.AccessToken" /></dd>
+	</dl>
+
+</fieldset>
+
+<fieldset>
+	<legend>Google Configuration</legend>
+
+	<dl>
+		<dt>Sheet Id (fetch instructions)</dt>
+		<dd><input type="text" name="SheetId" value="@Model.Config.Google.SheetId" /></dd>
+	</dl>
+
+</fieldset>
+
+<input type="submit" />
+
+}
