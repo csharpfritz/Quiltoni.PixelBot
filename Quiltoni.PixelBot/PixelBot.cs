@@ -12,7 +12,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using TwitchLib.Client.Enums;
 using TwitchLib.Client;
+using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
 using static Google.Apis.Sheets.v4.SpreadsheetsResource.ValuesResource;
 
@@ -52,12 +54,47 @@ namespace Quiltoni.PixelBot
 
 			_Client.OnConnected += _Client_OnConnected;
 			_Client.OnMessageReceived += _Client_OnMessageReceived;
+			_Client.OnNewSubscriber += _Client_OnNewSubscriber;
+			_Client.OnReSubscriber += _Client_OnReSubscriber;
+			_Client.OnRaidNotification += _Client_OnRaidNotification;
 
 			_Client.Connect();
 
 			ConfigureGoogleSheetsAccess();
 
 			return Task.CompletedTask;
+
+		}
+
+		private void _Client_OnRaidNotification(object sender, OnRaidNotificationArgs e)
+		{
+
+			var pixels = new int[] { 3, int.Parse(e.RaidNotificaiton.MsgParamViewerCount) }.Max();
+			pixels = pixels > 200 ? 200 : pixels;
+
+			AddPixelsForUser(e.Channel, pixels, "PixelBot-Raid");
+
+		}
+
+		private static readonly Dictionary<SubscriptionPlan, int> _PixelRewards = new Dictionary<SubscriptionPlan, int> {
+			{ SubscriptionPlan.Prime, 10 },
+			{ SubscriptionPlan.Tier1, 10 },
+			{ SubscriptionPlan.Tier2, 25 },
+			{ SubscriptionPlan.Tier3, 60 },
+		};
+
+		private void _Client_OnReSubscriber(object sender, OnReSubscriberArgs e)
+		{
+
+			AddPixelsForUser(e.ReSubscriber.DisplayName, _PixelRewards[e.ReSubscriber.SubscriptionPlan], "PixelBot-Resub");
+
+		}
+
+		private void _Client_OnNewSubscriber(object sender, OnNewSubscriberArgs e)
+		{
+
+			AddPixelsForUser(e.Subscriber.DisplayName, _PixelRewards[e.Subscriber.SubscriptionPlan], "PixelBot-Sub");
+
 
 		}
 
