@@ -72,7 +72,7 @@ namespace Quiltoni.PixelBot
 			var pixels = new int[] { 3, int.Parse(e.RaidNotificaiton.MsgParamViewerCount) }.Max();
 			pixels = pixels > 200 ? 200 : pixels;
 
-			AddPixelsForUser(e.Channel, pixels, "PixelBot-Raid");
+			AddPixelsForUser(e.RaidNotificaiton.DisplayName, pixels, "PixelBot-Raid");
 
 		}
 
