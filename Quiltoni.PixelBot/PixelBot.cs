@@ -56,6 +56,7 @@ namespace Quiltoni.PixelBot
 			_Client.OnMessageReceived += _Client_OnMessageReceived;
 			_Client.OnNewSubscriber += _Client_OnNewSubscriber;
 			_Client.OnReSubscriber += _Client_OnReSubscriber;
+			_Client.OnGiftedSubscription += _Client_OnGiftedSubscription;
 			_Client.OnRaidNotification += _Client_OnRaidNotification;
 
 			_Client.Connect();
@@ -95,6 +96,13 @@ namespace Quiltoni.PixelBot
 
 			AddPixelsForUser(e.Subscriber.DisplayName, _PixelRewards[e.Subscriber.SubscriptionPlan], "PixelBot-Sub");
 
+		}
+
+		private void _Client_OnGiftedSubscription(object sender, OnGiftedSubscriptionArgs e)
+		{
+
+			AddPixelsForUser(e.GiftedSubscription.DisplayName, 2, "PixelBot-SubGifter");
+			AddPixelsForUser(e.GiftedSubscription.MsgParamRecipientDisplayName, _PixelRewards[e.GiftedSubscription.MsgParamSubPlan], "PixelBot-SubGift");
 
 		}
 
