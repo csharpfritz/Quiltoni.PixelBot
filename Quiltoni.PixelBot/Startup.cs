@@ -29,6 +29,11 @@ namespace Quiltoni.PixelBot
 			services.AddOptions();
 			services.Configure<PixelBotConfig>(Configuration.GetSection("PixelBot"));
 
+			// Register bot commands
+			GetType().Assembly.GetTypes()
+				.Where(t => t != typeof(IBotCommand) && typeof(IBotCommand).IsAssignableFrom(t))
+				.ToList().ForEach(t => services.AddTransient(typeof(IBotCommand), t));
+
 			_ = services.AddSingleton<IHostedService, PixelBot>();
 
 			_ = services.AddMvc();
