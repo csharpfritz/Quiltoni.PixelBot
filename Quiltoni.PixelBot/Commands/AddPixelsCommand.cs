@@ -17,7 +17,13 @@ namespace Quiltoni.PixelBot.Commands
 
 			if (!Validate(command, twitch)) return;
 
-			GoogleSheet.AddPixelsForUser(command.ArgumentsAsList[0].Trim(), int.Parse(command.ArgumentsAsList[1]), command.ChatMessage.DisplayName);
+			var userName = command.ArgumentsAsList[0].Trim();
+
+			if (userName == "all") {
+				GoogleSheet.AddPixelsForChatters(command.ChatMessage.Channel, int.Parse(command.ArgumentsAsList[1]), command.ChatMessage.DisplayName);
+			} else {
+				GoogleSheet.AddPixelsForUser(command.ArgumentsAsList[0].Trim(), int.Parse(command.ArgumentsAsList[1]), command.ChatMessage.DisplayName);
+			}
 
 		}
 
