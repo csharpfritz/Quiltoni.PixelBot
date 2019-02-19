@@ -190,28 +190,51 @@ namespace Quiltoni.PixelBot
 		}
 
 		private void ResortSpreadsheet(SheetsService service) {
+			var sheetId = GetSheetIdForTitle(service, "Pixels");
+
 			BatchUpdateSpreadsheetRequest reqbody = new BatchUpdateSpreadsheetRequest();
-			SortSpec ss = new SortSpec();
-			ss.DimensionIndex = 0;
-			ss.SortOrder = "ASCENDING";
 
-			GridRange rangetosort = new GridRange();
-			rangetosort.StartColumnIndex = 0;
-			rangetosort.EndColumnIndex = 12;
-			rangetosort.StartRowIndex = 3;
-			//rangetosort.EndRowIndex = totalrows;
-			rangetosort.SheetId = 0;
+			var sortReq = new Request() {
+				SortRange = new SortRangeRequest() {
+					Range = new GridRange() {
+						StartColumnIndex = 0,
+						EndColumnIndex = 12,
+						StartRowIndex = 3,
+						SheetId = sheetId
+					},
+					SortSpecs = new List<SortSpec>() {
+						new SortSpec() {
+							DimensionIndex = 0,
+							SortOrder = "ASCENDING"
+						}
+					}
+				}
+			};
 
-			SortRangeRequest srr = new SortRangeRequest();
-			srr.Range = rangetosort;
-			IList<SortSpec> sortspecs = new List<SortSpec>();
-			sortspecs.Add(ss);
-			srr.SortSpecs = sortspecs;
-			Request req1 = new Request();
-			req1.SortRange = srr;
-			IList<Request> req2 = new List<Request>();
-			req2.Add(req1);
-			reqbody.Requests = req2;
+			var formatReq = new Request() {
+				RepeatCell = new RepeatCellRequest() {
+					Cell = new CellData() {
+						UserEnteredFormat = new CellFormat() {
+							HorizontalAlignment = "CENTER"
+						}
+					},
+					Range = new GridRange() {
+						StartColumnIndex = 1,
+						EndColumnIndex = 2,
+						StartRowIndex = 3,
+						SheetId = sheetId
+					},
+					Fields = "userEnteredFormat(horizontalAlignment)"
+
+				}
+			};
+
+
+			IList<Request> requests = new List<Request> {
+				sortReq,
+				formatReq
+			};
+			reqbody.Requests = requests;
 
 			SpreadsheetsResource.BatchUpdateRequest sortreq = service.Spreadsheets.BatchUpdate(reqbody, Spreadsheet);
 			sortreq.Execute();
