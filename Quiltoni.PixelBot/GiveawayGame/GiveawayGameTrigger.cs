@@ -6,8 +6,8 @@
 		Configure,
 		Open,
 		Start,
-		Reward
-
+		Reward,
+		Help
 	}
 
 }

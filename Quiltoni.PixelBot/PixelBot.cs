@@ -62,10 +62,18 @@ namespace Quiltoni.PixelBot
 			_Client.OnGiftedSubscription += _Client_OnGiftedSubscription;
 			_Client.OnRaidNotification += _Client_OnRaidNotification;
 			_Client.OnChatCommandReceived += _Client_OnChatCommandReceived;
+			_Client.OnMessageReceived += _Client_OnMessageReceived;
 
 			_Client.Connect();
 
 			return Task.CompletedTask;
+
+		}
+
+		private void _Client_OnMessageReceived(object sender, OnMessageReceivedArgs e) {
+
+			Commands.Where(c => c is IBotListensToMesages)
+				.ToList().ForEach(c => ((IBotListensToMesages)c).MessageReceived(this));
 
 		}
 

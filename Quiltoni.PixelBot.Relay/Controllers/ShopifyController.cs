@@ -18,7 +18,7 @@ using Quiltoni.PixelBot.Relay.Models;
 namespace Quiltoni.PixelBot.Relay.Controllers
 {
 	[Route("api/[controller]")]
-	//[ApiController]
+	//[ApiController()]
 	public class ShopifyController : ControllerBase
 	{
 

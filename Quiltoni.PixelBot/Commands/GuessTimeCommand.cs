@@ -11,6 +11,8 @@ namespace Quiltoni.PixelBot.Commands
 	public class GuessTimeCommand : IBotCommand
 	{
 
+		// Cheer 400 cpayette 05/3/19 
+		// Cheer 100 roberttables 05/3/19 
 		// Cheer 100 jamesmontemagno 05/3/19 
 
 		public string CommandText => "guess";

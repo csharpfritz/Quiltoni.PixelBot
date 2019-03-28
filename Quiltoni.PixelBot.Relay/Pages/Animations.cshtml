@@ -5,76 +5,94 @@
 <html>
 
 <head>
-    <title>PixelBot Animations</title>
+	<title>PixelBot Animations</title>
 </head>
 <body>
 
 
-    <script src="~/lib/signalr/signalr.js"></script>
-    <script type="text/javascript">
+	<script src="~/lib/signalr/signalr.js"></script>
+	<script type="text/javascript">
 
-				var testMode = true;
-        var orders = [];
-        var gifs = {
-            newSale: "/images/new_sale2.gif"
-        };
-        var fx = {
-            newSale: "/sounds/cha-ching.mp3"
-        };
+		var testMode = true;
+		var orders = [];
+		var gifs = {
+			newSale: "/images/new_sale2.gif"
+		};
+		var fx = {
+			newSale: "/sounds/cha-ching.mp3"
+		};
 
-        const connection = new signalR.HubConnectionBuilder()
-            .withUrl("/notifications")
-            .configureLogging(signalR.LogLevel.Information)
-            .build();
+		const connection = new signalR.HubConnectionBuilder()
+			.withUrl("/notifications")
+			.configureLogging(signalR.LogLevel.Information)
+			.build();
 
-        connection.on("OrderReceived", (orderId) => {
+		connection.on("OrderReceived", (orderId) => {
 
-            console.log("Received order " + orderId);
+			console.log("Received order " + orderId);
 
-            if (orders.indexOf(orderId) >= 0 && !testMode) {
-                console.warn(`Previously received order ${orderId} - skipping notification`);
-                return;
-            }
+			if (orders.indexOf(orderId) >= 0 && !testMode) {
+				console.warn(`Previously received order ${orderId} - skipping notification`);
+				return;
+			}
 
-            orders.push(orderId);
+			orders.push(orderId);
 
-            var newImg = document.createElement("img");
-            newImg.src = gifs.newSale;
-            newImg.id = "newImg";
-            document.body.appendChild(newImg);
+			var newImg = document.createElement("img");
+			newImg.src = gifs.newSale;
+			newImg.id = "newImg";
+			document.body.appendChild(newImg);
 
-            window.setTimeout(function () {
-                var chaChing = new Audio(fx.newSale);
-                chaChing.play();
-            }, 500);
+			window.setTimeout(function () {
+				var chaChing = new Audio(fx.newSale);
+				chaChing.play();
+			}, 500);
 
-            window.setTimeout(function () {
-                console.log("Removing the image");
-                document.getElementById("newImg").remove();
-            }, 3000);
+			window.setTimeout(function () {
+				console.log("Removing the image");
+				document.getElementById("newImg").remove();
+			}, 3000);
 
-				})
+		})
 
-				connection.onclose(() => {
-						if (this.debug) console.debug("hub connection closed");
+		connection.on("RunRaffle", (entrants) => {
 
-						// Hub connection was closed for some reason
-						let interval = setInterval(() => {
-								// Try to reconnect hub every 5 secs
-							location.reload();
-								//connection.start().then(() => {
-								//		// Reconnect succeeded
-								//		clearInterval(interval);
-								//		if (this.debug) console.debug("hub reconnected");
-								//});
-						}, 5000);
-				});
+			// trigger animation
+			// trigger music
 
-        connection.start().then(function () {
-            console.log("connected");
-        });
+			var theWinner = SelectWinner(entrants);
+			// send the winner information back to the SignalR hub for distribution to the bot
 
-    </script>
+		})
+
+		connection.onclose(() => {
+			if (this.debug) console.debug("hub connection closed");
+
+			// Hub connection was closed for some reason
+			let interval = setInterval(() => {
+				// Try to reconnect hub every 5 secs
+				location.reload();
+				//connection.start().then(() => {
+				//		// Reconnect succeeded
+				//		clearInterval(interval);
+				//		if (this.debug) console.debug("hub reconnected");
+				//});
+			}, 5000);
+		});
+
+		connection.start().then(function () {
+			console.log("connected");
+		});
+
+		function SelectWinner(entrants) {
+
+			// randomly select a winner
+
+			return "theWinner";
+
+		}
+
+	</script>
 
 </body>
 

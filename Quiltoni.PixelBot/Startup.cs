@@ -44,6 +44,7 @@ namespace Quiltoni.PixelBot
 
 			_ = services.AddSingleton<IHostedService, PixelBot>();
 			_ = services.AddSingleton<GuessGame>();
+			_ = services.AddSingleton<GiveawayGame.GiveawayGame>();
 
 			_ = services.AddMvc();
 
