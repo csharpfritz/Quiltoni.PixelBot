@@ -31,6 +31,7 @@ namespace Quiltoni.PixelBot.Relay
 			services.AddSignalR();
 
 			services.Configure<StoreConfig>(options => Configuration.GetSection("Shops").Bind(options));
+			//services.Configure<StoreConfig>(options => Configuration.GetSection("Shops").Bind(options));
 
 			services.AddCors(options =>
 						{

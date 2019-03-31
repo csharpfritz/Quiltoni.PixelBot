@@ -9,6 +9,8 @@ namespace Quiltoni.PixelBot
 
 		public GoogleConfig Google { get; set; }
 
+		public GiveawayGame.GiveawayGameConfiguration GiveawayGame { get; set; }
+
 		public CurrencyConfig Currency { get; set; }
 
 		public Dictionary<string, bool> Commands { get; set; }

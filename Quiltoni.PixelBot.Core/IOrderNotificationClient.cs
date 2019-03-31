@@ -8,8 +8,10 @@ namespace Quiltoni.PixelBot.Core
 
 		Task OrderReceived(string orderId);
 
-		Task RunRaffle(string[] entrants);
-
+		Task RunRaffle(int winnerPosition, string[] entrants);
+		Task Reset(bool v);
+		Task AddEntrant(string newEntrant);
+		Task AddEntrants(string[] newEntrants);
 	}
 
 }

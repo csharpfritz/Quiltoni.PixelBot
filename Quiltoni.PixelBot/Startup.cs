@@ -42,9 +42,12 @@ namespace Quiltoni.PixelBot
 				.Where(t => t != typeof(IBotCommand) && typeof(IBotCommand).IsAssignableFrom(t))
 				.ToList().ForEach(t => services.AddTransient(typeof(IBotCommand), t));
 
-			_ = services.AddSingleton<IHostedService, PixelBot>();
-			_ = services.AddSingleton<GuessGame>();
-			_ = services.AddSingleton<GiveawayGame.GiveawayGame>();
+			_ = services.AddHttpClient("giveaway");
+
+			_ = services.AddSingleton<IHostedService, PixelBot>()
+				.AddSingleton<GuessGame>()
+				.AddSingleton<GiveawayGame.GiveawayGame>();
+
 
 			_ = services.AddMvc();
 

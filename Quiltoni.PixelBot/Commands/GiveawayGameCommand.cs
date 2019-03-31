@@ -15,6 +15,17 @@ namespace Quiltoni.PixelBot.Commands
 
 		public GiveawayGame.GiveawayGame Game { get; }
 
+		public static readonly Dictionary<string, Action<GiveawayGame.GiveawayGame, IChatService, GiveawayGameCommand>> _Verbs =
+			new Dictionary<string, Action<GiveawayGame.GiveawayGame, IChatService, GiveawayGameCommand>> {
+				{ "help", (Game, twitch, cmd) => Game.Help(twitch, cmd) },
+				{ "open", (Game, twitch, cmd) => Game.Open(twitch, cmd) },
+				{ "clear", (Game, twitch, cmd) => Game.ClearEntrants() },
+				{ "start", (Game, twitch, cmd) => Game.Start(twitch, cmd) },
+				{ "exclude", (Game, twitch, cmd) => Game.Exclude(twitch, cmd) },
+				{ "end", (Game, twitch, cmd) => Game.End() }
+			};
+
+
 		public GiveawayGameCommand(GiveawayGame.GiveawayGame game) {
 
 			this.Game = game;
@@ -23,36 +34,28 @@ namespace Quiltoni.PixelBot.Commands
 
 		public ChatUser ChatUser { get; private set; }
 
+		public IEnumerable<string> Arguments { get; private set; }
+
 		public void Execute(ChatCommand cmd, IChatService twitch) {
 
 			this.ChatUser = cmd.ChatMessage.AsChatUser();
+			var theVerb = cmd.ArgumentsAsList.Any() ? cmd.ArgumentsAsList[0].ToLowerInvariant() : "";
+			Arguments = cmd.ArgumentsAsList;
 
-			if (!cmd.ArgumentsAsList.Any()) {
+			if (!cmd.ArgumentsAsList.Any() || !_Verbs.ContainsKey(theVerb)) {
 				Game.Help(twitch, this);
+				return;
 			}
 
-			switch (cmd.ArgumentsAsList[0].ToLowerInvariant()) {
-
-				case "help":
-					Game.Help(twitch, this);
-					break;
-				case "open":
-					Game.Open(twitch, this);
-					break;
-				case "start":
-					Game.Start(twitch, this);
-					break;
-
-			}
-
+			_Verbs[theVerb](Game, twitch, this);
 
 		}
 
-		public void MessageReceived(IChatService twitch) {
+		public void MessageReceived(IChatService twitch, string userName) {
 
 			if (Game.State != GiveawayGameState.Open) return;
 
-			Game.EnterGiveaway(ChatUser.DisplayName);
+			Game.EnterGiveaway(userName);
 
 		}
 	}

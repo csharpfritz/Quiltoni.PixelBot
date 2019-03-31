@@ -55,43 +55,6 @@
 
 		})
 
-		connection.on("RunRaffle", (entrants) => {
-
-			// trigger animation
-			// trigger music
-
-			var theWinner = SelectWinner(entrants);
-			// send the winner information back to the SignalR hub for distribution to the bot
-
-		})
-
-		connection.onclose(() => {
-			if (this.debug) console.debug("hub connection closed");
-
-			// Hub connection was closed for some reason
-			let interval = setInterval(() => {
-				// Try to reconnect hub every 5 secs
-				location.reload();
-				//connection.start().then(() => {
-				//		// Reconnect succeeded
-				//		clearInterval(interval);
-				//		if (this.debug) console.debug("hub reconnected");
-				//});
-			}, 5000);
-		});
-
-		connection.start().then(function () {
-			console.log("connected");
-		});
-
-		function SelectWinner(entrants) {
-
-			// randomly select a winner
-
-			return "theWinner";
-
-		}
-
 	</script>
 
 </body>

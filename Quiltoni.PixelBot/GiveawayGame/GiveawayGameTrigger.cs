@@ -2,12 +2,15 @@
 {
 	public enum GiveawayGameTrigger
 	{
-
 		Configure,
 		Open,
 		Start,
-		Reward,
-		Help
+		AnnounceWinner,
+		RewardCompleted,
+		Rerun,
+		Reopen,
+		Help,
+		End
 	}
 
 }

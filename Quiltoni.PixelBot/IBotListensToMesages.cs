@@ -3,7 +3,7 @@
 	public interface IBotListensToMesages
 	{
 
-		void MessageReceived(IChatService twitch);
+		void MessageReceived(IChatService twitch, string userName);
 
 	}
 

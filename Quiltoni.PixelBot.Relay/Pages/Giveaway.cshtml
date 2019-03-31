@@ -1,0 +1,273 @@
+﻿@page
+@model Quiltoni.PixelBot.Relay.Pages.GiveawayModel
+<html>
+
+<head>
+	<title>PixelBot Giveaway</title>
+	<style>
+		
+			#slotmachine {
+				width: 450px;
+				border: 1px solid black;
+				min-height: 200px;
+				margin: 0 auto;
+				position: relative;
+				overflow: hidden;
+				background-color: white;
+				transform: translate3d(0, 0, 0);
+			}
+
+			#slotmachine > ul {
+				min-height: 200px;
+				left: 0;
+				width: 100%;
+				position: absolute;
+				margin: 0;
+				padding: 0;
+				transform: translate3d(0, 0, 0);
+				animation-fill-mode: both;
+			}
+
+			#slotmachine LI {
+				display: block;
+				width: 100%;
+				height: 50px;
+				text-align: center;
+				font-size: 40px;
+			}
+
+			@@keyframes moveSlideshow {
+				0% {
+					transform: translateY(0);					
+				}
+				100% { 
+					transform: translateY(calc(-100% + 575px))	/* 325 */			
+				}
+			}
+
+			@@keyframes bounce {
+				0%   { top:000px; animation-timing-function:ease-in;  }
+				37%  { top:500px; animation-timing-function:ease-out; }
+				55%  { top:375px; animation-timing-function:ease-in;  }
+				73%  { top:500px; animation-timing-function:ease-out; }
+				82%  { top:465px; animation-timing-function:ease-in;  }
+				91%  { top:500px; animation-timing-function:ease-out; }
+				96%  { top:490px; animation-timing-function:ease-in;  }
+				100% { top:500px; }
+			}
+
+			.spin {
+				animation: moveSlideshow 8.7s cubic-bezier(.97,0,.45,1.15) 0s 1 normal both;
+			}
+
+			#indicator {
+				display: block;
+				height: 50px;
+				width: 100%;
+				z-index: 3;
+				position: absolute;
+				top: 75px;
+				border-top: 1px solid red;
+				border-bottom: 1px solid red;
+				background-color: rgba(255, 0, 0, .2); /* #ff000033 ; */
+			}
+
+			#entrants {
+				width: 450px;
+				height: 200px;
+				border: 1px solid #000;
+				margin: 0 auto;
+				position: relative;
+				overflow: hidden;
+				background-color: white;
+			}
+
+			#entrants span {
+				margin: 2px;
+				font-size: 9pt;
+				font-weight: bold;
+				font-family: sans-serif;
+				float: left;
+			}
+
+	</style>
+</head>
+<body>
+
+		<div class="wrapper" id="slotmachine" style="display: none;">
+			<div id="indicator"></div>
+			<ul></ul>
+		</div>
+
+		<div id="entrants">
+
+		</div>
+
+
+	<script src="~/lib/signalr/signalr.js"></script>
+	<script src="~/lib/jquery.min.js"></script>
+	<script src="~/lib/jquery.easing.min.js"></script>
+	<script type="text/javascript">
+
+		var testMode = true;
+		var totalHeight = 0;
+		var entrantCount = 0;
+
+		var elEntrants = document.getElementById("entrants");
+		var arrEntrants = [];
+
+		const connection = new signalR.HubConnectionBuilder()
+			.withUrl("/notifications")
+			.configureLogging(signalR.LogLevel.Information)
+			.build();
+
+		connection.on("RunRaffle", RunRaffle);
+
+		connection.on("AddEntrant", AddEntrant);
+
+		connection.on("AddEntrants", AddEntrants);
+
+		connection.on("Reset", Reset);
+
+		connection.onclose(() => {
+			if (this.debug) console.debug("hub connection closed");
+
+			// Hub connection was closed for some reason
+			let interval = setInterval(() => {
+
+				// Try to reconnect hub every 5 secs
+				location.reload();
+
+			}, 5000);
+		});
+
+		connection.start().then(function () {
+			console.log("connected");
+		});
+
+		function Reset(hideDisplay) {
+
+			while (elEntrants.firstChild) {
+		    elEntrants.removeChild(elEntrants.firstChild);
+			}
+			arrEntrants = [];
+
+			document.getElementById("slotmachine").style.display = "none";
+			if (hideDisplay) {
+				elEntrants.style.display = 'none';
+			} else {
+				elEntrants.style.display = 'block';
+			}
+		}
+
+		function AddEntrant(newEntrant) {
+
+			elEntrants.style.display = 'block';
+
+			if (arrEntrants.includes(newEntrant)) return;
+
+			var s = document.createElement("span");
+			s.textContent = newEntrant;
+			elEntrants.appendChild(s);
+			sortThem('#entrants span');
+
+			arrEntrants.push(newEntrant);
+
+		}
+
+		function AddEntrants(newEntrants) {
+
+			elEntrants.style.display = 'block';
+			document.getElementById("slotmachine").style.display = "none";
+
+			arrEntrants = newEntrants;
+			while (elEntrants.firstChild) {
+		    elEntrants.removeChild(elEntrants.firstChild);
+			}
+
+
+			for (var newEntrant of newEntrants) {
+				var s = document.createElement("span");
+				s.textContent = newEntrant;
+				elEntrants.appendChild(s);
+				sortThem('#entrants span');
+			}
+
+		}
+
+		function RunRaffle(winnerPos, entrants, time = 2000) {
+
+			elEntrants.style.display = 'none';
+
+			document.getElementById("slotmachine").style.display = "block";
+
+			document.querySelector("#slotmachine UL").style.animation = "";
+
+			var slider = document.querySelector("#slotmachine div");
+			var container = document.querySelector("#slotmachine ul");
+
+			if (container.querySelector("LI")) {
+				container.remove();
+				container = document.createElement("UL");
+				document.getElementById("slotmachine").appendChild(container);
+
+			} 
+
+			for (var i = 0; i < 20; i++) {
+				for (var e of entrants) {
+
+					var newLi = document.createElement("li");
+					newLi.innerText = e;
+					container.appendChild(newLi);
+
+				}
+			}
+
+			for (var i = 0; i < winnerPos + 10; i++) { // 5
+
+				var newLi = document.createElement("li");
+				newLi.innerText = entrants[i % entrants.length];
+				container.appendChild(newLi);
+
+			}
+
+
+			// NOTE During spin, need to make winning position larger
+
+			console.log(`Spinning for ${time}`);
+			spin();
+
+		}
+
+		function spin() {
+
+			var container = document.querySelector("#slotmachine ul");
+			container.classList.remove("spin");
+			container.offsetWidth;
+
+			var music = new Audio("/sounds/dance.mp3");
+			music.play();
+			container.classList.add("spin");
+
+		}
+
+		function sortThem(s) {
+			var theArray = Array.from(document.body.querySelectorAll(s)).sort(function sort (ea, eb) {
+					var a = ea.textContent.trim();
+					var b = eb.textContent.trim();
+					if (a < b) return -1;
+					if (a > b) return 1;
+					return 0;
+			})
+
+			theArray.forEach(function (div) {
+					div.parentElement.appendChild(div);
+	    });
+		}
+
+
+	</script>
+
+</body>
+
+</html>
