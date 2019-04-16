@@ -2,9 +2,9 @@
 {
 	public enum GiveawayGameState
 	{
-		NotStarted,
-		Entry,
-		Selection,
+		Idle,
+		Open,
+		Running,
 		Reward
 	}
 

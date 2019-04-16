@@ -18,6 +18,7 @@ using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
 using static Google.Apis.Sheets.v4.SpreadsheetsResource.ValuesResource;
 using System.Reflection;
+using System.Diagnostics;
 
 namespace Quiltoni.PixelBot
 {
@@ -27,6 +28,7 @@ namespace Quiltoni.PixelBot
 		private TwitchClient _Client;
 		static string ApplicationName = "PixelBot";
 		private readonly ISheetProxy _GoogleSheet;
+		private readonly bool _EnableSubPixels = false;
 
 		public PixelBot(IEnumerable<IBotCommand> commands, IOptions<PixelBotConfig> configuration, ILoggerFactory loggerFactory)
 		{
@@ -62,10 +64,20 @@ namespace Quiltoni.PixelBot
 			_Client.OnGiftedSubscription += _Client_OnGiftedSubscription;
 			_Client.OnRaidNotification += _Client_OnRaidNotification;
 			_Client.OnChatCommandReceived += _Client_OnChatCommandReceived;
+			_Client.OnMessageReceived += _Client_OnMessageReceived;
 
 			_Client.Connect();
 
 			return Task.CompletedTask;
+
+		}
+
+		private void _Client_OnMessageReceived(object sender, OnMessageReceivedArgs e) {
+
+			Debug.WriteLine($"User entering text: {e.ChatMessage.Username}");
+
+			Commands.Where(c => c is IBotListensToMesages)
+				.ToList().ForEach(c => ((IBotListensToMesages)c).MessageReceived(this, e.ChatMessage.Username));
 
 		}
 
@@ -85,6 +97,8 @@ namespace Quiltoni.PixelBot
 
 		private void _Client_OnRaidNotification(object sender, OnRaidNotificationArgs e)
 		{
+
+			if (!_EnableSubPixels) return;
 
 			// Exit if we do not meet the minimum of 3 viewers
 			if (int.Parse(e.RaidNotificaiton.MsgParamViewerCount) < 3) return;
@@ -106,12 +120,16 @@ namespace Quiltoni.PixelBot
 		private void _Client_OnReSubscriber(object sender, OnReSubscriberArgs e)
 		{
 
+			if (!_EnableSubPixels) return;
+
 			_GoogleSheet.AddPixelsForUser(e.ReSubscriber.DisplayName, _PixelRewards[e.ReSubscriber.SubscriptionPlan], "PixelBot-Resub");
 
 		}
 
 		private void _Client_OnNewSubscriber(object sender, OnNewSubscriberArgs e)
 		{
+
+			if (!_EnableSubPixels) return;
 
 			_GoogleSheet.AddPixelsForUser(e.Subscriber.DisplayName, _PixelRewards[e.Subscriber.SubscriptionPlan], "PixelBot-Sub");
 
@@ -120,6 +138,8 @@ namespace Quiltoni.PixelBot
 		private void _Client_OnGiftedSubscription(object sender, OnGiftedSubscriptionArgs e)
 		{
 
+			if (!_EnableSubPixels) return;
+
 			_GoogleSheet.AddPixelsForUser(e.GiftedSubscription.DisplayName, 2, "PixelBot-SubGifter");
 			_GoogleSheet.AddPixelsForUser(e.GiftedSubscription.MsgParamRecipientDisplayName, _PixelRewards[e.GiftedSubscription.MsgParamSubPlan], "PixelBot-SubGift");
 
@@ -127,7 +147,7 @@ namespace Quiltoni.PixelBot
 
 		public Task StopAsync(CancellationToken cancellationToken)
 		{
-			_Client.Disconnect();
+			if (_Client != null) _Client.Disconnect();
 			return Task.CompletedTask;
 		}
 
