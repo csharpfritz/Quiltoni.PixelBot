@@ -14,8 +14,13 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{C5967143-96DF-4726-85AC-B7B40DE2A339}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		global.json = global.json
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PixelBot.Orchestrator", "PixelBot.Orchestrator\PixelBot.Orchestrator.csproj", "{C68CFF33-594D-40B0-9CD9-7AB18FCA8486}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PixelBot.Workers", "PixelBot.Workers\PixelBot.Workers.csproj", "{82346639-FB33-468E-9BBE-12153506700A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +44,14 @@ Global
 		{4E209FFE-9971-4BEC-9A75-79A868B22F79}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E209FFE-9971-4BEC-9A75-79A868B22F79}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E209FFE-9971-4BEC-9A75-79A868B22F79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C68CFF33-594D-40B0-9CD9-7AB18FCA8486}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C68CFF33-594D-40B0-9CD9-7AB18FCA8486}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C68CFF33-594D-40B0-9CD9-7AB18FCA8486}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C68CFF33-594D-40B0-9CD9-7AB18FCA8486}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82346639-FB33-468E-9BBE-12153506700A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82346639-FB33-468E-9BBE-12153506700A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82346639-FB33-468E-9BBE-12153506700A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82346639-FB33-468E-9BBE-12153506700A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
