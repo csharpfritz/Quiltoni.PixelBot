@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Akka.Actor;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PixelBot.Orchestrator.Components;
+using PixelBot.Orchestrator.Data;
 using PixelBot.Orchestrator.Services;
 
 namespace PixelBot.Orchestrator
@@ -24,6 +26,11 @@ namespace PixelBot.Orchestrator
 			services.AddRazorComponents();
 
 			services.AddSingleton<WeatherForecastService>();
+			services.AddSingleton<ActorSystem>(_ => ActorSystem.Create("BotService"));
+
+			services.AddTransient<IChannelConfigurationContext, ChannelConfigurationContext>();
+
+
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
