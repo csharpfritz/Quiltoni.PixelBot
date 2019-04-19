@@ -34,6 +34,11 @@ namespace PixelBot.Orchestrator.Actors
 
 		private void GetChannelActor(JoinChannel msg) {
 
+			if (_ChannelActors.ContainsKey(msg.ChannelName)) {
+				Logger.Log(Akka.Event.LogLevel.InfoLevel, $"Actor for channel '{msg.ChannelName}' already present.");
+				return;
+			}
+
 			var config = DataContext.GetConfigurationForChannel(msg.ChannelName);
 			var props = Props.Create<ChannelActor>(config);
 
