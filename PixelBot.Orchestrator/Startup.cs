@@ -23,7 +23,7 @@ namespace PixelBot.Orchestrator
 			services.AddMvc()
 					.AddNewtonsoftJson();
 
-			services.AddRazorComponents();
+			services.AddServerSideBlazor();
 
 			services.AddSingleton<WeatherForecastService>();
 			services.AddSingleton<ActorSystem>(_ => ActorSystem.Create("BotService"));
@@ -46,9 +46,9 @@ namespace PixelBot.Orchestrator
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
 
-			app.UseRouting(routes => {
+			app.UseEndpoints(routes => {
 				routes.MapRazorPages();
-				routes.MapComponentHub<App>("app");
+				routes.MapBlazorHub<App>("app");
 			});
 		}
 	}
