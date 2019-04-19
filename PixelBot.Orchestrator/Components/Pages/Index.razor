@@ -1,5 +1,25 @@
 ﻿@page "/"
+@inject IActorRef channelManager
+
 
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
+
+<input type="text" bind="@channelName" placeholder="Channel to Join" />
+<button onclick="@JoinChannel">Join</button>
+
+@functions {
+
+	[Parameter]
+	public string channelName { get; set; }
+
+	void JoinChannel()
+	{
+
+		(channelManager as IActorRef).Tell(new JoinChannel(channelName));
+		channelName = null;
+
+	}
+
+}

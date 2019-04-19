@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Akka.Actor;
+using PixelBot.Orchestrator.Actors.ChannelEvents;
 using Quiltoni.PixelBot.Core.Domain;
 using TwitchLib.Client;
 using TwitchLib.Client.Events;
@@ -11,10 +13,19 @@ namespace PixelBot.Orchestrator.Actors
 	/// <summary>
 	/// An actor that manages interactions on a single channel
 	/// </summary>
-	public class ChannelActor : ReceiveActor, IDisposable
+	public class ChannelActor : ReceiveActor
 	{
 
 		private TwitchClient _Client;
+		
+		private IActorRef ChatCommand;
+		private IActorRef GiftSub;
+		private IActorRef NewMessage;
+		private IActorRef NewSub;
+		private IActorRef Raid;
+		private IActorRef ReSub;
+
+
 
 		public ChannelActor(ChannelConfiguration config) {
 
@@ -24,7 +35,7 @@ namespace PixelBot.Orchestrator.Actors
 
 		public ChannelConfiguration Config { get; }
 
-		public BotConfiguration BotConfig { get; }
+		public BotConfiguration BotConfig { get; } = Startup.BotConfiguration;
 
 		public override void AroundPreStart() {
 
@@ -41,73 +52,44 @@ namespace PixelBot.Orchestrator.Actors
 
 			_Client.OnConnected += (sender, args) => _Client.JoinChannel(Config.ChannelName);
 
-			// Delegate these to another actor class
+			// TODO: Handle unwanted disconnect
 
-			// IActorRef.Tell() to delegate these messages to another class
+			StartEventHandlerActors();
 
-			_Client.OnNewSubscriber += _Client_OnNewSubscriber;
-			_Client.OnReSubscriber += _Client_OnReSubscriber;
-			_Client.OnGiftedSubscription += _Client_OnGiftedSubscription;
-			_Client.OnRaidNotification += _Client_OnRaidNotification;
-			_Client.OnChatCommandReceived += _Client_OnChatCommandReceived;
-			_Client.OnMessageReceived += _Client_OnMessageReceived;
+			_Client.OnNewSubscriber += (o, args) => NewSub.Forward(args);
+			_Client.OnReSubscriber += (o, args) => ReSub.Forward(args);
+			_Client.OnGiftedSubscription += (o, args) => GiftSub.Forward(args);
+			_Client.OnRaidNotification += (o, args) => Raid.Forward(args);
+			_Client.OnChatCommandReceived += (o, args) => ChatCommand.Forward(args);
+			_Client.OnMessageReceived += (o, args) => NewMessage.Forward(args);
 
 			_Client.Connect();
 
 		}
 
-		private void _Client_OnMessageReceived(object sender, OnMessageReceivedArgs e) {
-			throw new NotImplementedException();
-		}
+		private void StartEventHandlerActors() {
 
-		private void _Client_OnChatCommandReceived(object sender, OnChatCommandReceivedArgs e) {
-			throw new NotImplementedException();
-		}
+			this.ChatCommand = CreateActor<ChatCommandActor>();
+			this.GiftSub = CreateActor<GiftSubscriberActor>();
+			this.NewMessage = CreateActor<NewMessageActor>();
+			this.NewSub = CreateActor<NewSubscriberActor>();
+			this.Raid = CreateActor<RaidActor>();
+			this.ReSub = CreateActor<ReSubscriberActor>();
 
-		private void _Client_OnRaidNotification(object sender, OnRaidNotificationArgs e) {
-			throw new NotImplementedException();
-		}
+			IActorRef CreateActor<T>() where T : ReceiveActor
+			{
+				var props = Props.Create<T>(Config);
 
-		private void _Client_OnGiftedSubscription(object sender, OnGiftedSubscriptionArgs e) {
-			throw new NotImplementedException();
-		}
+				return Context.ActorOf(props, $"event_{typeof(T).Name}");
 
-		private void _Client_OnReSubscriber(object sender, OnReSubscriberArgs e) {
-			throw new NotImplementedException();
-		}
+			}
 
-		private void _Client_OnNewSubscriber(object sender, OnNewSubscriberArgs e) {
-			throw new NotImplementedException();
 		}
 
 		public override void AroundPostStop() {
+			_Client.Disconnect();
 			base.AroundPostStop();
 		}
-
-
-		#region IDisposable Support
-		private bool disposedValue = false; // To detect redundant calls
-
-		protected virtual void Dispose(bool disposing) {
-			if (!disposedValue) {
-				if (disposing) {
-					
-
-
-				}
-
-				disposedValue = true;
-			}
-		}
-
-		// This code added to correctly implement the disposable pattern.
-		public void Dispose() {
-
-			// Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-			Dispose(true);
-
-		}
-		#endregion
 
 	}
 

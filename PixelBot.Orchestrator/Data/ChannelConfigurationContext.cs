@@ -13,6 +13,7 @@ namespace PixelBot.Orchestrator.Data
 
 		private static readonly IList<ChannelConfiguration> _Configs = new List<ChannelConfiguration> {
 			new ChannelConfiguration { ChannelName="csharpfritz" },
+			new ChannelConfiguration { ChannelName="instafluff" },
 			new ChannelConfiguration { ChannelName="quiltoni" }
 		};
 

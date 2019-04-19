@@ -20,7 +20,7 @@ namespace PixelBot.Orchestrator.Actors
 
 		private static readonly Dictionary<string, IActorRef> _ChannelActors = new Dictionary<string, IActorRef>();
 
-		public ChannelManagerActor(IChannelConfigurationContext dataContext, ILoggerFactory loggerFactory) {
+		public ChannelManagerActor(IChannelConfigurationContext dataContext) {
 
 			Logger = Context.GetLogger();
 
