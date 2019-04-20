@@ -16,7 +16,7 @@ namespace Quiltoni.Test.GiveawayGame
 		[InlineData(50)]
 		[InlineData(100)]
 		[InlineData(500)]
-		[InlineData(1000)]
+		//[InlineData(1000)]
 		public void ShouldPickRandomWinners(int entrantCount) {
 
 			var results = new Dictionary<int, int>();

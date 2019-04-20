@@ -61,7 +61,7 @@ namespace Quiltoni.PixelBot
 			GetSheetService(out service, out values);
 			var appends = new ValueRange() { Values = new List<IList<object>>() };
 			var updates = new List<ValueRange>();
-			var logrows =  new List<IList<object>>();
+			var logrows = new List<IList<object>>();
 
 			Twitch.BroadcastMessageOnChannel($"I've begun adding {numPixelsToAdd} {Models.Currency.Name} to all people in chat");
 
@@ -78,8 +78,9 @@ namespace Quiltoni.PixelBot
 				var thisRow = values.FirstOrDefault(r => r[0].ToString().Trim().ToLowerInvariant() == userName);
 				if (thisRow == null) {
 					Logger.LogDebug($"Adding row for {userName}");
-					appends.Values.Add(new List<object>() {userName, numPixelsToAdd });
-				} else {
+					appends.Values.Add(new List<object>() { userName, numPixelsToAdd });
+				}
+				else {
 					Logger.LogDebug($"Updating row for {userName}");
 
 					var pos = values.IndexOf(thisRow);
@@ -106,7 +107,7 @@ namespace Quiltoni.PixelBot
 
 			ResortSpreadsheet(service);
 
-			WriteActivityLogRowsToSheet(service, logrows);
+			WriteActivityLogRowsToSheet(service, logrows).Execute();
 
 			Twitch.BroadcastMessageOnChannel($"Successfully granted {numPixelsToAdd} {Models.Currency.Name} to all people in chat");
 		}
@@ -126,7 +127,7 @@ namespace Quiltoni.PixelBot
 					new List<object> {userName, numPixelsToAdd}
 				};
 				var append = new AppendCellsRequest();
-				append.SheetId = 0;
+				append.SheetId = GetSheetIdForTitle(service, "Sheet1");
 				append.Fields = "*";
 				var newRow = new RowData() { Values = new List<CellData> { } };
 				newRow.Values.Add(new CellData { UserEnteredValue = new ExtendedValue { StringValue = userName } });
@@ -188,7 +189,7 @@ namespace Quiltoni.PixelBot
 
 			for (var pos = 0; pos < sheets.Count; pos++) {
 				if (sheets[pos].Properties.Title.Equals(sheetTitle, StringComparison.InvariantCultureIgnoreCase)) {
-					return pos;
+					return sheets[pos].Properties.SheetId.Value;
 				}
 			}
 
@@ -205,8 +206,8 @@ namespace Quiltoni.PixelBot
 				SortRange = new SortRangeRequest() {
 					Range = new GridRange() {
 						StartColumnIndex = 0,
-						EndColumnIndex = 12,
-						StartRowIndex = 3,
+						EndColumnIndex = 2,
+						StartRowIndex = 1,
 						SheetId = sheetId
 					},
 					SortSpecs = new List<SortSpec>() {
@@ -227,8 +228,8 @@ namespace Quiltoni.PixelBot
 					},
 					Range = new GridRange() {
 						StartColumnIndex = 1,
-						EndColumnIndex = 2,
-						StartRowIndex = 3,
+						EndColumnIndex = 3,
+						StartRowIndex = 1,
 						SheetId = sheetId
 					},
 					Fields = "userEnteredFormat(horizontalAlignment)"
@@ -238,8 +239,8 @@ namespace Quiltoni.PixelBot
 
 
 			IList<Request> requests = new List<Request> {
-				sortReq,
-				formatReq
+				sortReq
+				//,formatReq
 			};
 			reqbody.Requests = requests;
 
@@ -259,13 +260,14 @@ namespace Quiltoni.PixelBot
 			return newRow;
 		}
 
-		private void WriteActivityLogRowsToSheet(SheetsService service, List<IList<object>> rows) {
+		private AppendRequest WriteActivityLogRowsToSheet(SheetsService service, List<IList<object>> rows) {
 			CreateLogSheet(service);
 
 			AppendRequest appendRequest = service.Spreadsheets.Values.Append(new ValueRange { Values = rows }, Spreadsheet, "PixelBotLog!A2:E");
 			appendRequest.InsertDataOption = AppendRequest.InsertDataOptionEnum.INSERTROWS;
 			appendRequest.ValueInputOption = AppendRequest.ValueInputOptionEnum.USERENTERED;
-			_ = appendRequest.Execute();
+			return appendRequest;
+
 		}
 
 		private void LogActivityOnSheet(SheetsService service, string actingUser, string userModified, string command, int change = 0) {
@@ -357,10 +359,9 @@ namespace Quiltoni.PixelBot
 			userName = userName.ToLowerInvariant().Trim();
 
 			var thisRow = values.FirstOrDefault(r => r[0].ToString().Trim().ToLowerInvariant() == userName);
-			if (thisRow == null || thisRow.Count < 2) 
-			{
+			if (thisRow == null || thisRow.Count < 2) {
 				return 0;
-			} 
+			}
 
 			return int.Parse(thisRow[1].ToString());
 
@@ -381,6 +382,75 @@ namespace Quiltoni.PixelBot
 			return response.Values;
 
 		}
+
+		public virtual void BatchAddPixelsForUsers(IEnumerable<(string userName, int numPixelsToAdd, string actingUser)> recordsToLoad) {
+
+			SheetsService service;
+			IList<IList<object>> values;
+			GetSheetService(out service, out values);
+			var sheetId = GetSheetIdForTitle(service, "Sheet1");
+			var request = new BatchUpdateSpreadsheetRequest() { Requests = new List<Request>() };
+			var logRows = new List<IList<object>>();
+			var rangeToUpdate = new List<ValueRange>();
+
+			foreach (var record in recordsToLoad) {
+
+				var userName = record.userName.ToLowerInvariant().Trim();
+				var thisRow = values.FirstOrDefault(r => r[0].ToString().Trim().ToLowerInvariant() == userName);
+
+				if (thisRow == null) {
+					Logger.LogDebug($"Adding row for {userName}");
+
+					var rangeToSet = new List<IList<object>> {
+					new List<object> {userName, record.numPixelsToAdd}
+				};
+
+					var append = new AppendCellsRequest();
+					append.SheetId = sheetId;
+					append.Fields = "*";
+					var newRow = new RowData() { Values = new List<CellData> { } };
+					newRow.Values.Add(new CellData { UserEnteredValue = new ExtendedValue { StringValue = userName } });
+					newRow.Values.Add(new CellData { UserEnteredValue = new ExtendedValue { NumberValue = record.numPixelsToAdd }, UserEnteredFormat = new CellFormat { HorizontalAlignment = "CENTER" } });
+
+					append.Rows = new[] { newRow };
+					var appendRequest = new Request();
+					appendRequest.AppendCells = append;
+					request.Requests.Add(appendRequest);
+
+					var newLogRow = ActivityLogRow(record.actingUser, record.userName, "Batch Update", record.numPixelsToAdd);
+					logRows.Add(newLogRow);
+
+				}
+				else {
+
+					Logger.LogDebug($"Updating row for {userName}");
+
+					var pos = values.IndexOf(thisRow);
+					var newValue = (int.Parse(thisRow.Count < 2 ? "0" : thisRow[1].ToString())) + record.numPixelsToAdd;
+					if (newValue < 0) newValue = 0;
+					var rangeToSet = new List<IList<object>> {
+						new List<object> {newValue}
+					};
+					rangeToUpdate.Add(new ValueRange {
+						Values = rangeToSet,
+						Range = $"Sheet1!B{2 + pos}"
+					});
+
+					var newLogRow = ActivityLogRow(record.actingUser, record.userName, "Batch Update", record.numPixelsToAdd);
+					logRows.Add(newLogRow);
+
+				}
+
+			}
+
+			WriteActivityLogRowsToSheet(service, logRows).Execute();
+			new BatchUpdateRequest(service, new BatchUpdateValuesRequest() { Data = rangeToUpdate, ValueInputOption="USER_ENTERED" }, Spreadsheet).Execute();
+			service.Spreadsheets.BatchUpdate(request, Spreadsheet).Execute();
+			ResortSpreadsheet(service);
+
+		}
+
+
 	}
 
 }
