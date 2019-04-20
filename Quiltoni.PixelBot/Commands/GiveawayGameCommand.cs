@@ -20,7 +20,7 @@ namespace Quiltoni.PixelBot.Commands
 				{ "help", (Game, twitch, cmd) => Game.Help(twitch, cmd) },
 				{ "open", (Game, twitch, cmd) => Game.Open(twitch, cmd) },
 				{ "clear", (Game, twitch, cmd) => Game.ClearEntrants() },
-				{ "start", (Game, twitch, cmd) => Game.Start(twitch, cmd) },
+				{ "start", (Game, twitch, cmd) => Task.Run(() => Game.Start(twitch, cmd)) },
 				{ "exclude", (Game, twitch, cmd) => Game.Exclude(twitch, cmd) },
 				{ "end", (Game, twitch, cmd) => Game.End() }
 			};
@@ -32,7 +32,7 @@ namespace Quiltoni.PixelBot.Commands
 
 		}
 
-		public ChatUser ChatUser { get; private set; }
+		public ChatUser ChatUser { get; set; }
 
 		public IEnumerable<string> Arguments { get; private set; }
 
