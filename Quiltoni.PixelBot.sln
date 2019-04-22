@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PixelBot.ReplayLog", "PixelBot.ReplayLog\PixelBot.ReplayLog.csproj", "{CA3F8B63-F4FB-468E-B09A-00329925A378}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{4E209FFE-9971-4BEC-9A75-79A868B22F79}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E209FFE-9971-4BEC-9A75-79A868B22F79}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E209FFE-9971-4BEC-9A75-79A868B22F79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA3F8B63-F4FB-468E-B09A-00329925A378}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA3F8B63-F4FB-468E-B09A-00329925A378}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA3F8B63-F4FB-468E-B09A-00329925A378}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA3F8B63-F4FB-468E-B09A-00329925A378}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
