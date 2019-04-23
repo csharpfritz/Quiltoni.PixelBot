@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Quiltoni.PixelBot.GiveawayGame;
 using TwitchLib.Client.Models;
 
@@ -9,11 +10,12 @@ namespace Quiltoni.PixelBot.Commands
 {
 	public class GiveawayGameCommand : IBotCommand, IBotListensToMesages
 	{
-		public bool Enabled { get; } = true;
+		public bool Enabled => bool.Parse(Configuration["PixelBot:Commands:GiveawayGameCommand"]);
 
 		public string CommandText => "giveaway";
 
 		public GiveawayGame.GiveawayGame Game { get; }
+		public IConfiguration Configuration { get; }
 
 		public static readonly Dictionary<string, Action<GiveawayGame.GiveawayGame, IChatService, GiveawayGameCommand>> _Verbs =
 			new Dictionary<string, Action<GiveawayGame.GiveawayGame, IChatService, GiveawayGameCommand>> {
@@ -26,9 +28,10 @@ namespace Quiltoni.PixelBot.Commands
 			};
 
 
-		public GiveawayGameCommand(GiveawayGame.GiveawayGame game) {
+		public GiveawayGameCommand(GiveawayGame.GiveawayGame game, IConfiguration config) {
 
 			this.Game = game;
+			this.Configuration = config;
 
 		}
 
