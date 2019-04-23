@@ -5,7 +5,6 @@
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <UserSecretsId>73a5524c-fac1-41f2-bd74-5bb75afd7a8c</UserSecretsId>
     <LangVersion>7.3</LangVersion>
-		<RuntimeIdentifier>win10-x64</RuntimeIdentifier>
   </PropertyGroup>
 
   <ItemGroup>
