@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Moq;
 using Moq.Contrib.HttpClient;
@@ -37,7 +38,7 @@ namespace Quiltoni.Test.GiveawayGame
 			_MockClientFactory = _MockHandler.CreateClientFactory();
 
 			_Game = new CORE.GiveawayGame(_MockClientFactory, Options.Create(Config));
-			_Cmd = new PixelBot.Commands.GiveawayGameCommand(_Game) {
+			_Cmd = new PixelBot.Commands.GiveawayGameCommand(_Game, new Mock<IConfiguration>().Object) {
 				ChatUser = new PixelBot.Commands.ChatUser {
 					IsBroadcaster = true
 				}
