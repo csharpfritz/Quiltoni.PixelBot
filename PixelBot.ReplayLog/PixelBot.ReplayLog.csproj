@@ -2,14 +2,14 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Google.Apis.Sheets.v4" Version="1.38.2.1565" />
     <PackageReference Include="LINQtoCSV.Core" Version="1.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.0.0-preview4" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="3.0.0-preview4" />
   </ItemGroup>
 
   <ItemGroup>
