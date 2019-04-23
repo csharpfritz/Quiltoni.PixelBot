@@ -21,6 +21,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PixelBot.Orchestrator", "PixelBot.Orchestrator\PixelBot.Orchestrator.csproj", "{C68CFF33-594D-40B0-9CD9-7AB18FCA8486}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PixelBot.Workers", "PixelBot.Workers\PixelBot.Workers.csproj", "{82346639-FB33-468E-9BBE-12153506700A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBot.ReplayLog", "PixelBot.ReplayLog\PixelBot.ReplayLog.csproj", "{CA3F8B63-F4FB-468E-B09A-00329925A378}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -52,6 +53,10 @@ Global
 		{82346639-FB33-468E-9BBE-12153506700A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82346639-FB33-468E-9BBE-12153506700A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82346639-FB33-468E-9BBE-12153506700A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA3F8B63-F4FB-468E-B09A-00329925A378}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA3F8B63-F4FB-468E-B09A-00329925A378}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA3F8B63-F4FB-468E-B09A-00329925A378}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA3F8B63-F4FB-468E-B09A-00329925A378}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

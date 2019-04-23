@@ -76,6 +76,10 @@ namespace Quiltoni.PixelBot.Pages
 		[Required]
 		public bool EnableDrinkMeCommand { get; set; }
 
+		[BindProperty]
+		[Required]
+		public bool EnableGiveawayGameCommand { get; set; }
+
 		public void OnGet() { }
 
 		public async Task<IActionResult> OnPost() {
@@ -93,6 +97,7 @@ namespace Quiltoni.PixelBot.Pages
 				var commandsToken = myRoot["Commands"];
 				commandsToken["GuessTimeCommand"] = EnableGuessCommand;
 				commandsToken["DrinkMeCommand"] = EnableDrinkMeCommand;
+				commandsToken["GiveawayGameCommand"] = EnableGiveawayGameCommand;
 
 				var twitchToken = myRoot["Twitch"];
 				twitchToken["UserName"] = this.BotName;

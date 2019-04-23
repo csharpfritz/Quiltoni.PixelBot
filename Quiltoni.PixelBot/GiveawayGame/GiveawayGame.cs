@@ -27,9 +27,11 @@ namespace Quiltoni.PixelBot.GiveawayGame
 		private IChatService _Twitch;
 		private string _TheWinner;
 
-		public static bool EnableCountdownTimer = true;
+		public bool EnableCountdownTimer = true;
 
-		public GiveawayGame(IHttpClientFactory factory, IOptions<PixelBotConfig> config) {
+		public IEnumerable<string> Entrants { get { return _entrants.ToArray(); } }
+
+		public GiveawayGame(IHttpClientFactory factory, IOptions<PixelBotConfig> config, bool enableCountdown = true) {
 
 			// Cheer 400 pharewings 24/3/19 
 			// Cheer 2500 devlead 28/3/19 
@@ -50,16 +52,19 @@ namespace Quiltoni.PixelBot.GiveawayGame
 
 			_machine.Configure(GiveawayGameState.Open)
 				.InternalTransition(_setHelpTrigger, OnHelpCommand)
+				.Ignore(GiveawayGameTrigger.Open)
 				.Permit(GiveawayGameTrigger.End, GiveawayGameState.Idle)
 				.PermitDynamicIf(_setStartTrigger, WhenStarting, CanStart);
 
 			_machine.Configure(GiveawayGameState.Running)
 				.OnEntryAsync(TriggerRunningAnimation)
+				.Ignore(GiveawayGameTrigger.Open)
 				.InternalTransition(_setHelpTrigger, OnHelpCommand)
 				.Permit(GiveawayGameTrigger.AnnounceWinner, GiveawayGameState.Reward);
 
 			_machine.Configure(GiveawayGameState.Reward)
 				.OnEntry(NotifyWinner)
+				.Ignore(GiveawayGameTrigger.Open)
 				.Permit(GiveawayGameTrigger.RewardCompleted, GiveawayGameState.Idle);
 
 
@@ -77,7 +82,9 @@ namespace Quiltoni.PixelBot.GiveawayGame
 			}
 
 			// TODO: Replace this with an event raised from the Razor Page and flows through to the statemachine
-			await Task.Delay(9000 + 5000); // Adding 5 seconds to account for Twitch latency
+			if (EnableCountdownTimer) {
+				await Task.Delay(9000 + 5000); // Adding 5 seconds to account for Twitch latency
+			}
 			_machine.Fire(GiveawayGameTrigger.AnnounceWinner);
 
 		}
@@ -94,7 +101,7 @@ namespace Quiltoni.PixelBot.GiveawayGame
 		}
 
 
-		internal void EnterGiveaway(string userName) {
+		public void EnterGiveaway(string userName) {
 
 			if (_entrants.Contains(userName)) return;
 
@@ -197,14 +204,24 @@ namespace Quiltoni.PixelBot.GiveawayGame
 
 		public void Open(IChatService twitch, GiveawayGameCommand cmd) {
 
+			if (State == GiveawayGameState.Reward || State == GiveawayGameState.Running) {
+				twitch.WhisperMessage(cmd.ChatUser.Username, "Game is not ready to be re-opened.  Wait for the winner to be announced before executing !giveaway open");
+				return;
+			}
+
 			_machine.Fire(_setOpenTrigger, twitch, cmd);
 
 		}
 
-		public void Start(IChatService twitch, GiveawayGameCommand cmd) {
+		public void Start(IChatService twitch, GiveawayGameCommand cmd, int countdownSeconds = 5) {
+
+			if (State == GiveawayGameState.Reward || State == GiveawayGameState.Running) {
+				twitch.WhisperMessage(cmd.ChatUser.Username, "Game is not ready to be re-started.  Wait for the winner to be announced before executing !giveaway start");
+				return;
+			}
 
 			if (EnableCountdownTimer) {
-				for (var i = 5; i > 0; i--) {
+				for (var i = countdownSeconds; i > 0; i--) {
 
 					Task.Delay(1000).GetAwaiter().GetResult();
 					twitch.BroadcastMessageOnChannel($"Giveaway starting in {i} seconds...");

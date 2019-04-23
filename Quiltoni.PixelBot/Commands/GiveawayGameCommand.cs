@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Quiltoni.PixelBot.GiveawayGame;
 using TwitchLib.Client.Models;
 
@@ -9,30 +10,32 @@ namespace Quiltoni.PixelBot.Commands
 {
 	public class GiveawayGameCommand : IBotCommand, IBotListensToMesages
 	{
-		public bool Enabled { get; } = true;
+		public bool Enabled => bool.Parse(Configuration["PixelBot:Commands:GiveawayGameCommand"]);
 
 		public string CommandText => "giveaway";
 
 		public GiveawayGame.GiveawayGame Game { get; }
+		public IConfiguration Configuration { get; }
 
 		public static readonly Dictionary<string, Action<GiveawayGame.GiveawayGame, IChatService, GiveawayGameCommand>> _Verbs =
 			new Dictionary<string, Action<GiveawayGame.GiveawayGame, IChatService, GiveawayGameCommand>> {
 				{ "help", (Game, twitch, cmd) => Game.Help(twitch, cmd) },
 				{ "open", (Game, twitch, cmd) => Game.Open(twitch, cmd) },
 				{ "clear", (Game, twitch, cmd) => Game.ClearEntrants() },
-				{ "start", (Game, twitch, cmd) => Game.Start(twitch, cmd) },
+				{ "start", (Game, twitch, cmd) => Task.Run(() => Game.Start(twitch, cmd)) },
 				{ "exclude", (Game, twitch, cmd) => Game.Exclude(twitch, cmd) },
 				{ "end", (Game, twitch, cmd) => Game.End() }
 			};
 
 
-		public GiveawayGameCommand(GiveawayGame.GiveawayGame game) {
+		public GiveawayGameCommand(GiveawayGame.GiveawayGame game, IConfiguration config) {
 
 			this.Game = game;
+			this.Configuration = config;
 
 		}
 
-		public ChatUser ChatUser { get; private set; }
+		public ChatUser ChatUser { get; set; }
 
 		public IEnumerable<string> Arguments { get; private set; }
 
