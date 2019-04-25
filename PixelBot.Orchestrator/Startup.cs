@@ -14,7 +14,6 @@ using Microsoft.Extensions.Options;
 using PixelBot.Orchestrator.Actors;
 using PixelBot.Orchestrator.Components;
 using PixelBot.Orchestrator.Data;
-using PixelBot.Orchestrator.Services;
 using Quiltoni.PixelBot.Core.Domain;
 
 namespace PixelBot.Orchestrator
@@ -43,7 +42,6 @@ namespace PixelBot.Orchestrator
 
 			services.Configure<BotConfiguration>(Configuration.GetSection("BotConfig"));
 
-			services.AddSingleton<WeatherForecastService>();
 			services.AddSingleton<ActorSystem>(_ => ActorSystem.Create("BotService"));
 
 			services.AddTransient<IChannelConfigurationContext, ChannelConfigurationContext>();

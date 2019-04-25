@@ -4,8 +4,8 @@ using Akka.Actor;
 using PixelBot.Orchestrator.Actors.ChannelEvents;
 using Quiltoni.PixelBot.Core.Domain;
 using TwitchLib.Client;
-using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
+using MSG = Quiltoni.PixelBot.Core.Messages;
 
 namespace PixelBot.Orchestrator.Actors
 {
@@ -25,11 +25,24 @@ namespace PixelBot.Orchestrator.Actors
 		private IActorRef Raid;
 		private IActorRef ReSub;
 
-
-
 		public ChannelActor(ChannelConfiguration config) {
 
 			this.Config = config;
+
+			Receive<MSG.WhisperMessage>(msg => WhisperMessage(msg));
+			Receive<MSG.BroadcastMessage>(msg => BroadcastMessage(msg));
+
+		}
+
+		private void BroadcastMessage(MSG.BroadcastMessage msg) {
+
+			_Client.SendMessage(Config.ChannelName, msg.Message);
+
+		}
+
+		private void WhisperMessage(MSG.WhisperMessage msg) {
+
+			_Client.SendWhisper(msg.UserToWhisper, msg.Message);
 
 		}
 
@@ -53,6 +66,7 @@ namespace PixelBot.Orchestrator.Actors
 			_Client.OnConnected += (sender, args) => _Client.JoinChannel(Config.ChannelName);
 
 			// TODO: Handle unwanted disconnect
+			// Cheer 142 cpayette 25/4/19 
 
 			StartEventHandlerActors();
 
@@ -78,8 +92,8 @@ namespace PixelBot.Orchestrator.Actors
 
 			IActorRef CreateActor<T>() where T : ReceiveActor
 			{
-				var props = Props.Create<T>(Config);
 
+				var props = Props.Create<T>(Config);
 				return Context.ActorOf(props, $"event_{typeof(T).Name}");
 
 			}
