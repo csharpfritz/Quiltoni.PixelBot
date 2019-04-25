@@ -40,9 +40,8 @@ namespace PixelBot.Orchestrator.Actors
 			}
 
 			var config = DataContext.GetConfigurationForChannel(msg.ChannelName);
-			var props = Props.Create<ChannelActor>(config);
 
-			var child = Context.ActorOf(props, $"channel_{msg.ChannelName}");
+			var child = Context.ActorOf(ChannelActor.Props(config), $"channel_{msg.ChannelName}");
 			_ChannelActors.Add(msg.ChannelName, child);
 
 		}

@@ -93,7 +93,7 @@ namespace PixelBot.Orchestrator.Actors
 			IActorRef CreateActor<T>() where T : ReceiveActor
 			{
 
-				var props = Props.Create<T>(Config);
+				var props = Akka.Actor.Props.Create<T>(Config);
 				return Context.ActorOf(props, $"event_{typeof(T).Name}");
 
 			}
@@ -103,6 +103,10 @@ namespace PixelBot.Orchestrator.Actors
 		public override void AroundPostStop() {
 			_Client.Disconnect();
 			base.AroundPostStop();
+		}
+
+		public static Props Props(ChannelConfiguration config) {
+				return Akka.Actor.Props.Create<ChannelActor>(config);
 		}
 
 	}
