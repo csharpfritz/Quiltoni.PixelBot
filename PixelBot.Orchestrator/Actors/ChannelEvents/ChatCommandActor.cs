@@ -28,7 +28,7 @@ namespace PixelBot.Orchestrator.Actors.ChannelEvents
 
 				if (thisCommand is null) {
 
-					Context.Parent.Tell(new WhisperMessage(cmd.Command.ChatMessage.Username, $"Unknown command '{cmd.Command.CommandText}' - use !help to get a list of valid commands"));
+					Context.Sender.Tell(new WhisperMessage(cmd.Command.ChatMessage.Username, $"Unknown command '{cmd.Command.CommandText}' - use !help to get a list of valid commands"));
 					return;
 
 				}
@@ -41,7 +41,7 @@ namespace PixelBot.Orchestrator.Actors.ChannelEvents
 				thisCommand = _Commands[cmd.Command.CommandText];
 			}
 
-			thisCommand.Tell(cmd, Context.Parent);
+			thisCommand.Tell(cmd, Context.Sender);
 
 		}
 
@@ -54,6 +54,10 @@ namespace PixelBot.Orchestrator.Actors.ChannelEvents
 
 			return null;
 
+		}
+
+		public static Props Props(ChannelConfiguration config) {
+			return Akka.Actor.Props.Create<ChatCommandActor>(config);
 		}
 
 	}
