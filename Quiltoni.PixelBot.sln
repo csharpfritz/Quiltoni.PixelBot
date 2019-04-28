@@ -24,7 +24,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBot.Workers", "PixelBo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBot.ReplayLog", "PixelBot.ReplayLog\PixelBot.ReplayLog.csproj", "{CA3F8B63-F4FB-468E-B09A-00329925A378}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PixelBot.OrchestratorTests", "PixelBot.OrchestratorTests\PixelBot.OrchestratorTests.csproj", "{326AE880-9CE0-45C2-A89D-3D9F07286AED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBot.OrchestratorTests", "PixelBot.OrchestratorTests\PixelBot.OrchestratorTests.csproj", "{326AE880-9CE0-45C2-A89D-3D9F07286AED}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{A16EF417-050E-42B6-AACB-1D34EFFDEBBE}"
 EndProject

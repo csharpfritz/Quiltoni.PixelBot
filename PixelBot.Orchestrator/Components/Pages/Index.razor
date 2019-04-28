@@ -9,16 +9,33 @@ Welcome to your new app.
 <input type="text" bind="@channelName" placeholder="Channel to Join" />
 <button onclick="@JoinChannel">Join</button>
 
+<h3>Channels currently joined to:</h3>
+<ul>
+	@foreach (var channel in CurrentChannels)
+	{
+		<li>@channel</li>
+	}
+</ul>
+
 @functions {
 
 	[Parameter]
 	public string channelName { get; set; }
 
+	public string[] CurrentChannels = new string[] { };
+
+	protected override async Task OnInitAsync()
+	{
+		CurrentChannels = (await channelManager.Ask(new ReportCurrentChannels())) as string[];
+	}
+
 	void JoinChannel()
 	{
 
-		(channelManager as IActorRef).Tell(new JoinChannel(channelName));
+		channelManager.Tell(new JoinChannel(channelName));
 		channelName = null;
+
+		CurrentChannels = (channelManager.Ask(new ReportCurrentChannels()).GetAwaiter().GetResult()) as string[];
 
 	}
 

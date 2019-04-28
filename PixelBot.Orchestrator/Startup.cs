@@ -77,7 +77,7 @@ namespace PixelBot.Orchestrator
 			app.UseEndpoints(routes => {
 				routes.MapRazorPages();
 				routes.MapControllers();
-				routes.MapBlazorHub<App>("app");
+				routes.MapBlazorHub();
 				routes.MapFallbackToPage("/Index");
 			});
 		}

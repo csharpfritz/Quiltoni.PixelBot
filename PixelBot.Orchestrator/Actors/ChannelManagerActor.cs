@@ -25,6 +25,9 @@ namespace PixelBot.Orchestrator.Actors
 			Logger = Context.GetLogger();
 
 			Receive<JoinChannel>(this.GetChannelActor);
+			Receive<ReportCurrentChannels>(_ => {
+				Sender.Tell(_ChannelActors.Select(kv => kv.Key).ToArray());
+			});
 			this.DataContext = dataContext;
 
 		}
