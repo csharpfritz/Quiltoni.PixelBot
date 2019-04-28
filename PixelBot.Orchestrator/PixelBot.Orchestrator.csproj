@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PixelBot.Games.GuessGame\PixelBot.Games.GuessGame.csproj" />
     <ProjectReference Include="..\Quiltoni.PixelBot.Core\Quiltoni.PixelBot.Core.csproj" />
   </ItemGroup>
 

@@ -9,7 +9,7 @@ using TwitchLib.Client.Events;
 namespace PixelBot.Orchestrator.Actors.Commands
 {
 
-	public class TealOldManCommandActor : ReceiveActor
+	public class TealOldManCommandActor : ReceiveActor, IBotCommandActor
 	{
 
 		public TealOldManCommandActor() {
@@ -17,6 +17,8 @@ namespace PixelBot.Orchestrator.Actors.Commands
 			Receive<OnChatCommandReceivedArgs>(_ => Sender.Forward(OutMessage));
 
 		}
+
+		public string CommandText => "tealoldman";
 
 		public static readonly BroadcastMessage OutMessage =
 			new BroadcastMessage("TealOldMan is blowing up chat!  EVERYTHING is now blue!");

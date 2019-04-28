@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Quiltoni.PixelBot.Core\Quiltoni.PixelBot.Core.csproj" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Stateless" Version="4.2.1" />
+	</ItemGroup>
+
+</Project>

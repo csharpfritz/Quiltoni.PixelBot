@@ -10,6 +10,8 @@ namespace Quiltoni.PixelBot.Core.Domain
 
 		public string ChannelName { get; set; }
 
+		public bool GuessGameEnabled { get; set; } = false;
+
 		// TODO: Add other configuration options later
 
 	}

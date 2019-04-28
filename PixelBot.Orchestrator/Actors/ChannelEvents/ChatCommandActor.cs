@@ -13,43 +13,51 @@ namespace PixelBot.Orchestrator.Actors.ChannelEvents
 
 		private readonly Dictionary<string, IActorRef> _Commands = new Dictionary<string, IActorRef>();
 
+		public ChannelConfiguration Config { get; }
+
 		public ChatCommandActor(ChannelConfiguration config) {
 
+			this.Config = config;
 			Receive<OnChatCommandReceivedArgs>(cmd => OnChatCommandReceived(cmd));
 			
 
 		}
 
-		private void OnChatCommandReceived(OnChatCommandReceivedArgs cmd) {
+		private void OnChatCommandReceived(OnChatCommandReceivedArgs args) {
 
 			IActorRef thisCommand = null;
-			if (!_Commands.ContainsKey(cmd.Command.CommandText)) {    // !tealoldman
-				thisCommand = CreateActorForCommand(cmd.Command.CommandText);
+			if (!_Commands.ContainsKey(args.Command.CommandText)) {    // !tealoldman
+				thisCommand = CreateActorForCommand(args.Command.CommandText);
 
 				if (thisCommand is null) {
 
-					Context.Sender.Tell(new WhisperMessage(cmd.Command.ChatMessage.Username, $"Unknown command '{cmd.Command.CommandText}' - use !help to get a list of valid commands"));
+					Context.Sender.Tell(new WhisperMessage(args.Command.ChatMessage.Username, $"Unknown command '{args.Command.CommandText}' - use !help to get a list of valid commands"));
 					return;
 
 				}
 				else {
-					_Commands.Add(cmd.Command.CommandText, thisCommand);
+					_Commands.Add(args.Command.CommandText, thisCommand);
 				}
 
 			}
 			else {
-				thisCommand = _Commands[cmd.Command.CommandText];
+				thisCommand = _Commands[args.Command.CommandText];
 			}
 
-			thisCommand.Tell(cmd, Context.Sender);
+			thisCommand.Tell(args, Context.Sender);
 
 		}
 
 		private IActorRef CreateActorForCommand(string commandText) {
 			
+			// TODO: Determine best way to identify, create, and load various command actors
+
 			switch (commandText) {
 				case "tealoldman":
 					return Context.ActorOf<TealOldManCommandActor>();
+				case "guess":
+					return Config.GuessGameEnabled ? Context.ActorOf<GuessGameCommandActor>()
+						: null;
 			}
 
 			return null;
