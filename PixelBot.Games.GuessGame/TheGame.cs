@@ -168,15 +168,6 @@ namespace PixelBot.Games.GuessGame
 
 		private void SendGenericCommand(IChatService service, ChatCommand cmd) {
 			if (service == null) throw new ArgumentException("IChatService should not be null");
-			//var validator = new ChatCommandValidator();
-			//var results = validator.Validate(cmd);
-			//if (!results.IsValid) {
-			//	foreach (var failure in results.Errors) {
-			//		//todo: move to logger??
-			//		Console.WriteLine("Property " + failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage);
-			//	}
-			//	throw new ArgumentException("The requested command is invalid", nameof(cmd));
-			//}
 
 			if (cmd.ArgumentsAsList.Count == 0) {
 				_machine.Fire(_setHelpTrigger, service, cmd);
