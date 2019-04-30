@@ -11,7 +11,7 @@ using TwitchLib.Client.Events;
 
 namespace PixelBot.Orchestrator.Actors.Commands
 {
-	public class GuessGameCommandActor : ReceiveActor, IBotCommandActor, IChatService
+	public class GuessGameCommandActor : ReceiveActor, IChatService, IBotCommandActor
 	{
 
 		// Cheer 400 cpayette 05/3/19 
@@ -86,11 +86,11 @@ namespace PixelBot.Orchestrator.Actors.Commands
 
 		}
 
-		//void IChatService.BroadcastMessageOnChannel(string message) {
+		public void BroadcastMessageOnChannel(string message) {
 
-		//	Sender.Tell(new BroadcastMessage(message));
+			Sender.Tell(new BroadcastMessage(message));
 
-		//}
+		}
 
 		public List<string> ArgumentsAsList { get; set; }
 
