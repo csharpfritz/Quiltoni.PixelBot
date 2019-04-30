@@ -10,6 +10,7 @@ using TwitchLib.Client.Models;
 using TwitchLib.Client.Models.Internal;
 using Xunit;
 using CORE = PixelBot.Orchestrator.Actors;
+using TWITCH = TwitchLib.Client.Models;
 using MSG = Quiltoni.PixelBot.Core.Messages;
 
 namespace PixelBot.OrchestratorTests.ChatCommandActor
@@ -22,7 +23,7 @@ namespace PixelBot.OrchestratorTests.ChatCommandActor
 		public GivenCommandThatDoesntExist() {
 
 			_Args = new OnChatCommandReceivedArgs {
-				Command = new ChatCommand(ChatMessageFromText(CommandThatDoesntExist))
+				Command = new TWITCH.ChatCommand(ChatMessageFromText(CommandThatDoesntExist))
 			};
 
 		}

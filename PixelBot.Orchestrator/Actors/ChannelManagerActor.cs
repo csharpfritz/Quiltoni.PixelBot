@@ -35,17 +35,19 @@ namespace PixelBot.Orchestrator.Actors
 		public IChannelConfigurationContext DataContext { get; }
 		public ILoggingAdapter Logger { get; }
 
-		private void GetChannelActor(JoinChannel msg) {
+		private bool GetChannelActor(JoinChannel msg) {
 
 			if (_ChannelActors.ContainsKey(msg.ChannelName)) {
 				Logger.Log(Akka.Event.LogLevel.InfoLevel, $"Actor for channel '{msg.ChannelName}' already present.");
-				return;
+				return false;
 			}
 
 			var config = DataContext.GetConfigurationForChannel(msg.ChannelName);
 
 			var child = Context.ActorOf(ChannelActor.Props(config), $"channel_{msg.ChannelName}");
 			_ChannelActors.Add(msg.ChannelName, child);
+
+			return true;
 
 		}
 

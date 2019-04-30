@@ -19,6 +19,7 @@ namespace PixelBot.Orchestrator.Actors.Commands
 		// Cheer 100 jamesmontemagno 05/3/19 
 		// Cheer 550 InaliTsusasi 28/4/19 
 		// Cheer 110 TheMichaelJolley 28/4/19 
+		// Cheer 156 cpayette 30/4/19 
 
 		public string CommandText => "guess";
 
@@ -30,7 +31,7 @@ namespace PixelBot.Orchestrator.Actors.Commands
 
 		}
 
-		public void Execute(OnChatCommandReceivedArgs args) {
+		public bool Execute(OnChatCommandReceivedArgs args) {
 
 			var theCmd = new ChatCommand() {
 				ArgumentsAsList = args.Command.ArgumentsAsList,
@@ -42,7 +43,7 @@ namespace PixelBot.Orchestrator.Actors.Commands
 
 			if (!args.Command.ArgumentsAsList.Any()) {
 				_TheGame.Help(this, theCmd);
-				return;
+				return true;
 			}
 
 			try {
@@ -75,6 +76,8 @@ namespace PixelBot.Orchestrator.Actors.Commands
 				_TheGame.Help(this, theCmd);
 			}
 
+			return true;
+
 		}
 
 		public void WhisperMessage(string username, string message) {
@@ -83,9 +86,13 @@ namespace PixelBot.Orchestrator.Actors.Commands
 
 		}
 
-		public List<string> ArgumentsAsList { get; set; }
+		//void IChatService.BroadcastMessageOnChannel(string message) {
 
-		public ChatUser ChatUser { get; set; }
+		//	Sender.Tell(new BroadcastMessage(message));
+
+		//}
+
+		public List<string> ArgumentsAsList { get; set; }
 
 	}
 }
