@@ -11,7 +11,7 @@ namespace Quiltoni.PixelBot
 
 		public GiveawayGame.GiveawayGameConfiguration GiveawayGame { get; set; }
 
-		public CurrencyConfig Currency { get; set; }
+		public CurrencyConfig Currency { get; set; } = new CurrencyConfig();
 
 		public Dictionary<string, bool> Commands { get; set; }
 
@@ -35,6 +35,8 @@ namespace Quiltoni.PixelBot
 
 		public class CurrencyConfig
 		{
+
+			public bool Enabled { get; set; } = true;
 
 			public string Name { get; set; } = "pixels";
 

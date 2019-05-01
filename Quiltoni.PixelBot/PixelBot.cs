@@ -28,7 +28,6 @@ namespace Quiltoni.PixelBot
 		private TwitchClient _Client;
 		static string ApplicationName = "PixelBot";
 		private readonly ISheetProxy _GoogleSheet;
-		private readonly bool _EnableSubPixels = false;
 
 		public PixelBot(IEnumerable<IBotCommand> commands, IOptions<PixelBotConfig> configuration, ILoggerFactory loggerFactory)
 		{
@@ -45,6 +44,7 @@ namespace Quiltoni.PixelBot
 		public static PixelBotConfig Config { get; set; }
 		public IEnumerable<IBotCommand> Commands { get; }
 		public ILogger Logger { get; }
+		private bool EnableSubPixels { get { return Config.Currency.Enabled; } }
 
 
 		public string Channel { get { return Config.Twitch.Channel; } }
@@ -98,7 +98,7 @@ namespace Quiltoni.PixelBot
 		private void _Client_OnRaidNotification(object sender, OnRaidNotificationArgs e)
 		{
 
-			if (!_EnableSubPixels) return;
+			if (!EnableSubPixels) return;
 
 			// Exit if we do not meet the minimum of 3 viewers
 			if (int.Parse(e.RaidNotificaiton.MsgParamViewerCount) < 3) return;
@@ -120,7 +120,7 @@ namespace Quiltoni.PixelBot
 		private void _Client_OnReSubscriber(object sender, OnReSubscriberArgs e)
 		{
 
-			if (!_EnableSubPixels) return;
+			if (!EnableSubPixels) return;
 
 			_GoogleSheet.AddPixelsForUser(e.ReSubscriber.DisplayName, _PixelRewards[e.ReSubscriber.SubscriptionPlan], "PixelBot-Resub");
 
@@ -129,7 +129,7 @@ namespace Quiltoni.PixelBot
 		private void _Client_OnNewSubscriber(object sender, OnNewSubscriberArgs e)
 		{
 
-			if (!_EnableSubPixels) return;
+			if (!EnableSubPixels) return;
 
 			_GoogleSheet.AddPixelsForUser(e.Subscriber.DisplayName, _PixelRewards[e.Subscriber.SubscriptionPlan], "PixelBot-Sub");
 
@@ -138,7 +138,7 @@ namespace Quiltoni.PixelBot
 		private void _Client_OnGiftedSubscription(object sender, OnGiftedSubscriptionArgs e)
 		{
 
-			if (!_EnableSubPixels) return;
+			if (!EnableSubPixels) return;
 
 			_GoogleSheet.AddPixelsForUser(e.GiftedSubscription.DisplayName, 2, "PixelBot-SubGifter");
 			_GoogleSheet.AddPixelsForUser(e.GiftedSubscription.MsgParamRecipientDisplayName, _PixelRewards[e.GiftedSubscription.MsgParamSubPlan], "PixelBot-SubGift");
