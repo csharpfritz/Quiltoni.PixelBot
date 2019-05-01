@@ -29,14 +29,16 @@ namespace Quiltoni.PixelBot
 		static string ApplicationName = "PixelBot";
 		private readonly ISheetProxy _GoogleSheet;
 
-		public PixelBot(IEnumerable<IBotCommand> commands, IOptions<PixelBotConfig> configuration, ILoggerFactory loggerFactory)
-		{
+		public PixelBot(IEnumerable<IBotCommand> commands, IOptions<PixelBotConfig> configuration, ILoggerFactory loggerFactory) :
+			this(commands, configuration, loggerFactory, null) { }
+
+		public PixelBot(IEnumerable<IBotCommand> commands, IOptions<PixelBotConfig> configuration, ILoggerFactory loggerFactory, ISheetProxy sheetProxy) {
 
 			Config = configuration.Value;
 			Commands = commands.Where(c => c.Enabled);
 			this.Logger = loggerFactory.CreateLogger("PixelBot");
-			var sheetType = GetType().Assembly.DefinedTypes.First(t => t.Name == Models.Currency.SheetType);
-			_GoogleSheet = Activator.CreateInstance(sheetType, configuration, loggerFactory) as ISheetProxy;
+			var sheetType = GetType().Assembly.DefinedTypes.First(t => t.Name == Config.Currency.SheetType);
+			_GoogleSheet = sheetProxy ?? Activator.CreateInstance(sheetType, configuration, loggerFactory) as ISheetProxy;
 			_GoogleSheet.Twitch = this;
 
 		}
@@ -126,7 +128,7 @@ namespace Quiltoni.PixelBot
 
 		}
 
-		private void _Client_OnNewSubscriber(object sender, OnNewSubscriberArgs e)
+		public void _Client_OnNewSubscriber(object sender, OnNewSubscriberArgs e)
 		{
 
 			if (!EnableSubPixels) return;

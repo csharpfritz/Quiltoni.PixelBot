@@ -22,9 +22,12 @@ namespace Quiltoni.PixelBot
 		private UserCredential _GoogleCredential;
 		static string[] Scopes = { SheetsService.Scope.Spreadsheets };
 		private bool _First = true;
+		private string _CurrencyName;
+
 		public GoogleSheetProxy(IOptions<PixelBotConfig> configuration, ILoggerFactory loggerFactory) {
 
 			Config = configuration.Value;
+			_CurrencyName = Config.Currency.Name;
 			this.Logger = loggerFactory.CreateLogger("GoogleSheetProxy");
 
 			ConfigureGoogleSheetsAccess();
@@ -66,7 +69,7 @@ namespace Quiltoni.PixelBot
 			var updates = new List<ValueRange>();
 			var logrows =  new List<IList<object>>();
 
-			Twitch.BroadcastMessageOnChannel($"I've begun adding {numPixelsToAdd} {Models.Currency.Name} to all people in chat");
+			Twitch.BroadcastMessageOnChannel($"I've begun adding {numPixelsToAdd} {_CurrencyName} to all people in chat");
 
 			CreateLogSheet(service);
 
@@ -112,7 +115,7 @@ namespace Quiltoni.PixelBot
 
 			WriteActivityLogRowsToSheet(service, logrows);
 
-			Twitch.BroadcastMessageOnChannel($"Successfully granted {numPixelsToAdd} {Models.Currency.Name} to all people in chat");
+			Twitch.BroadcastMessageOnChannel($"Successfully granted {numPixelsToAdd} {_CurrencyName} to all people in chat");
 		}
 
 		public virtual void AddPixelsForUser(string userName, int numPixelsToAdd, string actingUser) {
@@ -145,7 +148,7 @@ namespace Quiltoni.PixelBot
 
 				LogActivityOnSheet(service, actingUser, userName, "Add", numPixelsToAdd);
 
-				Twitch.BroadcastMessageOnChannel($"Successfully granted {userName} their first {numPixelsToAdd} {Models.Currency.Name}!");
+				Twitch.BroadcastMessageOnChannel($"Successfully granted {userName} their first {numPixelsToAdd} {_CurrencyName}!");
 
 			}
 			else {
@@ -169,7 +172,7 @@ namespace Quiltoni.PixelBot
 
 				LogActivityOnSheet(service, actingUser, userName, "Add", numPixelsToAdd);
 
-				Twitch.BroadcastMessageOnChannel($"Successfully granted {userName} an additional {numPixelsToAdd} {Models.Currency.Name}.  Their new total is {newValue} {Models.Currency.Name}");
+				Twitch.BroadcastMessageOnChannel($"Successfully granted {userName} an additional {numPixelsToAdd} {_CurrencyName}.  Their new total is {newValue} {_CurrencyName}");
 
 			}
 
