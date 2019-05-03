@@ -25,6 +25,15 @@ namespace PixelBot.Orchestrator.Actors.Commands
 
 		public TheGame _TheGame { get; }
 
+		public static readonly Dictionary<string, Action<TheGame, IChatService, ChatCommand>> _Actions = new Dictionary<string, Action<TheGame, IChatService, ChatCommand>> {
+			{"open", (game, svc, cmd) => game.Open(svc, cmd)},
+			{"reopen", (game, svc, cmd) => game.Open(svc, cmd)},
+			{"help", (game, svc, cmd) => game.Help(svc, cmd)},
+			{"close", (game, svc, cmd) => game.Close(svc, cmd)},
+			{"mine", (game, svc, cmd) => game.Mine(svc, cmd)},
+			{"end", (game, svc, cmd) => game.Reset(svc, cmd)}
+		};
+
 		public GuessGameCommandActor() {
 
 			Receive<OnChatCommandReceivedArgs>(Execute);
@@ -47,29 +56,17 @@ namespace PixelBot.Orchestrator.Actors.Commands
 			}
 
 			try {
-				switch (theCmd.ArgumentsAsList[0].ToLowerInvariant()) {
-					case "open":
-						_TheGame.Open(this, theCmd);
-						break;
-					case "reopen":
-						_TheGame.Open(this, theCmd);
-						break;
-					case "help":
-						_TheGame.Help(this, theCmd);
-						break;
-					case "close":
-						_TheGame.Close(this, theCmd);
-						break;
-					case "mine":
-						_TheGame.Mine(this, theCmd);
-						break;
-					case "end":
-						_TheGame.Reset(this, theCmd);
-						break;
-					default:
-						_TheGame.Guess(this, theCmd);
-						break;
+
+				if (_Actions.ContainsKey(theCmd.ArgumentsAsList[0].ToLowerInvariant())) {
+
+					_Actions[theCmd.ArgumentsAsList[0].ToLowerInvariant()](_TheGame, this, theCmd);
+
+				} else {
+
+					_TheGame.Guess(this, theCmd);
+
 				}
+
 			}
 			catch (InvalidOperationException) {
 				this.WhisperMessage(args.Command.ChatMessage.Username, "Invalid command...");

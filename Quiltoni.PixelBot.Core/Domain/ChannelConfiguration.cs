@@ -12,8 +12,11 @@ namespace Quiltoni.PixelBot.Core.Domain
 
 		public bool GuessGameEnabled { get; set; } = false;
 
+		public CurrencyConfiguration Currency { get; set; } = new CurrencyConfiguration();
+
 		// TODO: Add other configuration options later
 
 	}
+
 
 }
