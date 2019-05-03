@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using Akka.Actor;
 using PixelBot.Orchestrator.Actors.ChannelEvents;
 using Quiltoni.PixelBot.Core.Domain;
+using Quiltoni.PixelBot.Core.Data;
 using TwitchLib.Client;
 using TwitchLib.Client.Models;
+using System.Reflection;
 using MSG = Quiltoni.PixelBot.Core.Messages;
 
 namespace PixelBot.Orchestrator.Actors
@@ -50,6 +52,8 @@ namespace PixelBot.Orchestrator.Actors
 
 		public BotConfiguration BotConfig { get; } = Startup.BotConfiguration;
 
+		public ICurrencyRepository CurrencyRepository { get; set; }
+
 		public override void AroundPreStart() {
 
 			StartTwitchConnection();
@@ -64,6 +68,8 @@ namespace PixelBot.Orchestrator.Actors
 			_Client.Initialize(creds);
 
 			_Client.OnConnected += (sender, args) => _Client.JoinChannel(Config.ChannelName);
+
+			ConfigureCurrencyRepository();
 
 			// TODO: Handle unwanted disconnect
 			// Cheer 142 cpayette 25/4/19 
@@ -107,6 +113,21 @@ namespace PixelBot.Orchestrator.Actors
 
 		public static Props Props(ChannelConfiguration config) {
 				return Akka.Actor.Props.Create<ChannelActor>(config);
+		}
+
+		private void ConfigureCurrencyRepository() {
+
+			if (!Config.Currency.Enabled) return;
+
+			if (Config.Currency.Google != null) {
+
+				var sheetType = "PixelBot.Google, " + Config.Currency.Google.RepositoryType.ToString();
+
+				// TODO: Need to grab the Akka logger factory and pass in as the third argument
+				// CurrencyRepository = Activator.CreateInstance(sheetType, Config, null) as ICurrencyRepository;
+
+			}
+
 		}
 
 	}

@@ -25,6 +25,20 @@ namespace Quiltoni.PixelBot.Core.Domain
 
 		public int AwardForRaid_Max { get; set; } = 200;
 
+		public GoogleSheetCurrencyConfiguration Google { get; set; } = null;
+
+	}
+
+	public class GoogleSheetCurrencyConfiguration {
+
+		public string RepositoryType { get; set; } = "PixelBot.Google.GoogleSheetProxy";
+
+		public string ClientId { get; set; }
+
+		public string ClientSecret { get; set; }
+
+		public string SheetId { get; set; }
+
 	}
 
 }
