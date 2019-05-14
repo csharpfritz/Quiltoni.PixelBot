@@ -8,6 +8,7 @@ using TwitchLib.Client;
 using TwitchLib.Client.Models;
 using System.Reflection;
 using MSG = Quiltoni.PixelBot.Core.Messages;
+using Quiltoni.PixelBot.Core.Messages.Currency;
 
 namespace PixelBot.Orchestrator.Actors
 {
@@ -33,7 +34,16 @@ namespace PixelBot.Orchestrator.Actors
 
 			Receive<MSG.WhisperMessage>(msg => WhisperMessage(msg));
 			Receive<MSG.BroadcastMessage>(msg => BroadcastMessage(msg));
+			Receive<MSG.Currency.AddCurrencyMessage>(msg => AddCurrency(msg));
 
+		}
+
+		private void AddCurrency(AddCurrencyMessage msg) {
+			if (msg.UserName.StartsWith("#")) {
+				CurrencyRepository.AddForChatters(msg.UserName.Substring(1), msg.Amount, msg.ActingUser);
+			} else {
+				CurrencyRepository.AddForUser(msg.UserName, msg.Amount, msg.ActingUser);
+			}
 		}
 
 		private void BroadcastMessage(MSG.BroadcastMessage msg) {
@@ -124,7 +134,7 @@ namespace PixelBot.Orchestrator.Actors
 				var sheetType = "PixelBot.Google, " + Config.Currency.Google.RepositoryType.ToString();
 
 				// TODO: Need to grab the Akka logger factory and pass in as the third argument
-				// CurrencyRepository = Activator.CreateInstance(sheetType, Config, null) as ICurrencyRepository;
+				CurrencyRepository = Activator.CreateInstance(Type.GetType(sheetType), Config, null) as ICurrencyRepository;
 
 			}
 
