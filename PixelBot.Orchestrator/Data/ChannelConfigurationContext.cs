@@ -18,7 +18,13 @@ namespace PixelBot.Orchestrator.Data
 			new ChannelConfiguration { ChannelName="banzaibaby" },
 			new ChannelConfiguration { ChannelName="visualstudio" },
 			new ChannelConfiguration { ChannelName="chiefcll" },
-			new ChannelConfiguration { ChannelName="quiltoni", GuessGameEnabled=true }
+			new ChannelConfiguration { ChannelName="quiltoni", GuessGameEnabled=true,
+				Currency =new CurrencyConfiguration {
+					Enabled=true,
+					MyCommand = "mypixels",
+					Name = "Pixels"				
+				}
+			}
 		};
 
 		public ChannelConfiguration GetConfigurationForChannel(string channelName) 

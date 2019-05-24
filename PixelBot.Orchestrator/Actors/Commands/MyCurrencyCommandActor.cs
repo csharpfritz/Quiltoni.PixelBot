@@ -16,7 +16,7 @@ namespace PixelBot.Orchestrator.Actors.Commands
 
 		}
 
-		public string CommandText => "my" + Config.Currency.Name.ToLowerInvariant();
+		public string CommandText => Config.Currency.MyCommand.ToLowerInvariant();
 
 		private void Execute(OnChatCommandReceivedArgs args) {
 
