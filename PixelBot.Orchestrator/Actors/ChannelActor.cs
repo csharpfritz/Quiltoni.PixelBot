@@ -35,6 +35,7 @@ namespace PixelBot.Orchestrator.Actors
 			Receive<MSG.WhisperMessage>(msg => WhisperMessage(msg));
 			Receive<MSG.BroadcastMessage>(msg => BroadcastMessage(msg));
 			Receive<MSG.Currency.AddCurrencyMessage>(msg => AddCurrency(msg));
+			Receive<MSG.Currency.MyCurrencyMessage>(msg => ReportCurrency(msg));
 
 		}
 
@@ -44,6 +45,13 @@ namespace PixelBot.Orchestrator.Actors
 			} else {
 				CurrencyRepository.AddForUser(msg.UserName, msg.Amount, msg.ActingUser);
 			}
+		}
+
+		private void ReportCurrency(MyCurrencyMessage msg) {
+
+			var count = CurrencyRepository.FindForUser(msg.UserName);
+			BroadcastMessage(new MSG.BroadcastMessage($"{msg.UserName} has {count} {Config.Currency.Name}"));
+
 		}
 
 		private void BroadcastMessage(MSG.BroadcastMessage msg) {

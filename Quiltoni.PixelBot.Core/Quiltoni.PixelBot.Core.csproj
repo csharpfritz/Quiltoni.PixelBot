@@ -6,6 +6,5 @@
 
   <ItemGroup>
     <Folder Include="Data\" />
-    <Folder Include="Messages\Currency\" />
   </ItemGroup>
 </Project>

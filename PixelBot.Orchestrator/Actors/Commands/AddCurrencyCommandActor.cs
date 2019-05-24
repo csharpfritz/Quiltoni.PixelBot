@@ -11,21 +11,19 @@ namespace PixelBot.Orchestrator.Actors.Commands
 	public class AddCurrencyCommandActor : ReceiveActor, IBotCommandActor
 	{
 
-		public AddCurrencyCommandActor(DOMAIN.ChannelConfiguration config, ICurrencyRepository currencyRepository) {
+		public AddCurrencyCommandActor(DOMAIN.ChannelConfiguration config) {
 
-			GoogleSheet = currencyRepository;
 			this.Config = config;
 
 			Receive<OnChatCommandReceivedArgs>(args => Execute(args));
 
 		}
 
-		public ICurrencyRepository GoogleSheet { get; set; }
 		public DOMAIN.ChannelConfiguration Config { get; }
 
 		public string CommandText => "add";
 
-		public bool Enabled => true;
+		public bool Enabled => Config.Currency.Enabled;
 
 		public void Execute(OnChatCommandReceivedArgs args) {
 
@@ -35,11 +33,9 @@ namespace PixelBot.Orchestrator.Actors.Commands
 
 			if (userName == "all") {
 				Sender.Tell(new MSG.Currency.AddCurrencyMessage("#" + args.Command.ChatMessage.Channel, int.Parse(args.Command.ArgumentsAsList[1]), args.Command.ChatMessage.DisplayName));
-				//GoogleSheet.AddForChatters(args.Command.ChatMessage.Channel, int.Parse(args.Command.ArgumentsAsList[1]), args.Command.ChatMessage.DisplayName);
 			}
 			else {
 				Sender.Tell(new MSG.Currency.AddCurrencyMessage(args.Command.ArgumentsAsList[0].Trim(), int.Parse(args.Command.ArgumentsAsList[1]), args.Command.ChatMessage.DisplayName));
-				//GoogleSheet.AddForUser(args.Command.ArgumentsAsList[0].Trim(), int.Parse(args.Command.ArgumentsAsList[1]), args.Command.ChatMessage.DisplayName);
 			}
 
 		}
@@ -66,12 +62,13 @@ namespace PixelBot.Orchestrator.Actors.Commands
 		}
 
 
-		public static IActorRef CreateActor(DOMAIN.ChannelConfiguration config, ICurrencyRepository currencyRepository) {
+		public static IActorRef CreateActor(DOMAIN.ChannelConfiguration config) {
 
-			var props = Akka.Actor.Props.Create<AddCurrencyCommandActor>(config, currencyRepository);
+			var props = Akka.Actor.Props.Create<AddCurrencyCommandActor>(config);
 			return Context.ActorOf(props);
 
 		}
 
 	}
+
 }

@@ -58,7 +58,13 @@ namespace PixelBot.Orchestrator.Actors.ChannelEvents
 				case "guess":
 					return Config.GuessGameEnabled ? Context.ActorOf<GuessGameCommandActor>()
 						: null;
+				case "add":
+					return Config.Currency.Enabled ? AddCurrencyCommandActor.CreateActor(Config)
+						: null;
 			}
+
+			if (Config.Currency.Enabled && commandText == "my" + Config.Currency.Name)
+				return MyCurrencyCommandActor.CreateActor(Config);
 
 			return null;
 
