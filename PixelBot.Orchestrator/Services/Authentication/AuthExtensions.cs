@@ -1,0 +1,90 @@
+using System;
+using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+
+namespace PixelBot.Orchestrator.Services.Authentication
+{
+  public static class AuthExtensions
+  {
+    public static AuthenticationBuilder AddAuth0OpenIdConnect(this AuthenticationBuilder builder, IConfiguration config)
+    {
+      var domain = $"https://{config["Auth0:Domain"]}";
+      var clientId = config["Auth0:ClientId"];
+      var clientSecret = config["Auth0:ClientSecret"];
+
+      return builder.AddOpenIdConnect("Auth0", options =>
+      {
+        // Set the authority to your Auth0 domain
+        options.Authority = domain;
+
+        // Configure the Auth0 Client ID and Client Secret
+        options.ClientId = clientId;
+        options.ClientSecret = clientSecret;
+
+        // Set response type to code
+        options.ResponseType = "code";
+
+        // Configure the scope
+        options.Scope.Clear();
+        options.Scope.Add("openid");
+
+        //for adding profile
+        options.Scope.Add("profile");
+        options.Scope.Add("email");
+        //for adding idps
+        //options.Scope.Add("https://iamnotmyself.com/connections");
+
+        //for adding profile
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+          NameClaimType = "name"
+        };
+
+        //for adding profile
+        options.GetClaimsFromUserInfoEndpoint = true;
+
+        // Set the callback path, so Auth0 will call back to http://localhost:3000/callback
+        // Also ensure that you have added the URL as an Allowed Callback URL in your Auth0 dashboard
+        options.CallbackPath = new PathString("/callback");
+
+        // Configure the Claims Issuer to be Auth0
+        options.ClaimsIssuer = "Auth0";
+
+        //for adding profile
+        options.SaveTokens = true;
+
+        options.Events = new OpenIdConnectEvents
+        {
+          // handle the logout redirection
+          OnRedirectToIdentityProviderForSignOut = (context) =>
+           {
+             var logoutUri = $"https://{config["Auth0:Domain"]}/v2/logout?client_id={config["Auth0:ClientId"]}";
+             var postLogoutUri = context.Properties.RedirectUri;
+
+             if (!string.IsNullOrEmpty(postLogoutUri))
+             {
+               if (postLogoutUri.StartsWith("/"))
+               {
+                 // transform to absolute
+                 var request = context.Request;
+                 postLogoutUri = request.Scheme + "://" + request.Host + request.PathBase + postLogoutUri;
+               }
+               logoutUri += $"&returnTo={ Uri.EscapeDataString(postLogoutUri)}";
+             }
+
+             context.Response.Redirect(logoutUri);
+             context.HandleResponse();
+
+             return Task.CompletedTask;
+           }
+        };
+      });
+    }
+  }
+}

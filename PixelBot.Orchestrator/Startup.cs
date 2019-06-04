@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Akka.Actor;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -14,6 +16,7 @@ using Microsoft.Extensions.Options;
 using PixelBot.Orchestrator.Actors;
 using PixelBot.Orchestrator.Components;
 using PixelBot.Orchestrator.Data;
+using PixelBot.Orchestrator.Services.Authentication;
 using Quiltoni.PixelBot.Core.Domain;
 
 namespace PixelBot.Orchestrator
@@ -29,12 +32,28 @@ namespace PixelBot.Orchestrator
 			this.Configuration = config;
 		}
 
-			// This method gets called by the runtime. Use this method to add services to the container.
-			// For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-			public void ConfigureServices(IServiceCollection services) {
+		// This method gets called by the runtime. Use this method to add services to the container.
+		// For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+		public void ConfigureServices(IServiceCollection services) {
+
+			services.Configure<CookiePolicyOptions>(options => {
+				options.CheckConsentNeeded = context => true;
+				options.MinimumSameSitePolicy = SameSiteMode.None;
+			});
+
+			services.AddAuthentication(options => {
+				options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+				options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+				options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+			})
+			.AddCookie()
+			.AddAuth0OpenIdConnect(Configuration);
 
 			services.AddMvc()
 					.AddNewtonsoftJson();
+
+			services.AddHttpContextAccessor();
+			services.AddScoped<ClaimsPrincipal>(context => context.GetRequiredService<IHttpContextAccessor>()?.HttpContext?.User);
 
 			services.AddControllers();
 
@@ -73,10 +92,12 @@ namespace PixelBot.Orchestrator
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
 
+			app.UseCookiePolicy();
+			app.UseAuthentication();
 
 			app.UseEndpoints(routes => {
 				routes.MapRazorPages();
-				routes.MapControllers();
+				routes.MapDefaultControllerRoute();
 				routes.MapBlazorHub();
 				routes.MapFallbackToPage("/Index");
 			});

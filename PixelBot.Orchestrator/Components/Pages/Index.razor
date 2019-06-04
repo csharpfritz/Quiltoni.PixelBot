@@ -1,42 +1,60 @@
 ﻿@page "/"
+@inject System.Security.Claims.ClaimsPrincipal CurrentUser
 @inject IActorRef channelManager
+@inject IUriHelper UriHelper
 
 
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
 
+@if (CurrentUser.Identity.IsAuthenticated)
+{
+    <li class="nav-item text-nowrap">
+        <button class="nav-link" onclick="@(() => UriHelper.NavigateTo("/Account/Profile", true))" >Hello @CurrentUser.Identity.Name!</button>
+    </li>
+    <li class="nav-item text-nowrap">
+        <button class="nav-link" onclick="@(() => UriHelper.NavigateTo("/Account/Logout", true))">Logout</button>
+    </li>
+}
+else
+{
+    <li class="nav-item text-nowrap">
+        <button class="nav-link" onclick="@(() => UriHelper.NavigateTo("/Account/Login", true))">Login</button>
+    </li>
+}
+
 <input type="text" bind="@channelName" placeholder="Channel to Join" />
 <button onclick="@JoinChannel">Join</button>
 
 <h3>Channels currently joined to:</h3>
 <ul>
-	@foreach (var channel in CurrentChannels)
-	{
-		<li>@channel</li>
-	}
+    @foreach (var channel in CurrentChannels)
+    {
+        <li>@channel</li>
+    }
 </ul>
 
 @functions {
 
-	[Parameter]
-	public string channelName { get; set; }
+    [Parameter]
+    public string channelName { get; set; }
 
-	public string[] CurrentChannels = new string[] { };
+    public string[] CurrentChannels = new string[] { };
 
-	protected override async Task OnInitAsync()
-	{
-		CurrentChannels = (await channelManager.Ask(new ReportCurrentChannels())) as string[];
-	}
+    protected override async Task OnInitAsync()
+    {
+        CurrentChannels = (await channelManager.Ask(new ReportCurrentChannels())) as string[];
+    }
 
-	void JoinChannel()
-	{
+    void JoinChannel()
+    {
 
-		channelManager.Tell(new JoinChannel(channelName));
-		channelName = null;
+        channelManager.Tell(new JoinChannel(channelName));
+        channelName = null;
 
-		CurrentChannels = (channelManager.Ask(new ReportCurrentChannels()).GetAwaiter().GetResult()) as string[];
+        CurrentChannels = (channelManager.Ask(new ReportCurrentChannels()).GetAwaiter().GetResult()) as string[];
 
-	}
+    }
 
 }
