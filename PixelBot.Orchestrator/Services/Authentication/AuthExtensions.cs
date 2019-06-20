@@ -37,8 +37,8 @@ namespace PixelBot.Orchestrator.Services.Authentication
         //for adding profile
         options.Scope.Add("profile");
         options.Scope.Add("email");
-        //for adding idps
-        //options.Scope.Add("https://iamnotmyself.com/connections");
+		options.Scope.Add("roles");
+
 
         //for adding profile
         options.TokenValidationParameters = new TokenValidationParameters

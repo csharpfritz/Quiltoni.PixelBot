@@ -1,0 +1,49 @@
+﻿@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+@inject System.Security.Claims.ClaimsPrincipal CurrentUser
+@inject IUriHelper UriHelper
+@inject IActorRef channelManager
+
+<input type="text" bind="@channelName" placeholder="Channel to Join" />
+<button onclick="@JoinChannel">Join</button>
+
+<h3>Channels currently joined to:</h3>
+<ul>
+    @foreach (var channel in TheCurrentChannels)
+    {
+        <li>@channel</li>
+    }
+</ul>
+
+
+@functions {
+
+    public string channelName { get; set; }
+
+    public string[] TheCurrentChannels = new string[] { };
+
+    protected override async Task OnInitAsync()
+    {
+
+        if (!(await AuthorizationService.AuthorizeAsync(CurrentUser, "GlobalAdmin")).Succeeded)
+        {
+            UriHelper.NavigateTo("/");
+            return;
+        }
+
+        TheCurrentChannels = (await channelManager.Ask(new ReportCurrentChannels())) as string[];
+
+    }
+
+    void JoinChannel()
+    {
+
+        channelManager.Tell(new JoinChannel(channelName));
+        channelName = null;
+
+        TheCurrentChannels = (channelManager.Ask(new ReportCurrentChannels()).GetAwaiter().GetResult()) as string[];
+
+    }
+
+
+}

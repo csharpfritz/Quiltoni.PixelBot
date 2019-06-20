@@ -16,6 +16,7 @@ using Microsoft.Extensions.Options;
 using PixelBot.Orchestrator.Actors;
 using PixelBot.Orchestrator.Components;
 using PixelBot.Orchestrator.Data;
+using PixelBot.Orchestrator.Services;
 using PixelBot.Orchestrator.Services.Authentication;
 using Quiltoni.PixelBot.Core.Domain;
 
@@ -48,6 +49,13 @@ namespace PixelBot.Orchestrator
 			})
 			.AddCookie()
 			.AddAuth0OpenIdConnect(Configuration);
+
+			services.AddAuthorization(config => {
+
+				config.AddPolicy(nameof(Policy.GlobalAdmin), p => {
+					p.RequireRole("GlobalAdmin");
+				});
+			});
 
 			services.AddMvc()
 					.AddNewtonsoftJson();
@@ -94,6 +102,7 @@ namespace PixelBot.Orchestrator
 
 			app.UseCookiePolicy();
 			app.UseAuthentication();
+			app.UseAuthorization();
 
 			app.UseEndpoints(routes => {
 				routes.MapRazorPages();

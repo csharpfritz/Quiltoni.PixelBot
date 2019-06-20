@@ -10,9 +10,10 @@ using Microsoft.AspNetCore.Mvc;
 namespace PixelBot.Orchestrator.Controllers
 {
 
-    public class AccountController : Controller
+	public class AccountController : Controller
     {
 
+		[HttpGet()]
         public async Task Login(string returnUrl = "/")
         {
         await HttpContext.ChallengeAsync("Auth0", new AuthenticationProperties() { RedirectUri = returnUrl });
