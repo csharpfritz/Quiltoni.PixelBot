@@ -6,7 +6,18 @@
 
 <h1>Welcome to the PixelBot!</h1>
 
-
-@functions {
-
+@if (CurrentUser.Identity.IsAuthenticated)
+{
+<h4>My Claims:</h4>
+<dl>
+	@foreach (var claim in CurrentUser.Claims)
+	{
+		<dt>@claim.Type</dt>
+		<dd>@claim.Value</dd>
+	}
+	</dl>
 }
+
+	@functions {
+
+	}

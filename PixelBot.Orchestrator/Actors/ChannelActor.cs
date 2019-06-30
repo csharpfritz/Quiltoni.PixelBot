@@ -114,8 +114,7 @@ namespace PixelBot.Orchestrator.Actors
 			this.Raid = CreateActor<RaidActor>();
 			this.ReSub = CreateActor<ReSubscriberActor>();
 
-			IActorRef CreateActor<T>() where T : ReceiveActor
-			{
+			IActorRef CreateActor<T>() where T : ReceiveActor {
 
 				var props = Akka.Actor.Props.Create<T>(Config);
 				return Context.ActorOf(props, $"event_{typeof(T).Name}");

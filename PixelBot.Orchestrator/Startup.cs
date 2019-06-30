@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -66,6 +67,9 @@ namespace PixelBot.Orchestrator
 			services.AddControllers();
 
 			services.AddServerSideBlazor();
+			services.AddSignalR(config => {
+				config.EnableDetailedErrors = true;
+			}).AddJsonProtocol();
 
 			services.Configure<BotConfiguration>(Configuration.GetSection("BotConfig"));
 
@@ -78,9 +82,11 @@ namespace PixelBot.Orchestrator
 
 			// Cheer 100 ramblinggeek 19/4/19 
 
-			var system = provider.GetService<ActorSystem>();
-			var props = Props.Create<ChannelManagerActor>(provider.GetService<IChannelConfigurationContext>());
-			services.AddSingleton<IActorRef>(_ => system.ActorOf(props));
+			services.AddSingleton<IActorRef>(_ => ChannelManagerActor.Create(
+				provider.GetService<ActorSystem>(),
+				provider.GetService<IChannelConfigurationContext>(),
+				provider.GetService<IHubContext<LoggerHub>>()
+			));
 
 
 		}
@@ -104,7 +110,12 @@ namespace PixelBot.Orchestrator
 			app.UseAuthentication();
 			app.UseAuthorization();
 
+			app.UseSignalR(config => {
+				config.MapHub<LoggerHub>("/loggerhub");
+			});
+
 			app.UseEndpoints(routes => {
+				routes.MapHub<LoggerHub>("/loggerhub");
 				routes.MapRazorPages();
 				routes.MapDefaultControllerRoute();
 				routes.MapBlazorHub();

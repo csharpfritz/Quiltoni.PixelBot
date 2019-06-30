@@ -5,8 +5,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.Event;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using PixelBot.Orchestrator.Data;
+using PixelBot.Orchestrator.Services;
 using Quiltoni.PixelBot.Core.Messages;
 
 namespace PixelBot.Orchestrator.Actors
@@ -20,9 +22,22 @@ namespace PixelBot.Orchestrator.Actors
 
 		private static readonly Dictionary<string, IActorRef> _ChannelActors = new Dictionary<string, IActorRef>();
 
-		public ChannelManagerActor(IChannelConfigurationContext dataContext) {
+		private readonly IActorRef _ChatLogger;
+
+		public const string Name = "channelmanager";
+
+		public static IActorRef Create(ActorSystem system, IChannelConfigurationContext dataContext, IHubContext<LoggerHub> chatLogger) {
+
+			var props = Props.Create<ChannelManagerActor>(dataContext, chatLogger);
+			return system.ActorOf(props, Name);
+
+		}
+
+		public ChannelManagerActor(IChannelConfigurationContext dataContext, IHubContext<LoggerHub> chatLogger) {
 
 			Logger = Context.GetLogger();
+
+			_ChatLogger = ChatLoggerActor.Create(chatLogger);
 
 			Receive<JoinChannel>(this.GetChannelActor);
 			Receive<ReportCurrentChannels>(_ => {

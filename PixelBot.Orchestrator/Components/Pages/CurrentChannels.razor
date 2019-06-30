@@ -1,4 +1,5 @@
-﻿@using Microsoft.AspNetCore.Authorization
+﻿@page "/CurrentChannels"
+@using Microsoft.AspNetCore.Authorization
 @inject IAuthorizationService AuthorizationService
 @inject System.Security.Claims.ClaimsPrincipal CurrentUser
 @inject IUriHelper UriHelper
@@ -15,6 +16,9 @@
     }
 </ul>
 
+<div>
+	<ul id="messagesList"></ul>
+</div>
 
 @functions {
 
@@ -22,7 +26,7 @@
 
     public string[] TheCurrentChannels = new string[] { };
 
-    protected override async Task OnInitAsync()
+		protected override async Task OnAfterRenderAsync()
     {
 
         if (!(await AuthorizationService.AuthorizeAsync(CurrentUser, "GlobalAdmin")).Succeeded)

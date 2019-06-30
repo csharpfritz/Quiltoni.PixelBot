@@ -1,4 +1,5 @@
 using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authentication;
@@ -7,10 +8,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 
 namespace PixelBot.Orchestrator.Services.Authentication
 {
-  public static class AuthExtensions
+	public static class AuthExtensions
   {
     public static AuthenticationBuilder AddAuth0OpenIdConnect(this AuthenticationBuilder builder, IConfiguration config)
     {
@@ -36,15 +38,16 @@ namespace PixelBot.Orchestrator.Services.Authentication
 
         //for adding profile
         options.Scope.Add("profile");
-        options.Scope.Add("email");
-		options.Scope.Add("roles");
+				options.Scope.Add("email");
+				options.Scope.Add("roles");
 
 
-        //for adding profile
-        options.TokenValidationParameters = new TokenValidationParameters
+				//for adding profile
+				options.TokenValidationParameters = new TokenValidationParameters
         {
-          NameClaimType = "name"
-        };
+          NameClaimType = "name",
+					RoleClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/roles"
+				};
 
         //for adding profile
         options.GetClaimsFromUserInfoEndpoint = true;
@@ -59,32 +62,30 @@ namespace PixelBot.Orchestrator.Services.Authentication
         //for adding profile
         options.SaveTokens = true;
 
-        options.Events = new OpenIdConnectEvents
-        {
-          // handle the logout redirection
-          OnRedirectToIdentityProviderForSignOut = (context) =>
-           {
-             var logoutUri = $"https://{config["Auth0:Domain"]}/v2/logout?client_id={config["Auth0:ClientId"]}";
-             var postLogoutUri = context.Properties.RedirectUri;
+				options.Events = new OpenIdConnectEvents {
+					// handle the logout redirection
+					OnRedirectToIdentityProviderForSignOut = (context) => {
+						var logoutUri = $"https://{config["Auth0:Domain"]}/v2/logout?client_id={config["Auth0:ClientId"]}";
+						var postLogoutUri = context.Properties.RedirectUri;
 
-             if (!string.IsNullOrEmpty(postLogoutUri))
-             {
-               if (postLogoutUri.StartsWith("/"))
-               {
-                 // transform to absolute
-                 var request = context.Request;
-                 postLogoutUri = request.Scheme + "://" + request.Host + request.PathBase + postLogoutUri;
-               }
-               logoutUri += $"&returnTo={ Uri.EscapeDataString(postLogoutUri)}";
-             }
+						if (!string.IsNullOrEmpty(postLogoutUri)) {
+							if (postLogoutUri.StartsWith("/")) {
+								// transform to absolute
+								var request = context.Request;
+								postLogoutUri = request.Scheme + "://" + request.Host + request.PathBase + postLogoutUri;
+							}
+							logoutUri += $"&returnTo={ Uri.EscapeDataString(postLogoutUri)}";
+						}
 
-             context.Response.Redirect(logoutUri);
-             context.HandleResponse();
+						context.Response.Redirect(logoutUri);
+						context.HandleResponse();
 
-             return Task.CompletedTask;
-           }
-        };
-      });
+						return Task.CompletedTask;
+					}
+				};
+
+			});
     }
   }
+
 }
