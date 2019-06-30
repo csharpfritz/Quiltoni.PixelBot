@@ -10,6 +10,7 @@ connection.on("LogMessage", function (level, message) {
 	var li = document.createElement("li");
 	li.textContent = message;
 	document.getElementById("messagesList").appendChild(li);
+	li.scrollIntoView();
 });
 
 console.log("Created signalR connection");
