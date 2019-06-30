@@ -21,10 +21,12 @@ namespace Quiltoni.PixelBot
 		private UserCredential _GoogleCredential;
 		static string[] Scopes = { SheetsService.Scope.Spreadsheets };
 		private bool _First = true;
+		private string _CurrencyName;
 
 		public DryadGoogleSheetProxy(IOptions<PixelBotConfig> configuration, ILoggerFactory loggerFactory) {
 
 			Config = configuration.Value;
+			_CurrencyName = Config.Currency.Name;
 			this.Logger = loggerFactory.CreateLogger("GoogleSheetProxy");
 
 			ConfigureGoogleSheetsAccess();
@@ -63,7 +65,7 @@ namespace Quiltoni.PixelBot
 			var updates = new List<ValueRange>();
 			var logrows = new List<IList<object>>();
 
-			Twitch.BroadcastMessageOnChannel($"I've begun adding {numPixelsToAdd} {Models.Currency.Name} to all people in chat");
+			Twitch.BroadcastMessageOnChannel($"I've begun adding {numPixelsToAdd} {_CurrencyName} to all people in chat");
 
 			CreateLogSheet(service);
 
@@ -109,7 +111,7 @@ namespace Quiltoni.PixelBot
 
 			WriteActivityLogRowsToSheet(service, logrows).Execute();
 
-			Twitch.BroadcastMessageOnChannel($"Successfully granted {numPixelsToAdd} {Models.Currency.Name} to all people in chat");
+			Twitch.BroadcastMessageOnChannel($"Successfully granted {numPixelsToAdd} {_CurrencyName} to all people in chat");
 		}
 
 		public virtual void AddPixelsForUser(string userName, int numPixelsToAdd, string actingUser) {
@@ -140,9 +142,10 @@ namespace Quiltoni.PixelBot
 
 				ResortSpreadsheet(service);
 
-				LogActivityOnSheet(service, actingUser, userName, "Add", numPixelsToAdd);
+				LogActivityOnSheet(service, actingUser, userName, "Add", numPixelsToAdd)
+					.Execute();
 
-				Twitch.BroadcastMessageOnChannel($"Successfully granted {userName} their first {numPixelsToAdd} {Models.Currency.Name}!");
+				Twitch.BroadcastMessageOnChannel($"Successfully granted {userName} their first {numPixelsToAdd} {_CurrencyName}!");
 
 			}
 			else {
@@ -164,9 +167,10 @@ namespace Quiltoni.PixelBot
 				update.ValueInputOption = UpdateRequest.ValueInputOptionEnum.USERENTERED;
 				var theResponse = update.Execute();
 
-				LogActivityOnSheet(service, actingUser, userName, "Add", numPixelsToAdd);
+				LogActivityOnSheet(service, actingUser, userName, "Add", numPixelsToAdd)
+					.Execute();
 
-				Twitch.BroadcastMessageOnChannel($"Successfully granted {userName} an additional {numPixelsToAdd} {Models.Currency.Name}.  Their new total is {newValue} {Models.Currency.Name}");
+				Twitch.BroadcastMessageOnChannel($"Successfully granted {userName} an additional {numPixelsToAdd} {_CurrencyName}.  Their new total is {newValue} {_CurrencyName}");
 
 			}
 
@@ -270,13 +274,13 @@ namespace Quiltoni.PixelBot
 
 		}
 
-		private void LogActivityOnSheet(SheetsService service, string actingUser, string userModified, string command, int change = 0) {
+		private AppendRequest LogActivityOnSheet(SheetsService service, string actingUser, string userModified, string command, int change = 0) {
 			var rows = new List<IList<object>>();
 			List<object> newRow = ActivityLogRow(actingUser, userModified, command, change);
 
 			rows.Add(newRow);
 
-			WriteActivityLogRowsToSheet(service, rows);
+			return WriteActivityLogRowsToSheet(service, rows);
 		}
 
 		private void CreateLogSheet(SheetsService service) {

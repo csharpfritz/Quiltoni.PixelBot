@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Options;
 using Moq;
 using Quiltoni.PixelBot;
 using TwitchLib.Client.Enums;
@@ -18,7 +20,7 @@ namespace Quiltoni.Test.AddPixelsCommand.GivenModeratorStatus
 		public void ShouldAddToGoogleSheet() {
 
 			// arrange
-			var sut = new CMD();
+			var sut = new CMD(Options.Create(new PixelBotConfig()));
 			var sheet = _Mockery.Create<GoogleSheetProxy>(MockBehavior.Loose);
 			sheet.Setup(s => s.AddPixelsForUser(UserName, PixelsToAdd, AddCommand.ChatMessage.DisplayName))
 				.Verifiable("Did not add pixels for the user");
@@ -30,6 +32,25 @@ namespace Quiltoni.Test.AddPixelsCommand.GivenModeratorStatus
 
 			// assert
 			_Mockery.Verify();
+
+		}
+
+		[Fact]
+		public void AndCurrencyIsDisabledShouldNotAddToGoogleSheet() {
+
+			// arrange
+			var cfg = new PixelBotConfig();
+			cfg.Currency.Enabled = false;
+			var proxy = new Mock<ISheetProxy>();
+
+			// Act
+			var sut = new Quiltoni.PixelBot.PixelBot(
+				new IBotCommand[] { }, Options.Create(cfg), 
+				new NullLoggerFactory(), proxy.Object);
+
+			sut._Client_OnNewSubscriber(null, new TwitchLib.Client.Events.OnNewSubscriberArgs());
+			proxy.Verify(p => p.AddPixelsForUser(It.IsAny<string>(), 10, It.IsAny<string>()), Times.Never);
+
 
 		}
 

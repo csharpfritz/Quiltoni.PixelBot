@@ -26,4 +26,8 @@
     <PackageReference Include="TwitchLib" Version="2.1.5" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
 </Project>

@@ -28,16 +28,17 @@ namespace Quiltoni.PixelBot
 		private TwitchClient _Client;
 		static string ApplicationName = "PixelBot";
 		private readonly ISheetProxy _GoogleSheet;
-		private readonly bool _EnableSubPixels = false;
 
-		public PixelBot(IEnumerable<IBotCommand> commands, IOptions<PixelBotConfig> configuration, ILoggerFactory loggerFactory)
-		{
+		public PixelBot(IEnumerable<IBotCommand> commands, IOptions<PixelBotConfig> configuration, ILoggerFactory loggerFactory) :
+			this(commands, configuration, loggerFactory, null) { }
+
+		public PixelBot(IEnumerable<IBotCommand> commands, IOptions<PixelBotConfig> configuration, ILoggerFactory loggerFactory, ISheetProxy sheetProxy) {
 
 			Config = configuration.Value;
 			Commands = commands.Where(c => c.Enabled);
 			this.Logger = loggerFactory.CreateLogger("PixelBot");
-			var sheetType = GetType().Assembly.DefinedTypes.First(t => t.Name == Models.Currency.SheetType);
-			_GoogleSheet = Activator.CreateInstance(sheetType, configuration, loggerFactory) as ISheetProxy;
+			var sheetType = GetType().Assembly.DefinedTypes.First(t => t.Name == Config.Currency.SheetType);
+			_GoogleSheet = sheetProxy ?? Activator.CreateInstance(sheetType, configuration, loggerFactory) as ISheetProxy;
 			_GoogleSheet.Twitch = this;
 
 		}
@@ -45,6 +46,7 @@ namespace Quiltoni.PixelBot
 		public static PixelBotConfig Config { get; set; }
 		public IEnumerable<IBotCommand> Commands { get; }
 		public ILogger Logger { get; }
+		private bool EnableSubPixels { get { return Config.Currency.Enabled; } }
 
 
 		public string Channel { get { return Config.Twitch.Channel; } }
@@ -98,7 +100,7 @@ namespace Quiltoni.PixelBot
 		private void _Client_OnRaidNotification(object sender, OnRaidNotificationArgs e)
 		{
 
-			if (!_EnableSubPixels) return;
+			if (!EnableSubPixels) return;
 
 			// Exit if we do not meet the minimum of 3 viewers
 			if (int.Parse(e.RaidNotificaiton.MsgParamViewerCount) < 3) return;
@@ -120,16 +122,16 @@ namespace Quiltoni.PixelBot
 		private void _Client_OnReSubscriber(object sender, OnReSubscriberArgs e)
 		{
 
-			if (!_EnableSubPixels) return;
+			if (!EnableSubPixels) return;
 
 			_GoogleSheet.AddPixelsForUser(e.ReSubscriber.DisplayName, _PixelRewards[e.ReSubscriber.SubscriptionPlan], "PixelBot-Resub");
 
 		}
 
-		private void _Client_OnNewSubscriber(object sender, OnNewSubscriberArgs e)
+		public void _Client_OnNewSubscriber(object sender, OnNewSubscriberArgs e)
 		{
 
-			if (!_EnableSubPixels) return;
+			if (!EnableSubPixels) return;
 
 			_GoogleSheet.AddPixelsForUser(e.Subscriber.DisplayName, _PixelRewards[e.Subscriber.SubscriptionPlan], "PixelBot-Sub");
 
@@ -138,7 +140,7 @@ namespace Quiltoni.PixelBot
 		private void _Client_OnGiftedSubscription(object sender, OnGiftedSubscriptionArgs e)
 		{
 
-			if (!_EnableSubPixels) return;
+			if (!EnableSubPixels) return;
 
 			_GoogleSheet.AddPixelsForUser(e.GiftedSubscription.DisplayName, 2, "PixelBot-SubGifter");
 			_GoogleSheet.AddPixelsForUser(e.GiftedSubscription.MsgParamRecipientDisplayName, _PixelRewards[e.GiftedSubscription.MsgParamSubPlan], "PixelBot-SubGift");

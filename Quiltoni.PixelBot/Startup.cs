@@ -21,9 +21,6 @@ namespace Quiltoni.PixelBot
 		{
 
 			this.Configuration = config;
-			Models.Currency.Name = config["PixelBot:Currency:Name"];
-			Models.Currency.MyCommand = config["PixelBot:Currency:MyCommand"];
-			Models.Currency.SheetType = config["PixelBot:Currency:SheetType"];
 
 		}
 

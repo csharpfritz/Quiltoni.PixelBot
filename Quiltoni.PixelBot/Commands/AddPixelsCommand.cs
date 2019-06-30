@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using TwitchLib.Client.Models;
 
 namespace Quiltoni.PixelBot.Commands
@@ -11,6 +12,11 @@ namespace Quiltoni.PixelBot.Commands
 
 		public ISheetProxy GoogleSheet { get; set; }
 
+		private string _CurrencyName;
+
+		public AddPixelsCommand(IOptions<PixelBotConfig> config) {
+			_CurrencyName = config.Value.Currency.Name;
+		}
 
 		public string CommandText => "add";
 
@@ -40,11 +46,11 @@ namespace Quiltoni.PixelBot.Commands
 			}
 
 			if (command.ArgumentsAsList.Count != 2) {
-				twitch.WhisperMessage(command.ChatMessage.DisplayName, $"Invalid format to add {Models.Currency.Name}.  \"!add username {Models.Currency.Name}ToAdd\"");
+				twitch.WhisperMessage(command.ChatMessage.DisplayName, $"Invalid format to add {_CurrencyName}.  \"!add username {_CurrencyName}ToAdd\"");
 				return false;
 			}
 			else if (!int.TryParse(command.ArgumentsAsList[1], out int pixels)) {
-				twitch.WhisperMessage(command.ChatMessage.DisplayName, $"Invalid format to add {Models.Currency.Name}.  \"!add username {Models.Currency.Name}ToAdd\"");
+				twitch.WhisperMessage(command.ChatMessage.DisplayName, $"Invalid format to add {_CurrencyName}.  \"!add username {_CurrencyName}ToAdd\"");
 				return false;
 			}
 
