@@ -16,21 +16,25 @@ namespace PixelBot.Orchestrator.Controllers
 	[ApiController]
 	public class TestController : ControllerBase
 	{
-
-		public TestController(IActorRef channelMgr, IHubContext<LoggerHub> loggerContext) {
+		// IHubContext<LoggerHub, IChatLogger> loggerContext
+		public TestController(IActorRef channelMgr, ChatLogProxy proxy) {
 
 			this.ChannelManager = channelMgr;
-			this.LoggerContext = loggerContext;
+			// this.LoggerContext = loggerContext;
+			this.Proxy = proxy;
 
 		}
 
 		public IActorRef ChannelManager { get; }
-		public IHubContext<LoggerHub> LoggerContext { get; }
 
-		public IActionResult Get(string channelName) {
+		private ChatLogProxy Proxy;
+
+		public IHubContext<LoggerHub, IChatLogger> LoggerContext { get; }
+
+		public async Task<IActionResult> Get(string channelName) {
 
 			ChannelManager.Tell(new JoinChannel(channelName));
-			LoggerContext.Clients.All.SendAsync("LogMessage", LogLevel.Information, "Test message").GetAwaiter().GetResult();
+			await Proxy.LogMessage(LogLevel.Information, "Test message");
 			return Ok();
 
 		}

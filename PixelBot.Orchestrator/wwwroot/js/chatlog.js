@@ -7,9 +7,9 @@ var connection = new signalR.HubConnectionBuilder()
 
 connection.on("LogMessage", function (level, message) {
 	console.debug("Received message: " + message);
-	//var li = document.createElement("li");
-	//li.textContent = message;
-	//document.getElementById("messagesList").appendChild(li);
+	var li = document.createElement("li");
+	li.textContent = message;
+	document.getElementById("messagesList").appendChild(li);
 });
 
 console.log("Created signalR connection");

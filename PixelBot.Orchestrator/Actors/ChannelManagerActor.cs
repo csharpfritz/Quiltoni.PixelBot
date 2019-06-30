@@ -26,14 +26,14 @@ namespace PixelBot.Orchestrator.Actors
 
 		public const string Name = "channelmanager";
 
-		public static IActorRef Create(ActorSystem system, IChannelConfigurationContext dataContext, IHubContext<LoggerHub> chatLogger) {
+		public static IActorRef Create(ActorSystem system, IChannelConfigurationContext dataContext, IHubContext<LoggerHub, IChatLogger> chatLogger) {
 
 			var props = Props.Create<ChannelManagerActor>(dataContext, chatLogger);
 			return system.ActorOf(props, Name);
 
 		}
 
-		public ChannelManagerActor(IChannelConfigurationContext dataContext, IHubContext<LoggerHub> chatLogger) {
+		public ChannelManagerActor(IChannelConfigurationContext dataContext, IHubContext<LoggerHub, IChatLogger> chatLogger) {
 
 			Logger = Context.GetLogger();
 

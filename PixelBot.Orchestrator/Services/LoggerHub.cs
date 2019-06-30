@@ -9,23 +9,16 @@ using Microsoft.Extensions.Logging;
 namespace PixelBot.Orchestrator.Services
 {
 
-	//[Authorize(Policy = nameof(Policy.GlobalAdmin))]
-	public class LoggerHub : Hub
+	[Authorize(Policy = nameof(Policy.GlobalAdmin))]
+	public class LoggerHub : Hub<IChatLogger>
 	{
-
-		//[Authorize(nameof(Policy.GlobalAdmin))]
-		//public async Task LogMessage(LogLevel level, string message) {
-
-		//	await Clients.All.LogMessage(level, message);
-
-		//}
 
 	}
 
 	public interface IChatLogger
 	{
 
-		Task LogMessage(LogLevel level, string message);
+		Task LogMessage(string level, string message);
 
 	}
 

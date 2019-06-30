@@ -19,7 +19,6 @@ namespace PixelBot.Orchestrator.Actors.ChannelEvents
 
 			this.Config = config;
 			Receive<OnChatCommandReceivedArgs>(cmd => OnChatCommandReceived(cmd));
-			
 
 		}
 

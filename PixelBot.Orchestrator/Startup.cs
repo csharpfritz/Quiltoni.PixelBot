@@ -71,28 +71,28 @@ namespace PixelBot.Orchestrator
 				config.EnableDetailedErrors = true;
 			}).AddJsonProtocol();
 
+
 			services.Configure<BotConfiguration>(Configuration.GetSection("BotConfig"));
 
 			services.AddSingleton<ActorSystem>(_ => ActorSystem.Create("BotService"));
 
 			services.AddTransient<IChannelConfigurationContext, ChannelConfigurationContext>();
 
-			var provider = services.BuildServiceProvider();
-			BotConfiguration = provider.GetService<IOptions<BotConfiguration>>().Value;
-
 			// Cheer 100 ramblinggeek 19/4/19 
 
-			services.AddSingleton<IActorRef>(_ => ChannelManagerActor.Create(
+			services.AddSingleton<IActorRef>(provider => ChannelManagerActor.Create(
 				provider.GetService<ActorSystem>(),
 				provider.GetService<IChannelConfigurationContext>(),
-				provider.GetService<IHubContext<LoggerHub>>()
+				provider.GetService<IHubContext<LoggerHub, IChatLogger>>()
 			));
-
 
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IOptions<BotConfiguration> botConfig) {
+
+			BotConfiguration = botConfig.Value;
+
 			if (env.IsDevelopment()) {
 				app.UseDeveloperExceptionPage();
 			}
@@ -109,10 +109,6 @@ namespace PixelBot.Orchestrator
 			app.UseCookiePolicy();
 			app.UseAuthentication();
 			app.UseAuthorization();
-
-			app.UseSignalR(config => {
-				config.MapHub<LoggerHub>("/loggerhub");
-			});
 
 			app.UseEndpoints(routes => {
 				routes.MapHub<LoggerHub>("/loggerhub");

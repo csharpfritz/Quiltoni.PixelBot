@@ -15,19 +15,19 @@ namespace PixelBot.Orchestrator.Actors
 		public const string Name = "chatlogger";
 		public static string Path;
 
-		public ChatLoggerActor(IHubContext<LoggerHub> hubContext) {
+		public ChatLoggerActor(IHubContext<LoggerHub, IChatLogger> chatContext) {
 
-			this.ChatLogger = hubContext;
+			this.ChatLogger = chatContext;
 
 			Path = Context.Self.Path.ToString();
 
-			ReceiveAsync<ChatLogMessage>(async m => await ChatLogger.Clients.All.SendAsync("LogMessage", m.LogLevel, m.Message));
+			ReceiveAsync<ChatLogMessage>(async m => await ChatLogger.Clients.All.LogMessage(m.LogLevel.ToString(), "#" + m.Channel + ": " + m.Message));
 
 		}
 
-		public IHubContext<LoggerHub> ChatLogger { get; }
+		public IHubContext<LoggerHub, IChatLogger> ChatLogger { get; }
 
-		public static IActorRef Create(IHubContext<LoggerHub> hubContext) {
+		public static IActorRef Create(IHubContext<LoggerHub, IChatLogger> hubContext) {
 
 			var props = Akka.Actor.Props.Create<ChatLoggerActor>(hubContext);
 			return Context.ActorOf(props, Name);
