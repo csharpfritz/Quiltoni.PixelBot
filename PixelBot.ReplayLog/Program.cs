@@ -22,9 +22,6 @@ namespace PixelBot.ReplayLog
 
 			var options = Options.Create<PixelBotConfig>(new PixelBotConfig {
 				Google = new PixelBotConfig.GoogleConfig {
-					//SheetId = "1WPBnPwKrv66JQGOdbd8ngeSSeZuT4-CWVL6tiAblp_E",
-					//ClientId = "705417911268-3mdfebph1ifahfptkm5s3c12udu33kou.apps.googleusercontent.com",
-					//ClientSecret = "MgKxJJ5PfFyLio9p6VA6qIW-"
 				}
 			});
 			var proxy = new DryadGoogleSheetProxy(options, NullLoggerFactory.Instance);

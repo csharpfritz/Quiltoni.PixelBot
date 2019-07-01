@@ -1,0 +1,19 @@
+﻿@page "/CurrentChannels"
+@inherits CurrentChannelModel
+@using Microsoft.AspNetCore.Authorization
+
+
+<input type="text" bind="@channelName" placeholder="Channel to Join" />
+<button onclick="@(async () => await this.JoinChannel())">Join</button>
+
+<h3>Channels currently joined to:</h3>
+<ul>
+    @foreach (var channel in TheCurrentChannels)
+    {
+        <li>@channel</li>
+    }
+</ul>
+
+<div id="chatMessageConsole">
+	<ul id="messagesList"></ul>
+</div>

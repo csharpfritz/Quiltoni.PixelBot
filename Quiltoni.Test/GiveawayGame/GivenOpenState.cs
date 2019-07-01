@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Moq;
+using Moq.Contrib.HttpClient;
 using Quiltoni.PixelBot;
 using Quiltoni.PixelBot.Commands;
 using Xunit;
@@ -20,8 +22,8 @@ namespace Quiltoni.Test.GiveawayGame
 
 		public Mock<IChatService> TwitchChat { get; }
 
-		private readonly Mock<IHttpClientFactory> _MockClientFactory;
-		private readonly Mock<HttpClient> _MockClient;
+		private readonly Mock<HttpMessageHandler> _MockHandler = new Mock<HttpMessageHandler>();
+		private readonly IHttpClientFactory _MockClientFactory;
 		private readonly CORE.GiveawayGame _Game;
 		private readonly GiveawayGameCommand _Cmd;
 		private PixelBot.PixelBotConfig Config = new PixelBot.PixelBotConfig {
@@ -34,11 +36,9 @@ namespace Quiltoni.Test.GiveawayGame
 
 			TwitchChat = new Mock<IChatService>();
 
-			_MockClientFactory = new Mock<IHttpClientFactory>();
-			_MockClient = new Mock<HttpClient>();
-			_MockClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(_MockClient.Object);
+			_MockClientFactory = _MockHandler.CreateClientFactory();
 
-			_Game = new CORE.GiveawayGame(_MockClientFactory.Object, Options.Create(Config));
+			_Game = new CORE.GiveawayGame(_MockClientFactory, Options.Create(Config));
 			_Cmd = new GiveawayGameCommand(_Game, new Mock<IConfiguration>().Object) {
 				ChatUser = new ChatUser {
 					IsBroadcaster = true
@@ -51,6 +51,11 @@ namespace Quiltoni.Test.GiveawayGame
 		public async Task WhenStarting_ShouldBeAbleToJoinGiveaway() {
 
 			// Arrange
+			_MockHandler.SetupRequest(HttpMethod.Put, Config.GiveawayGame.RelayUrl, msg => msg.Method == HttpMethod.Put)
+				.ReturnsResponse(HttpStatusCode.OK, _ => new HttpResponseMessage { });
+			_MockHandler.SetupRequest(HttpMethod.Put, Config.GiveawayGame.RelayUrl, msg => msg.Method == HttpMethod.Put)
+				.ReturnsResponse(HttpStatusCode.OK, _ => new HttpResponseMessage { });
+
 			TwitchChat.Setup(t => t.BroadcastMessageOnChannel(It.Is<string>(s => s.StartsWith("Giveaway starting in "))));
 
 			// Act
@@ -93,6 +98,10 @@ namespace Quiltoni.Test.GiveawayGame
 		public void WhenSameChatterEntersTwice_ShouldOnlyBeAddedOnce() {
 
 			// Arrange
+			_MockHandler.SetupRequest(HttpMethod.Put, Config.GiveawayGame.RelayUrl, msg => msg.Method == HttpMethod.Put)
+				.ReturnsResponse(HttpStatusCode.OK, _ => new HttpResponseMessage { });
+			_MockHandler.SetupRequest(HttpMethod.Put, Config.GiveawayGame.RelayUrl, msg => msg.Method == HttpMethod.Put)
+				.ReturnsResponse(HttpStatusCode.OK, _ => new HttpResponseMessage { });
 
 
 			// Act

@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="3.0.0-preview3-19153-02" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.0.0-preview3.19153.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Quiltoni.PixelBot.Core\Quiltoni.PixelBot.Core.csproj" />
+  </ItemGroup>
+</Project>

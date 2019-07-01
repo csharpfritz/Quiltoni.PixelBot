@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <LangVersion>7.3</LangVersion>
     <ApplicationInsightsResourceId>/subscriptions/5375802b-f892-427b-8ab0-d5f1b29a4ada/resourcegroups/quiltoni_resources/providers/microsoft.insights/components/quiltonirelay</ApplicationInsightsResourceId>
@@ -11,8 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.5.1" />
-    <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <!--<PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />-->
   </ItemGroup>
 
   <ItemGroup>
