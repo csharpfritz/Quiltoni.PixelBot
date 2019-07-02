@@ -20,8 +20,8 @@ namespace PixelBot.Orchestrator.Actors.ChannelEvents
 
 			this.Receive<OnMessageReceivedArgs>((args) => {
 
-				Debug.WriteLine(args.ChatMessage.Username + ": " + args.ChatMessage.Message);
-				ChatLogger.Tell(new ChatLogMessage(LogLevel.Information, Configuration.ChannelName, args.ChatMessage.Username + ": " + args.ChatMessage.Message));
+				Debug.WriteLine(args.ChatMessage.DisplayName + ": " + args.ChatMessage.Message);
+				ChatLogger.Tell(new ChatLogMessage(LogLevel.Information, Configuration.ChannelName, args.ChatMessage.DisplayName + ": " + args.ChatMessage.Message));
 
 			});
 

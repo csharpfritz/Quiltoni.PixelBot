@@ -12,8 +12,4 @@
     <PackageReference Include="Microsoft.Extensions.Options" Version="3.0.0-*" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Quiltoni.PixelBot\Quiltoni.PixelBot.csproj" />
-  </ItemGroup>
-
 </Project>
