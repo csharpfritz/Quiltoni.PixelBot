@@ -10,6 +10,7 @@ using System.Reflection;
 using MSG = Quiltoni.PixelBot.Core.Messages;
 using Quiltoni.PixelBot.Core.Messages.Currency;
 using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace PixelBot.Orchestrator.Actors
 {
@@ -111,6 +112,8 @@ namespace PixelBot.Orchestrator.Actors
 		}
 
 		private void StartEventHandlerActors() {
+
+			// TODO: Inject features appropriate for each StreamEvent
 
 			this.ChatCommand = CreateActor<ChatCommandActor>();
 			this.GiftSub = CreateActor<GiftSubscriberActor>(CurrencyRepository);
