@@ -38,15 +38,6 @@ namespace PixelBot.Orchestrator
 		// For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
 		public void ConfigureServices(IServiceCollection services) {
 
-			#region Load the channel specific and optional features
-
-			var features = PluginBootstrapper.LoadFeatures();
-			foreach (var feature in features) {
-				services.AddTransient(feature);
-			}
-
-			#endregion
-
 			services.Configure<CookiePolicyOptions>(options => {
 				options.CheckConsentNeeded = context => true;
 				options.MinimumSameSitePolicy = SameSiteMode.None;
@@ -92,7 +83,8 @@ namespace PixelBot.Orchestrator
 			services.AddSingleton<IActorRef>(provider => ChannelManagerActor.Create(
 				provider.GetService<ActorSystem>(),
 				provider.GetService<IChannelConfigurationContext>(),
-				provider.GetService<IHubContext<LoggerHub, IChatLogger>>()
+				provider.GetService<IHubContext<LoggerHub, IChatLogger>>(),
+				provider
 			));
 
 		}

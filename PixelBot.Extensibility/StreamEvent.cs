@@ -7,6 +7,7 @@ namespace PixelBot.Extensibility
 	public enum StreamEvent
 	{
 
+		None							= 0,
 		OnCommand					= 1,
 		OnGiftSubscribe		= 2,
 		OnMessage					= 4,

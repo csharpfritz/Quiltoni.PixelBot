@@ -15,6 +15,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0. SolutionItems", "0. Solu
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBot.Orchestrator", "PixelBot.Orchestrator\PixelBot.Orchestrator.csproj", "{C68CFF33-594D-40B0-9CD9-7AB18FCA8486}"
+	ProjectSection(ProjectDependencies) = postProject
+		{41F9D724-B454-4018-A220-5C4B37CB5D14} = {41F9D724-B454-4018-A220-5C4B37CB5D14}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBot.Workers", "PixelBot.Workers\PixelBot.Workers.csproj", "{82346639-FB33-468E-9BBE-12153506700A}"
 EndProject
@@ -28,9 +31,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBot.Games.GuessGame", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBot.Google", "PixelBot.Google\PixelBot.Google.csproj", "{EC82777A-FC02-4874-BBE1-84F46415E799}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PixelBot.Extensibility", "PixelBot.Extensibility\PixelBot.Extensibility.csproj", "{843BB191-B0A3-4A87-B757-F96087DC34E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBot.Extensibility", "PixelBot.Extensibility\PixelBot.Extensibility.csproj", "{843BB191-B0A3-4A87-B757-F96087DC34E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PixelBot.StandardFeatures", "PixelBot.StandardFeatures\PixelBot.StandardFeatures.csproj", "{41F9D724-B454-4018-A220-5C4B37CB5D14}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBot.StandardFeatures", "PixelBot.StandardFeatures\PixelBot.StandardFeatures.csproj", "{41F9D724-B454-4018-A220-5C4B37CB5D14}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
