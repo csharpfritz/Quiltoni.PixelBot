@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PixelBot.Extensibility\PixelBot.Extensibility.csproj" />
     <ProjectReference Include="..\PixelBot.Games.GuessGame\PixelBot.Games.GuessGame.csproj" />
     <ProjectReference Include="..\Quiltoni.PixelBot.Core\Quiltoni.PixelBot.Core.csproj" />
     <ProjectReference Include="..\PixelBot.Google\PixelBot.Google.csproj" />
