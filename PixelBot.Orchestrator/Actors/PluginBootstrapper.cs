@@ -6,10 +6,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Akka.Actor;
 using McMaster.NETCore.Plugins;
-using PixelBot.Extensibility;
+using Quiltoni.PixelBot.Core;
+using Quiltoni.PixelBot.Core.Extensibility;
+using Quiltoni.PixelBot.Core.Messages;
 
 namespace PixelBot.Orchestrator.Actors
 {
+
 	public class PluginBootstrapper : ReceiveActor
 	{
 
@@ -24,10 +27,16 @@ namespace PixelBot.Orchestrator.Actors
 
 			_Provider = provider;
 
-			// TODO: Write message handlers to receive requests for Types and send messages about those types
-			//this.Receive<>
+			LoadFeatures();
 
-		}
+      // TODO: Write message handlers to receive requests for Types and send messages about those types
+      this.Receive<RequestFeaturesForStreamEvent>(e => {
+				var features = GetFeaturesForStreamEvent(e.StreamEvent).ToArray();
+				Sender.Tell(new SendFeatures(features)); 
+			});
+
+
+    }
 
 		private void LoadFeatures() {
 

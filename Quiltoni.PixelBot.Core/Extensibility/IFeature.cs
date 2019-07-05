@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.Tracing;
+using Quiltoni.PixelBot.Core;
 
-namespace PixelBot.Extensibility
+namespace Quiltoni.PixelBot.Core.Extensibility
 {
 
 	[ActivatingEvents(StreamEvent.OnMessage)]

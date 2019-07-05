@@ -1,5 +1,6 @@
 ﻿using System;
-using PixelBot.Extensibility;
+using Quiltoni.PixelBot.Core;
+using Quiltoni.PixelBot.Core.Extensibility;
 
 namespace PixelBot.StandardFeatures.ScreenWidgets.ChatRoom
 {

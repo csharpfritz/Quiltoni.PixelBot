@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PixelBot.Extensibility
+namespace Quiltoni.PixelBot.Core.Extensibility
 {
 	public class BaseFeatureConfiguration
 	{

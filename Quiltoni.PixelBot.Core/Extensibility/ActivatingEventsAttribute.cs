@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace PixelBot.Extensibility
+namespace Quiltoni.PixelBot.Core.Extensibility
 {
 
 	public class ActivatingEventsAttribute : Attribute

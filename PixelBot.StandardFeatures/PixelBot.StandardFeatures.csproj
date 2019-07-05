@@ -4,12 +4,12 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\PixelBot.Extensibility\PixelBot.Extensibility.csproj" />
-  </ItemGroup>
-
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="xcopy $(TargetDir)*.* $(SolutionDir)PixelBot.Orchestrator\bin\Debug\netcoreapp3.0\plugins\PixelBot.StandardFeatures /e /y" />
   </Target>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Quiltoni.PixelBot.Core\Quiltoni.PixelBot.Core.csproj" />
+  </ItemGroup>
 
 </Project>
