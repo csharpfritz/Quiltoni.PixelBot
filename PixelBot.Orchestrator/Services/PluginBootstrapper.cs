@@ -7,38 +7,34 @@ using System.Threading.Tasks;
 using Akka.Actor;
 using McMaster.NETCore.Plugins;
 using Quiltoni.PixelBot.Core;
+using Quiltoni.PixelBot.Core.Domain;
 using Quiltoni.PixelBot.Core.Extensibility;
 using Quiltoni.PixelBot.Core.Messages;
 
-namespace PixelBot.Orchestrator.Actors
+namespace PixelBot.Orchestrator.Services
 {
 
-	public class PluginBootstrapper : ReceiveActor
+	public class PluginBootstrapper
 	{
 
-		public const string Name = "pluginbootstrapper";
-		private readonly IServiceProvider _Provider;
+		private static IEnumerable<Type> _Features;
 
-		public static string Path { get; private set; }
-
-		private IEnumerable<Type> _Features;
-
-		public PluginBootstrapper(IServiceProvider provider) {
-
-			_Provider = provider;
-
+		static PluginBootstrapper() {
 			LoadFeatures();
+		}
 
-      // TODO: Write message handlers to receive requests for Types and send messages about those types
-      this.Receive<RequestFeaturesForStreamEvent>(e => {
-				var features = GetFeaturesForStreamEvent(e.StreamEvent).ToArray();
-				Sender.Tell(new SendFeatures(features)); 
-			});
+		public PluginBootstrapper() {
+
+   //   // TODO: Write message handlers to receive requests for Types and send messages about those types
+   //   this.Receive<RequestFeaturesForStreamEvent>(e => {
+			//	var features = GetFeaturesForStreamEvent(e.StreamEvent).ToArray();
+			//	Sender.Tell(new SendFeatures(features), Self); 
+			//});
 
 
     }
 
-		private void LoadFeatures() {
+		private static void LoadFeatures() {
 
 			var loaders = new List<PluginLoader>();
 
@@ -71,7 +67,7 @@ namespace PixelBot.Orchestrator.Actors
 
 		}
 
-		private IEnumerable<IFeature> GetFeaturesForStreamEvent(StreamEvent evt) {
+		internal IEnumerable<IFeature> GetFeaturesForStreamEvent(StreamEvent evt, ChannelConfiguration config) {
 
 			var outFeatures = new List<IFeature>();
 
@@ -83,21 +79,16 @@ namespace PixelBot.Orchestrator.Actors
 				});
 
 			foreach (var f in featuresToMake) {
-				var newFeature = _Provider.GetService(f) as IFeature;
-				//newFeature.Configure()
-				outFeatures.Add(newFeature);
+				var newFeature = Activator.CreateInstance(f) as IFeature;
+				var featureConfig = config.GetFeatureConfiguration(newFeature.Name);
+				newFeature.Configure(featureConfig);
+				if (newFeature.IsVisible) outFeatures.Add(newFeature);
 			}
 
 			return outFeatures;
 
 		}
 
-		internal static IActorRef Create(IServiceProvider serviceProvider) {
-
-			var props = Akka.Actor.Props.Create<PluginBootstrapper>(serviceProvider);
-			return Context.ActorOf(props, Name);
-
-		}
-
 	}
+
 }

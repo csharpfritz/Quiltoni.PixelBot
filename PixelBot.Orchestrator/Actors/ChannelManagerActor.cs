@@ -24,26 +24,23 @@ namespace PixelBot.Orchestrator.Actors
 		private static readonly Dictionary<string, IActorRef> _ChannelActors = new Dictionary<string, IActorRef>();
 
 		private readonly IActorRef _ChatLogger;
-		private readonly IActorRef _PluginBootstrapper;
 		public const string Name = "channelmanager";
 
 		public static IActorRef Create(
 			ActorSystem system, 
 			IChannelConfigurationContext dataContext, 
-			IHubContext<LoggerHub, IChatLogger> chatLogger,
-			IServiceProvider serviceProvider) {
+			IHubContext<LoggerHub, IChatLogger> chatLogger) {
 
-			var props = Props.Create<ChannelManagerActor>(dataContext, chatLogger, serviceProvider);
+			var props = Props.Create<ChannelManagerActor>(dataContext, chatLogger);
 			return system.ActorOf(props, Name);
 
 		}
 
-		public ChannelManagerActor(IChannelConfigurationContext dataContext, IHubContext<LoggerHub, IChatLogger> chatLogger, IEnumerable<Type> featureTypes, IServiceProvider serviceProvider) {
+		public ChannelManagerActor(IChannelConfigurationContext dataContext, IHubContext<LoggerHub, IChatLogger> chatLogger) {
 
 			Logger = Context.GetLogger();
 
 			_ChatLogger = ChatLoggerActor.Create(chatLogger);
-			_PluginBootstrapper = PluginBootstrapper.Create(serviceProvider);
 
 			Receive<JoinChannel>(this.GetChannelActor);
 			Receive<ReportCurrentChannels>(_ => {
@@ -57,6 +54,8 @@ namespace PixelBot.Orchestrator.Actors
 		public ILoggingAdapter Logger { get; }
 
 		private bool GetChannelActor(JoinChannel msg) {
+
+			if (string.IsNullOrEmpty(msg.ChannelName)) return false;
 
 			if (_ChannelActors.ContainsKey(msg.ChannelName)) {
 				Logger.Log(Akka.Event.LogLevel.InfoLevel, $"Actor for channel '{msg.ChannelName}' already present.");

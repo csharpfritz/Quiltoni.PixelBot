@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Akka.Actor;
 using Microsoft.Extensions.Logging;
+using Quiltoni.PixelBot.Core;
 using Quiltoni.PixelBot.Core.Domain;
+using Quiltoni.PixelBot.Core.Extensibility;
 using Quiltoni.PixelBot.Core.Messages;
 using TwitchLib.Client.Events;
 
@@ -11,12 +15,17 @@ namespace PixelBot.Orchestrator.Actors.ChannelEvents
 	public class NewMessageActor : ReceiveActor
 	{
 
-		public NewMessageActor(ChannelConfiguration config) {
+		public NewMessageActor(ChannelConfiguration config, IEnumerable<IFeature> features) {
 
 			this.Configuration = config;
 
 			this.ChatLogger = Context.ActorSelection(ChatLoggerActor.Path)
 				.ResolveOne(TimeSpan.FromSeconds(5)).GetAwaiter().GetResult();
+
+			// Cheer 100 nothing_else_matters 05/07/19 
+			// Cheer 200 cpayette 05/07/19 
+			// Cheer 300 pakmanjr 05/07/19 
+			this.Features = features.ToArray();
 
 			this.Receive<OnMessageReceivedArgs>((args) => {
 
@@ -29,7 +38,11 @@ namespace PixelBot.Orchestrator.Actors.ChannelEvents
 		}
 
 		public ChannelConfiguration Configuration { get; }
+
 		public IActorRef ChatLogger { get; }
+
+		public IFeature[] Features { get; private set; }
+
 	}
 
 }

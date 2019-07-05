@@ -1,14 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using Akka.Actor;
 using Quiltoni.PixelBot.Core.Data;
 using Quiltoni.PixelBot.Core.Domain;
+using Quiltoni.PixelBot.Core.Extensibility;
 using TwitchLib.Client.Events;
 
 namespace PixelBot.Orchestrator.Actors.ChannelEvents
 {
 	public class GiftSubscriberActor : ReceiveActor
 	{
-		public GiftSubscriberActor(ChannelConfiguration config, ICurrencyRepository currencyRepository) {
+		public GiftSubscriberActor(ChannelConfiguration config, IEnumerable<IFeature> features,  ICurrencyRepository currencyRepository) {
 
 			this.Config = config;
 			this.CurrencyRepository = currencyRepository;

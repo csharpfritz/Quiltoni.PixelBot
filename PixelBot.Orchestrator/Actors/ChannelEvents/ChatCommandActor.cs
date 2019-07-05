@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Akka.Actor;
 using PixelBot.Orchestrator.Actors.Commands;
 using Quiltoni.PixelBot.Core.Domain;
+using Quiltoni.PixelBot.Core.Extensibility;
 using Quiltoni.PixelBot.Core.Messages;
 using TwitchLib.Client.Events;
 
@@ -15,7 +16,7 @@ namespace PixelBot.Orchestrator.Actors.ChannelEvents
 
 		public ChannelConfiguration Config { get; }
 
-		public ChatCommandActor(ChannelConfiguration config) {
+		public ChatCommandActor(ChannelConfiguration config, IEnumerable<IFeature> features) {
 
 			this.Config = config;
 			Receive<OnChatCommandReceivedArgs>(cmd => OnChatCommandReceived(cmd));

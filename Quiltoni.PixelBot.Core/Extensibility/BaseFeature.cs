@@ -10,14 +10,12 @@ namespace Quiltoni.PixelBot.Core.Extensibility
 
 		public bool IsEnabled { get; private set; }
 
-		protected string Channel { get; private set; }
-
 		protected BaseFeatureConfiguration Configuration { get; private set; }
 
-		public virtual void Configure(BaseFeatureConfiguration configuration, string channel) {
+		public virtual void Configure(BaseFeatureConfiguration configuration) {
 			this.Configuration = configuration;
-			this.IsEnabled = Configuration.IsFeatureEnabled(GetType().FullName);
-			this.Channel = channel;
+			this.IsEnabled = Configuration.IsEnabled;
+			this.IsVisible = Configuration.IsVisible;
 		}
 	}
 

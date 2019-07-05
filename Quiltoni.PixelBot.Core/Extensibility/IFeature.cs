@@ -13,7 +13,7 @@ namespace Quiltoni.PixelBot.Core.Extensibility
 		/// </summary>
 		/// <param name="configuration">Configuration for the feature specific to a channel</param>
 		/// <param name="channel">The channel to be configured</param>
-		void Configure(BaseFeatureConfiguration configuration, string channel);
+		void Configure(BaseFeatureConfiguration configuration);
 
 		string Name { get; }
 

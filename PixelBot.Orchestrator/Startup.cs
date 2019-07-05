@@ -83,8 +83,7 @@ namespace PixelBot.Orchestrator
 			services.AddSingleton<IActorRef>(provider => ChannelManagerActor.Create(
 				provider.GetService<ActorSystem>(),
 				provider.GetService<IChannelConfigurationContext>(),
-				provider.GetService<IHubContext<LoggerHub, IChatLogger>>(),
-				provider
+				provider.GetService<IHubContext<LoggerHub, IChatLogger>>()
 			));
 
 		}

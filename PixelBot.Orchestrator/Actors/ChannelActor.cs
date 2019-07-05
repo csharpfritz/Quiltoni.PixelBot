@@ -11,6 +11,8 @@ using MSG = Quiltoni.PixelBot.Core.Messages;
 using Quiltoni.PixelBot.Core.Messages.Currency;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
+using PixelBot.Orchestrator.Services;
+using Quiltoni.PixelBot.Core;
 
 namespace PixelBot.Orchestrator.Actors
 {
@@ -22,6 +24,7 @@ namespace PixelBot.Orchestrator.Actors
 	{
 
 		private TwitchClient _Client;
+		private PluginBootstrapper _Bootstrapper;
 		
 		private IActorRef ChatCommand;
 		private IActorRef GiftSub;
@@ -115,18 +118,20 @@ namespace PixelBot.Orchestrator.Actors
 
 			// TODO: Inject features appropriate for each StreamEvent
 
-			this.ChatCommand = CreateActor<ChatCommandActor>();
-			this.GiftSub = CreateActor<GiftSubscriberActor>(CurrencyRepository);
-			this.NewMessage = CreateActor<NewMessageActor>();
-			this.NewSub = CreateActor<NewSubscriberActor>(CurrencyRepository);
-			this.Raid = CreateActor<RaidActor>(CurrencyRepository);
-			this.ReSub = CreateActor<ReSubscriberActor>(CurrencyRepository);
+			this.ChatCommand = CreateActor<ChatCommandActor>(StreamEvent.OnCommand);
+			this.GiftSub = CreateActor<GiftSubscriberActor>(StreamEvent.OnGiftSubscribe, CurrencyRepository);
+			this.NewMessage = CreateActor<NewMessageActor>(StreamEvent.OnMessage);
+			this.NewSub = CreateActor<NewSubscriberActor>(StreamEvent.OnSubscribe, CurrencyRepository);
+			this.Raid = CreateActor<RaidActor>(StreamEvent.OnRaid, CurrencyRepository);
+			this.ReSub = CreateActor<ReSubscriberActor>(StreamEvent.OnResubscribe, CurrencyRepository);
 
-			IActorRef CreateActor<T>(params object[] args) where T : ReceiveActor {
+			IActorRef CreateActor<T>(StreamEvent evt, params object[] args) where T : ReceiveActor {
 
-				var realArgs = new object[] { Config };
+				var features = _Bootstrapper.GetFeaturesForStreamEvent(evt, Config);
+				var realArgs = new object[] { Config, features };
 				realArgs = realArgs.Concat(args).ToArray();
 				var props = Akka.Actor.Props.Create<T>(realArgs);
+
 				return Context.ActorOf(props, $"event_{typeof(T).Name}");
 
 			}
