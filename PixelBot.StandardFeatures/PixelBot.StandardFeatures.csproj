@@ -4,10 +4,6 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy $(TargetDir)*.* $(SolutionDir)PixelBot.Orchestrator\bin\Debug\netcoreapp3.0\plugins\PixelBot.StandardFeatures /e /y" />
-  </Target>
-
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
