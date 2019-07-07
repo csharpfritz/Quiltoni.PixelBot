@@ -24,7 +24,7 @@ namespace PixelBot.Orchestrator.Actors
 	{
 
 		private TwitchClient _Client;
-		private PluginBootstrapper _Bootstrapper;
+		private PluginBootstrapper _Bootstrapper = new PluginBootstrapper();
 		
 		private IActorRef ChatCommand;
 		private IActorRef GiftSub;

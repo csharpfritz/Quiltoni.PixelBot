@@ -32,6 +32,11 @@ namespace PixelBot.Orchestrator.Actors.ChannelEvents
 				Debug.WriteLine(args.ChatMessage.DisplayName + ": " + args.ChatMessage.Message);
 				ChatLogger.Tell(new ChatLogMessage(LogLevel.Information, Configuration.ChannelName, args.ChatMessage.DisplayName + ": " + args.ChatMessage.Message));
 
+				foreach (var f in Features) {
+					// TODO: Ensure we pass badges and emotes through to the feature
+					f.FeatureTriggered(args.ChatMessage.DisplayName + ": " + args.ChatMessage.Message);
+				}
+
 			});
 
 

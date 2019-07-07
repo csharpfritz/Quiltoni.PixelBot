@@ -8,6 +8,10 @@
     <Exec Command="xcopy $(TargetDir)*.* $(SolutionDir)PixelBot.Orchestrator\bin\Debug\netcoreapp3.0\plugins\PixelBot.StandardFeatures /e /y" />
   </Target>
 
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+	
   <ItemGroup>
     <ProjectReference Include="..\Quiltoni.PixelBot.Core\Quiltoni.PixelBot.Core.csproj" />
   </ItemGroup>

@@ -19,7 +19,10 @@ using PixelBot.Orchestrator.Components;
 using PixelBot.Orchestrator.Data;
 using PixelBot.Orchestrator.Services;
 using PixelBot.Orchestrator.Services.Authentication;
+using PixelBot.StandardFeatures.ScreenWidgets.ChatRoom;
+using Quiltoni.PixelBot.Core;
 using Quiltoni.PixelBot.Core.Domain;
+using TwitchLib.Api.Models.v5.Chat;
 
 namespace PixelBot.Orchestrator
 {
@@ -71,7 +74,6 @@ namespace PixelBot.Orchestrator
 				config.EnableDetailedErrors = true;
 			}).AddJsonProtocol();
 
-
 			services.Configure<BotConfiguration>(Configuration.GetSection("BotConfig"));
 
 			services.AddSingleton<ActorSystem>(_ => ActorSystem.Create("BotService"));
@@ -92,6 +94,8 @@ namespace PixelBot.Orchestrator
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IOptions<BotConfiguration> botConfig) {
 
 			BotConfiguration = botConfig.Value;
+			var foo = new ChatRoomFeature();
+			var plugins = new PluginBootstrapper();
 
 			if (env.IsDevelopment()) {
 				app.UseDeveloperExceptionPage();
@@ -110,7 +114,16 @@ namespace PixelBot.Orchestrator
 			app.UseAuthentication();
 			app.UseAuthorization();
 
+			var features = plugins.GetFeaturesForStreamEvent(StreamEvent.All, null);
+
 			app.UseEndpoints(routes => {
+
+				foreach (var f in features) {
+
+					f.RegisterRoutes(routes);
+
+				}
+
 				routes.MapHub<LoggerHub>("/loggerhub");
 				routes.MapRazorPages();
 				routes.MapDefaultControllerRoute();

@@ -15,6 +15,8 @@ namespace Quiltoni.PixelBot.Core
 		OnResubscribe			= 16,
 		OnSubscribe				= 32,
 
+		All								= 1023
+
 	}
 
 }

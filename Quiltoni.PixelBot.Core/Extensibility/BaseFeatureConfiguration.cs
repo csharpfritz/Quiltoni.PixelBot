@@ -6,6 +6,8 @@ namespace Quiltoni.PixelBot.Core.Extensibility
 	public class BaseFeatureConfiguration
 	{
 
+		public string ChannelName { get; set; }
+
 		/// <summary>
 		/// has the owner of this channel configured this feature?
 		/// </summary>

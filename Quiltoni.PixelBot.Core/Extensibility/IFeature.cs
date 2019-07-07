@@ -1,4 +1,6 @@
-﻿using System.Diagnostics.Tracing;
+﻿using System;
+using System.Diagnostics.Tracing;
+using Microsoft.AspNetCore.Routing;
 using Quiltoni.PixelBot.Core;
 
 namespace Quiltoni.PixelBot.Core.Extensibility
@@ -20,6 +22,10 @@ namespace Quiltoni.PixelBot.Core.Extensibility
 		bool IsVisible { get; }
 
 		bool IsEnabled { get; }
+
+		void RegisterRoutes(IEndpointRouteBuilder routes);
+
+		void FeatureTriggered(string notifyAction);
 
 	}
 

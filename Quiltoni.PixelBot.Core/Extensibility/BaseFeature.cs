@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.Routing;
 
 namespace Quiltoni.PixelBot.Core.Extensibility
 {
@@ -17,6 +18,11 @@ namespace Quiltoni.PixelBot.Core.Extensibility
 			this.IsEnabled = Configuration.IsEnabled;
 			this.IsVisible = Configuration.IsVisible;
 		}
+
+		public abstract void FeatureTriggered(string notifyAction);
+
+		public virtual void RegisterRoutes(IEndpointRouteBuilder routes) { }
+
 	}
 
 }
