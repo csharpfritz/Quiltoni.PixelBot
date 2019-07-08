@@ -13,6 +13,7 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using PixelBot.Orchestrator.Services;
 using Quiltoni.PixelBot.Core;
+using Quiltoni.PixelBot.Core.Extensibility;
 
 namespace PixelBot.Orchestrator.Actors
 {
@@ -33,6 +34,8 @@ namespace PixelBot.Orchestrator.Actors
 		private IActorRef Raid;
 		private IActorRef ReSub;
 
+		private IActorRef[] EventActors { get { return new[] { ChatCommand, GiftSub, NewMessage, NewSub, Raid, ReSub }; } }
+
 		public ChannelActor(ChannelConfiguration config) {
 
 			this.Config = config;
@@ -41,6 +44,7 @@ namespace PixelBot.Orchestrator.Actors
 			Receive<MSG.BroadcastMessage>(msg => BroadcastMessage(msg));
 			Receive<MSG.Currency.AddCurrencyMessage>(msg => AddCurrency(msg));
 			Receive<MSG.Currency.MyCurrencyMessage>(msg => ReportCurrency(msg));
+			//Receive<MSG.GetFeatureFromChannel>(msg => Sender.Tell(GetFeature(msg.FeatureType)));
 
 			Self = Context.Self;
 
@@ -159,6 +163,24 @@ namespace PixelBot.Orchestrator.Actors
 				CurrencyRepository = Activator.CreateInstance(Type.GetType(sheetType), Config, null) as ICurrencyRepository;
 
 			}
+
+		}
+
+		public IFeature GetFeature(Type featureType) {
+
+			foreach (var a in EventActors) {
+
+				if (a.GetType().GetProperty("Features") != null) {
+
+					var featureProperty = a.GetType().GetProperty("Features");
+					var features = featureProperty.GetValue(a) as IFeature[];
+					return features.FirstOrDefault(f => f.GetType() == featureType);
+
+				}
+
+			}
+
+			return null;
 
 		}
 

@@ -16,7 +16,10 @@ namespace Quiltoni.PixelBot.Core.Domain
 		public CurrencyConfiguration Currency { get; set; } = new CurrencyConfiguration();
 
 		public BaseFeatureConfiguration GetFeatureConfiguration(string featureName) {
-			return new BaseFeatureConfiguration();
+			return new BaseFeatureConfiguration() {
+				ChannelName = ChannelName,
+				IsEnabled = true
+			};
 		}
 
 		// TODO: Add other configuration options later

@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using PixelBot.StandardFeatures.ScreenWidgets.ChatRoom;
 using Quiltoni.PixelBot.Core;
 using Quiltoni.PixelBot.Core.Domain;
@@ -26,6 +27,8 @@ namespace PixelBot.Orchestrator.Services
 
 		public PluginBootstrapper() { }
 
+		public static IServiceProvider ServiceProvider { get; internal set; }
+
 		private static void LoadFeatures() {
 
 			var outTypeCollection = new List<Type>();
@@ -34,7 +37,6 @@ namespace PixelBot.Orchestrator.Services
 			var rootAssembly = typeof(PluginBootstrapper).Assembly;
 			foreach (var assembly in rootAssembly.GetReferencedAssemblies()) {
 
-				if (assembly.FullName.Contains("StandardFeatures")) Debugger.Break();
 				var loadedAssembly = Assembly.Load(assembly);
 
 				outTypeCollection.AddRange(loadedAssembly.GetTypes()
@@ -60,10 +62,10 @@ namespace PixelBot.Orchestrator.Services
 			// Instantiate the features that interact with the StreamEvent requested
 			foreach (var f in featuresToMake) {
 
-				var newFeature = Activator.CreateInstance(f) as IFeature;
-				var featureConfig = config.GetFeatureConfiguration(newFeature.Name);
-				newFeature.Configure(featureConfig);
-				if (newFeature.IsVisible) outFeatures.Add(newFeature);
+				var newFeature = ActivatorUtilities.CreateInstance(ServiceProvider, f) as IFeature;
+				var featureConfig = config?.GetFeatureConfiguration(newFeature.Name);
+				if (featureConfig != null) newFeature.Configure(featureConfig);
+				if (featureConfig == null || newFeature.IsVisible) outFeatures.Add(newFeature);
 
 			}
 

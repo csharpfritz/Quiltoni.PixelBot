@@ -10,7 +10,7 @@
 <ul>
     @foreach (var channel in TheCurrentChannels)
     {
-        <li>@channel</li>
+        <li>@channel  <NavLink href="@($"Widgets/ChatRoom/{channel}")">Chat Room Widget</NavLink></li>
     }
 </ul>
 

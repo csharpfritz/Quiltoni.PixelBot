@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using Akka.Actor;
 using Microsoft.Extensions.Logging;
 using Quiltoni.PixelBot.Core;
@@ -32,13 +33,16 @@ namespace PixelBot.Orchestrator.Actors.ChannelEvents
 				Debug.WriteLine(args.ChatMessage.DisplayName + ": " + args.ChatMessage.Message);
 				ChatLogger.Tell(new ChatLogMessage(LogLevel.Information, Configuration.ChannelName, args.ChatMessage.DisplayName + ": " + args.ChatMessage.Message));
 
-				foreach (var f in Features) {
+				foreach (var f in Features.Where(f => f.IsEnabled)) {
 					// TODO: Ensure we pass badges and emotes through to the feature
 					f.FeatureTriggered(args.ChatMessage.DisplayName + ": " + args.ChatMessage.Message);
 				}
 
 			});
-
+			this.Receive<GetFeatureForChannel>(f => {
+				if (f.Channel != Configuration.ChannelName || !Features.Any(feature => feature.GetType() == f.FeatureType)) return;
+				Sender.Tell(Features.First(feature => f.FeatureType == feature.GetType()));
+			});
 
 		}
 

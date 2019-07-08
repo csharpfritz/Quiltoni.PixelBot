@@ -44,8 +44,12 @@ namespace PixelBot.Orchestrator.Actors
 
 			Receive<JoinChannel>(this.GetChannelActor);
 			Receive<ReportCurrentChannels>(_ => {
-				Sender.Tell(_ChannelActors.Select(kv => kv.Key).ToArray());
+				 Sender.Tell(_ChannelActors.Select(kv => kv.Key).ToArray());
 			});
+			//Receive<GetFeatureForChannel>(async f => {
+			//	var theChannelActor = _ChannelActors[f.Channel];
+			//	Sender.Tell(await theChannelActor.Ask(new GetFeatureFromChannel(f.FeatureType)));
+			//});
 			this.DataContext = dataContext;
 
 		}
@@ -69,6 +73,10 @@ namespace PixelBot.Orchestrator.Actors
 
 			return true;
 
+		}
+
+		public ChannelActor this[string channelName] {
+			get { return _ChannelActors[channelName] as ChannelActor; }
 		}
 
 	}

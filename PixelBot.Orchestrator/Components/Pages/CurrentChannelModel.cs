@@ -36,7 +36,13 @@ namespace PixelBot.Orchestrator.Components.Pages
 				return;
 			}
 
+		}
+
+		protected override async Task OnParametersSetAsync() {
+
 			TheCurrentChannels = (await ChannelManager.Ask(new MSG.ReportCurrentChannels())) as string[];
+
+			await base.OnParametersSetAsync();
 
 		}
 

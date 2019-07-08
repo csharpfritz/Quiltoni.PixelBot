@@ -95,6 +95,7 @@ namespace PixelBot.Orchestrator
 
 			BotConfiguration = botConfig.Value;
 			var foo = new ChatRoomFeature(null);
+			PluginBootstrapper.ServiceProvider = app.ApplicationServices;
 			var plugins = new PluginBootstrapper();
 
 			if (env.IsDevelopment()) {
