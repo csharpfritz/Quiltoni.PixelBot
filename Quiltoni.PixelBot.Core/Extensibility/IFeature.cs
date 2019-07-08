@@ -27,6 +27,10 @@ namespace Quiltoni.PixelBot.Core.Extensibility
 
 		void FeatureTriggered(string notifyAction);
 
+		Action<string> BroadcastMessage { set; }
+
+		Action<string, string> WhisperMessage { set; }
+
 	}
 
 }

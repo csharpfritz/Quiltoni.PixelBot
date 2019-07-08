@@ -11,6 +11,10 @@ namespace Quiltoni.PixelBot.Core.Extensibility
 
 		public bool IsEnabled { get; private set; }
 
+		public Action<string> BroadcastMessage { get; set; }
+
+		public Action<string, string> WhisperMessage { get; set; }
+
 		protected BaseFeatureConfiguration Configuration { get; private set; }
 
 		public virtual void Configure(BaseFeatureConfiguration configuration) {

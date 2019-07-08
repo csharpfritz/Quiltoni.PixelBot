@@ -14,8 +14,6 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.ChatRoom
 
 		private readonly IHubContext<ChatRoomHub> _HubContext;
 
-		// TODO:  Allow the HubContext to be passed-in
-
 		public ChatRoomFeature(IHubContext<ChatRoomHub> hubContext) {
 			_HubContext = hubContext;
 		}

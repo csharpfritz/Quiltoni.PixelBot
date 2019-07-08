@@ -94,9 +94,6 @@ namespace PixelBot.Orchestrator
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IOptions<BotConfiguration> botConfig) {
 
 			BotConfiguration = botConfig.Value;
-			var foo = new ChatRoomFeature(null);
-			PluginBootstrapper.ServiceProvider = app.ApplicationServices;
-			var plugins = new PluginBootstrapper();
 
 			if (env.IsDevelopment()) {
 				app.UseDeveloperExceptionPage();
@@ -115,6 +112,9 @@ namespace PixelBot.Orchestrator
 			app.UseAuthentication();
 			app.UseAuthorization();
 
+			// Configure plugged in features
+			PluginBootstrapper.ServiceProvider = app.ApplicationServices;
+			var plugins = new PluginBootstrapper();
 			var features = plugins.GetFeaturesForStreamEvent(StreamEvent.All, null);
 
 			app.UseEndpoints(routes => {
