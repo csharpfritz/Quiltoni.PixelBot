@@ -70,8 +70,8 @@ namespace PixelBot.Orchestrator.Actors.ChannelEvents
 
 		}
 
-		public static Props Props(ChannelConfiguration config) {
-			return Akka.Actor.Props.Create<ChatCommandActor>(config);
+		public static Props Props(ChannelConfiguration config, IEnumerable<IFeature> features = null) {
+			return Akka.Actor.Props.Create<ChatCommandActor>(config, features);
 		}
 
 	}

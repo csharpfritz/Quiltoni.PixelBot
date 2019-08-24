@@ -26,18 +26,21 @@ namespace PixelBot.Orchestrator.Components.Pages.Widgets
 
 		public abstract StreamEvent TriggerEvent { get; }
 
-		protected override async Task OnInitAsync() {
+		protected override async Task OnInitializedAsync() {
 
 			var eventMsg = _StreamEvents[TriggerEvent];
 
-			Feature = await ActorSystem
-				.ActorSelection($"/user/channelmanager/channel_{Channel}/event_{eventMsg}")
-				.Ask(new GetFeatureForChannel(Channel, typeof(T))) as T;
+			await InitializeFeatureForChannel(eventMsg);
 
-			await base.OnInitAsync();
+			await base.OnInitializedAsync();
 
 		}
 
+		public async Task InitializeFeatureForChannel(string eventMsg) {
+			Feature = await ActorSystem
+				.ActorSelection($"/user/channelmanager/channel_{Channel}/event_{eventMsg}")
+				.Ask(new GetFeatureForChannel(Channel, typeof(T))) as T;
+		}
 	}
 
 }
