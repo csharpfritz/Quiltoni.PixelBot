@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Akka.Actor;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using MSG = Quiltoni.PixelBot.Core.Messages;
 
 namespace PixelBot.Orchestrator.Components.Pages
@@ -25,6 +26,9 @@ namespace PixelBot.Orchestrator.Components.Pages
 		[Inject]
 		public IActorRef ChannelManager { get; set; }
 
+		[Inject]
+		public IJSRuntime JSRuntime { get; set; }
+
 		public string channelName { get; set; }
 
 		public string[] TheCurrentChannels = new string[] { };
@@ -35,6 +39,9 @@ namespace PixelBot.Orchestrator.Components.Pages
 				UriHelper.NavigateTo("/");
 				return;
 			}
+
+			// TODO: Activate the JavaScript to connect the SignalR log
+			await JSRuntime.InvokeAsync<string>("StartLogging", null);
 
 		}
 

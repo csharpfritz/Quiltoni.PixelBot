@@ -3,7 +3,7 @@
 @using Microsoft.AspNetCore.Authorization
 
 
-<input type="text" bind="@channelName" placeholder="Channel to Join" />
+<input type="text" @bind="channelName" placeholder="Channel to Join" />
 <button @onclick="@(async () => await this.JoinChannel())">Join</button>
 
 <h3>Channels currently joined to:</h3>

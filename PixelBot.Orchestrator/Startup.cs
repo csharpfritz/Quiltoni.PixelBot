@@ -126,11 +126,19 @@ namespace PixelBot.Orchestrator
 				}
 
 				routes.MapHub<LoggerHub>("/loggerhub");
+				MapExternalHubs(routes);
 				routes.MapRazorPages();
 				routes.MapDefaultControllerRoute();
 				routes.MapBlazorHub();
 				routes.MapFallbackToPage("/Index");
 			});
+		}
+
+		private static void MapExternalHubs(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder routes) {
+			
+			// TODO: use reflection to identify Hubs in the StandardFeatures assembly and add them
+			routes.MapHub<ChatRoomHub>("/hubs/chatroom");
+
 		}
 	}
 }

@@ -24,6 +24,7 @@ namespace PixelBot.Orchestrator.Actors.ChannelEvents
 			this.ChatLogger = Context.ActorSelection(ChatLoggerActor.Path)
 				.ResolveOne(TimeSpan.FromSeconds(5)).GetAwaiter().GetResult();
 
+			// TODO:  This should be a static method on the ChannelActor object
 			_ChannelActor = Context.ActorSelection($"/user/channelmanager/channel_{config.ChannelName}");
 
 			// Cheer 100 nothing_else_matters 05/07/19 
