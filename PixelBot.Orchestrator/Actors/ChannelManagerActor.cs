@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using PixelBot.Orchestrator.Data;
 using PixelBot.Orchestrator.Services;
 using Quiltoni.PixelBot.Core.Messages;
+using TwitchLib.Api.Services.Events.FollowerService;
 
 namespace PixelBot.Orchestrator.Actors
 {
@@ -24,6 +25,7 @@ namespace PixelBot.Orchestrator.Actors
 		private static readonly Dictionary<string, IActorRef> _ChannelActors = new Dictionary<string, IActorRef>();
 
 		private readonly IActorRef _ChatLogger;
+		private IActorRef _FollowerActor;
 		public const string Name = "channelmanager";
 
 		public static IActorRef Create(
@@ -42,15 +44,28 @@ namespace PixelBot.Orchestrator.Actors
 
 			_ChatLogger = ChatLoggerActor.Create(chatLogger);
 
+			CreateFollowerActor();
+
 			Receive<JoinChannel>(this.GetChannelActor);
 			Receive<ReportCurrentChannels>(_ => {
 				 Sender.Tell(_ChannelActors.Select(kv => kv.Key).ToArray());
+			});
+			Receive<OnNewFollowersDetectedArgs>(args => {
+
+				_ChannelActors[args.Channel].Tell(args);
+
 			});
 			//Receive<GetFeatureForChannel>(async f => {
 			//	var theChannelActor = _ChannelActors[f.Channel];
 			//	Sender.Tell(await theChannelActor.Ask(new GetFeatureFromChannel(f.FeatureType)));
 			//});
 			this.DataContext = dataContext;
+
+		}
+
+		private void CreateFollowerActor() {
+
+			_FollowerActor = Context.ActorOf<FollowerServiceActor>();
 
 		}
 

@@ -14,7 +14,7 @@ namespace Quiltoni.PixelBot.Core
 		OnRaid						= 8,
 		OnResubscribe			= 16,
 		OnSubscribe				= 32,
-
+		OnFollow					= 64,
 		All								= 1023
 
 	}

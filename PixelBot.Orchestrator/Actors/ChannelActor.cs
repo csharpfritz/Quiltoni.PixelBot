@@ -14,6 +14,9 @@ using Microsoft.Extensions.DependencyInjection;
 using PixelBot.Orchestrator.Services;
 using Quiltoni.PixelBot.Core;
 using Quiltoni.PixelBot.Core.Extensibility;
+using TwitchLib.Api;
+using TwitchLib.Api.Services;
+using TwitchLib.Api.Services.Events.FollowerService;
 
 namespace PixelBot.Orchestrator.Actors
 {
@@ -33,6 +36,9 @@ namespace PixelBot.Orchestrator.Actors
 		private IActorRef NewSub;
 		private IActorRef Raid;
 		private IActorRef ReSub;
+		private IActorRef NewFollower;
+		private TwitchAPI _API;
+		private FollowerService _FollowerService;
 
 		private IActorRef[] EventActors { get { return new[] { ChatCommand, GiftSub, NewMessage, NewSub, Raid, ReSub }; } }
 
@@ -44,6 +50,7 @@ namespace PixelBot.Orchestrator.Actors
 			Receive<MSG.BroadcastMessage>(msg => BroadcastMessage(msg));
 			Receive<MSG.Currency.AddCurrencyMessage>(msg => AddCurrency(msg));
 			Receive<MSG.Currency.MyCurrencyMessage>(msg => ReportCurrency(msg));
+			Receive<OnNewFollowersDetectedArgs>(args => NewFollower.Tell(args, this.Self));
 			//Receive<MSG.GetFeatureFromChannel>(msg => Sender.Tell(GetFeature(msg.FeatureType)));
 
 			Self = Context.Self;
@@ -128,6 +135,7 @@ namespace PixelBot.Orchestrator.Actors
 			this.NewSub = CreateActor<NewSubscriberActor>(StreamEvent.OnSubscribe, CurrencyRepository);
 			this.Raid = CreateActor<RaidActor>(StreamEvent.OnRaid, CurrencyRepository);
 			this.ReSub = CreateActor<ReSubscriberActor>(StreamEvent.OnResubscribe, CurrencyRepository);
+			this.NewFollower = CreateActor<NewFollowerActor>(StreamEvent.OnFollow);
 
 			IActorRef CreateActor<T>(StreamEvent evt, params object[] args) where T : ReceiveActor {
 
