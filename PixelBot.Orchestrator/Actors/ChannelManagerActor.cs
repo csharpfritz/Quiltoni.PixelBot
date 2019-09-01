@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using PixelBot.Orchestrator.Data;
 using PixelBot.Orchestrator.Services;
+using Quiltoni.PixelBot.Core.Domain;
 using Quiltoni.PixelBot.Core.Messages;
 using TwitchLib.Api.Services.Events.FollowerService;
 
@@ -25,8 +26,11 @@ namespace PixelBot.Orchestrator.Actors
 		private static readonly Dictionary<string, IActorRef> _ChannelActors = new Dictionary<string, IActorRef>();
 
 		private readonly IActorRef _ChatLogger;
+		private readonly IActorRef _ChannelConfigurationActor;
 		private IActorRef _FollowerActor;
 		public const string Name = "channelmanager";
+
+		public static IActorRef Instance { get; private set; }
 
 		public static IActorRef Create(
 			ActorSystem system, 
@@ -34,7 +38,8 @@ namespace PixelBot.Orchestrator.Actors
 			IHubContext<LoggerHub, IChatLogger> chatLogger) {
 
 			var props = Props.Create<ChannelManagerActor>(dataContext, chatLogger);
-			return system.ActorOf(props, Name);
+			Instance = system.ActorOf(props, Name);
+			return Instance;
 
 		}
 
@@ -45,6 +50,7 @@ namespace PixelBot.Orchestrator.Actors
 			_ChatLogger = ChatLoggerActor.Create(chatLogger);
 
 			CreateFollowerActor();
+			_ChannelConfigurationActor = Context.ActorOf(Props.Create<ChannelConfigurationActor>(dataContext));
 
 			Receive<JoinChannel>(this.GetChannelActor);
 			Receive<ReportCurrentChannels>(_ => {
@@ -55,11 +61,28 @@ namespace PixelBot.Orchestrator.Actors
 				_ChannelActors[args.Channel].Tell(args);
 
 			});
+			Receive<NotifyChannelOfConfigurationUpdate>(UpdateChannelWithConfiguration);
+
+			Receive<GetConfigurationForChannel>(msg =>
+			{
+
+				var config = _ChannelConfigurationActor.Ask<ChannelConfiguration>(msg);
+				Sender.Tell(config);
+
+			});
+
 			//Receive<GetFeatureForChannel>(async f => {
 			//	var theChannelActor = _ChannelActors[f.Channel];
 			//	Sender.Tell(await theChannelActor.Ask(new GetFeatureFromChannel(f.FeatureType)));
 			//});
 			this.DataContext = dataContext;
+
+		}
+
+		private void UpdateChannelWithConfiguration(NotifyChannelOfConfigurationUpdate msg)
+		{
+
+			_ChannelActors[msg.ChannelName].Tell(msg);
 
 		}
 
@@ -70,6 +93,7 @@ namespace PixelBot.Orchestrator.Actors
 		}
 
 		public IChannelConfigurationContext DataContext { get; }
+
 		public ILoggingAdapter Logger { get; }
 
 		private bool GetChannelActor(JoinChannel msg) {
@@ -81,7 +105,7 @@ namespace PixelBot.Orchestrator.Actors
 				return false;
 			}
 
-			var config = DataContext.GetConfigurationForChannel(msg.ChannelName);
+			var config = _ChannelConfigurationActor.Ask<ChannelConfiguration>(new GetConfigurationForChannel(msg.ChannelName)).GetAwaiter().GetResult();
 
 			var child = Context.ActorOf(ChannelActor.Props(config), $"channel_{msg.ChannelName}");
 			_ChannelActors.Add(msg.ChannelName, child);

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Akka.Actor;
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualBasic.ApplicationServices;
 using Quiltoni.PixelBot.Core.Domain;
 using Quiltoni.PixelBot.Core.Messages;
 using TwitchLib.Api;
@@ -49,15 +50,23 @@ namespace PixelBot.Orchestrator.Actors
 		private void _FollowerService_OnNewFollowersDetected(object sender, OnNewFollowersDetectedArgs e) {
 
 			// TODO: Notify the appopriate ChannelActor for the channel with a new follower
-			ChatLogger.Tell(new MSG.ChatLogMessage(LogLevel.Information, e.Channel, $"New Follower on channel ({e.Channel}): {e.NewFollowers.First().}" + args.ChatMessage.Message));
-			Context.Parent.Tell(e);
+
+			var users = ConvertUserIdToUserName(e.NewFollowers.Select(f => f.ToUserId)).GetAwaiter().GetResult();
+
+			foreach (var newFollower in e.NewFollowers) {
+
+				var thisUser = users.First(u => u.Id == newFollower.ToUserId);
+				ChatLogger.Tell(new MSG.ChatLogMessage(LogLevel.Information, e.Channel, $"New Follower on channel ({e.Channel}): {thisUser.DisplayName}"));
+				Context.Parent.Tell(e);
+
+			}
 
 		}
 
-		private async Task<string> ConvertUserIdToUserName(string userId) {
+		private async Task<TwitchLib.Api.Helix.Models.Users.User[]> ConvertUserIdToUserName(IEnumerable<string> userIds) {
 
-			var response = await _API.Helix.Users.GetUsersAsync(new List<string>() { userId });
-			return response.Users.First().DisplayName;
+			var response = await _API.Helix.Users.GetUsersAsync(userIds.ToList());
+			return response.Users;
 
 		}
 

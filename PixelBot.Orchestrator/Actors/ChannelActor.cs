@@ -30,17 +30,17 @@ namespace PixelBot.Orchestrator.Actors
 		private TwitchClient _Client;
 		private PluginBootstrapper _Bootstrapper = new PluginBootstrapper();
 		
-		private IActorRef ChatCommand;
-		private IActorRef GiftSub;
-		private IActorRef NewMessage;
-		private IActorRef NewSub;
-		private IActorRef Raid;
-		private IActorRef ReSub;
-		private IActorRef NewFollower;
+		private IActorRef _ChatCommand;
+		private IActorRef _GiftSub;
+		private IActorRef _NewMessage;
+		private IActorRef _NewSub;
+		private IActorRef _Raid;
+		private IActorRef _ReSub;
+		private IActorRef _NewFollower;
 		private TwitchAPI _API;
 		private FollowerService _FollowerService;
 
-		private IActorRef[] EventActors { get { return new[] { ChatCommand, GiftSub, NewMessage, NewSub, Raid, ReSub }; } }
+		private IActorRef[] EventActors { get { return new[] { _ChatCommand, _GiftSub, _NewMessage, _NewSub, _Raid, _ReSub }; } }
 
 		public ChannelActor(ChannelConfiguration config) {
 
@@ -50,7 +50,8 @@ namespace PixelBot.Orchestrator.Actors
 			Receive<MSG.BroadcastMessage>(msg => BroadcastMessage(msg));
 			Receive<MSG.Currency.AddCurrencyMessage>(msg => AddCurrency(msg));
 			Receive<MSG.Currency.MyCurrencyMessage>(msg => ReportCurrency(msg));
-			Receive<OnNewFollowersDetectedArgs>(args => NewFollower.Tell(args, this.Self));
+			Receive<OnNewFollowersDetectedArgs>(args => _NewFollower.Tell(args, this.Self));
+			Receive<MSG.NotifyChannelOfConfigurationUpdate>(msg => this.Config = config);
 			//Receive<MSG.GetFeatureFromChannel>(msg => Sender.Tell(GetFeature(msg.FeatureType)));
 
 			Self = Context.Self;
@@ -84,7 +85,7 @@ namespace PixelBot.Orchestrator.Actors
 
 		}
 
-		public ChannelConfiguration Config { get; }
+		public ChannelConfiguration Config { get; private set; }
 
 		public BotConfiguration BotConfig { get; } = Startup.BotConfiguration;
 
@@ -114,12 +115,12 @@ namespace PixelBot.Orchestrator.Actors
 
 			StartEventHandlerActors();
 
-			_Client.OnNewSubscriber += (o, args) => NewSub.Tell(args, this.Self);
-			_Client.OnReSubscriber += (o, args) => ReSub.Tell(args, this.Self);
-			_Client.OnGiftedSubscription += (o, args) => GiftSub.Tell(args, this.Self);
-			_Client.OnRaidNotification += (o, args) => Raid.Tell(args, this.Self);
-			_Client.OnChatCommandReceived += (o, args) => ChatCommand.Tell(args, this.Self);
-			_Client.OnMessageReceived += (o, args) => NewMessage.Tell(args, this.Self);
+			_Client.OnNewSubscriber += (o, args) => _NewSub.Tell(args, this.Self);
+			_Client.OnReSubscriber += (o, args) => _ReSub.Tell(args, this.Self);
+			_Client.OnGiftedSubscription += (o, args) => _GiftSub.Tell(args, this.Self);
+			_Client.OnRaidNotification += (o, args) => _Raid.Tell(args, this.Self);
+			_Client.OnChatCommandReceived += (o, args) => _ChatCommand.Tell(args, this.Self);
+			_Client.OnMessageReceived += (o, args) => _NewMessage.Tell(args, this.Self);
 
 			_Client.Connect();
 
@@ -129,13 +130,13 @@ namespace PixelBot.Orchestrator.Actors
 
 			// TODO: Inject features appropriate for each StreamEvent
 
-			this.ChatCommand = CreateActor<ChatCommandActor>(StreamEvent.OnCommand);
-			this.GiftSub = CreateActor<GiftSubscriberActor>(StreamEvent.OnGiftSubscribe, CurrencyRepository);
-			this.NewMessage = CreateActor<NewMessageActor>(StreamEvent.OnMessage);
-			this.NewSub = CreateActor<NewSubscriberActor>(StreamEvent.OnSubscribe, CurrencyRepository);
-			this.Raid = CreateActor<RaidActor>(StreamEvent.OnRaid, CurrencyRepository);
-			this.ReSub = CreateActor<ReSubscriberActor>(StreamEvent.OnResubscribe, CurrencyRepository);
-			this.NewFollower = CreateActor<NewFollowerActor>(StreamEvent.OnFollow);
+			this._ChatCommand = CreateActor<ChatCommandActor>(StreamEvent.OnCommand);
+			this._GiftSub = CreateActor<GiftSubscriberActor>(StreamEvent.OnGiftSubscribe, CurrencyRepository);
+			this._NewMessage = CreateActor<NewMessageActor>(StreamEvent.OnMessage);
+			this._NewSub = CreateActor<NewSubscriberActor>(StreamEvent.OnSubscribe, CurrencyRepository);
+			this._Raid = CreateActor<RaidActor>(StreamEvent.OnRaid, CurrencyRepository);
+			this._ReSub = CreateActor<ReSubscriberActor>(StreamEvent.OnResubscribe, CurrencyRepository);
+			this._NewFollower = CreateActor<NewFollowerActor>(StreamEvent.OnFollow);
 
 			IActorRef CreateActor<T>(StreamEvent evt, params object[] args) where T : ReceiveActor {
 

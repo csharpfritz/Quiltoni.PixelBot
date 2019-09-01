@@ -77,7 +77,7 @@ namespace PixelBot.Orchestrator
 
 			services.AddSingleton<ActorSystem>(_ => ActorSystem.Create("BotService"));
 
-			services.AddTransient<IChannelConfigurationContext, ChannelConfigurationContext>();
+			services.AddScoped<IChannelConfigurationContext, FileStorageChannelConfigurationContext>();
 
 			// Cheer 100 ramblinggeek 19/4/19 
 

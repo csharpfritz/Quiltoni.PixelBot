@@ -6,6 +6,7 @@ using Quiltoni.PixelBot.Core.Extensibility;
 namespace Quiltoni.PixelBot.Core.Domain
 {
 
+	[Serializable]
 	public class ChannelConfiguration
 	{
 

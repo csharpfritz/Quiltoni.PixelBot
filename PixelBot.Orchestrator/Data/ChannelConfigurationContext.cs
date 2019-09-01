@@ -33,6 +33,11 @@ namespace PixelBot.Orchestrator.Data
 				new ChannelConfiguration { ChannelName = channelName };
 
 		}
+
+		public void SaveConfigurationForChannel(string channelName, ChannelConfiguration config)
+		{
+			throw new NotImplementedException();
+		}
 	}
 
 }

@@ -35,7 +35,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBot.Google", "PixelBot
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBot.StandardFeatures", "PixelBot.StandardFeatures\PixelBot.StandardFeatures.csproj", "{41F9D724-B454-4018-A220-5C4B37CB5D14}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PixelBot.UI", "PixelBot.UI\PixelBot.UI.csproj", "{84564158-C1E8-4985-B9CE-E3300F8BAD8C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBot.UI", "PixelBot.UI\PixelBot.UI.csproj", "{84564158-C1E8-4985-B9CE-E3300F8BAD8C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
