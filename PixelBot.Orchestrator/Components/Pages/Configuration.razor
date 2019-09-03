@@ -1,8 +1,15 @@
 ﻿@page "/configuration"
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
-@inherits ChannelConfigurationModel
+@inherits ConfigurationModel
 
 <h3>Channel Configuration</h3>
+
+<fieldset>
+
+	<label>Channel Name: @Configuration.ChannelName</label>
+
+</fieldset>
+
 
 @code {
 

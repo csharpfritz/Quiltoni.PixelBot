@@ -29,7 +29,12 @@ namespace PixelBot.Orchestrator.Data
 
 			var configFile = _StorageFolder.GetFiles($"{channelName.ToLowerInvariant()}.json").FirstOrDefault();
 
-			if (configFile == null || !configFile.Exists) return new ChannelConfiguration();
+			if (configFile == null || !configFile.Exists) {
+				return new ChannelConfiguration()
+				{
+					ChannelName = channelName
+				};
+			}
 
 			return JsonConvert.DeserializeObject<ChannelConfiguration>(File.ReadAllText(configFile.FullName));
 

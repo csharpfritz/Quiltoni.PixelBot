@@ -34,6 +34,11 @@ namespace PixelBot.Orchestrator.Actors
 		}
 
 		private void AddChannelToTrack(TrackNewFollowers msg) {
+
+			if (!_FollowerService.Enabled) {
+				_FollowerService.Start();
+			}
+
 			_FollowerService.ChannelsToMonitor.Add(msg.ChannelName);
 		}
 
@@ -70,16 +75,12 @@ namespace PixelBot.Orchestrator.Actors
 
 		}
 
-		public override void AroundPreStart() {
-
-			_FollowerService.Start();
-			
-			base.AroundPreStart();
-		}
-
 		public override void AroundPostStop() {
 
-			_FollowerService.Stop();
+			if (_FollowerService.Enabled)
+			{
+				_FollowerService.Stop();
+			}
 
 			base.AroundPostStop();
 		}

@@ -50,7 +50,7 @@ namespace PixelBot.Orchestrator.Actors
 			_ChatLogger = ChatLoggerActor.Create(chatLogger);
 
 			CreateFollowerActor();
-			_ChannelConfigurationActor = Context.ActorOf(Props.Create<ChannelConfigurationActor>(dataContext));
+			_ChannelConfigurationActor = Context.ActorOf(Props.Create<ChannelConfigurationActor>(dataContext), nameof(ChannelConfigurationActor));
 
 			Receive<JoinChannel>(this.GetChannelActor);
 			Receive<ReportCurrentChannels>(_ => {

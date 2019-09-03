@@ -1,5 +1,7 @@
 ﻿using Akka.Actor;
 using Microsoft.AspNetCore.Components;
+using PixelBot.Orchestrator.Actors;
+using Quiltoni.PixelBot.Core.Domain;
 using Quiltoni.PixelBot.Core.Messages;
 using System;
 using System.Collections.Generic;
@@ -9,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace PixelBot.Orchestrator.Components.Pages
 {
-	public class ChannelConfigurationModel : ComponentBase
+	public class ConfigurationModel : ComponentBase
 	{
 
 		[Inject]
-		public IActorRef ChannelManager { get; set; }
+		public ActorSystem ActorSystem { get; set; }
 
 		[CascadingParameter]
 		private Task<AuthenticationState> authenticationStateTask { get; set; }
@@ -27,7 +29,8 @@ namespace PixelBot.Orchestrator.Components.Pages
 		{
 
 			var User = (await authenticationStateTask).User;
-			Configuration = await ChannelManager.Ask<ChannelConfiguration>(new GetConfigurationForChannel(User.Identity.Name));
+			var configActor = ActorSystem.ActorSelection(ChannelConfigurationActor.InstancePath).ResolveOne(TimeSpan.FromSeconds(5)).GetAwaiter().GetResult();
+			Configuration = await configActor.Ask<ChannelConfiguration>(new GetConfigurationForChannel(User.Identity.Name));
 
 			base.OnInitializedAsync();
 

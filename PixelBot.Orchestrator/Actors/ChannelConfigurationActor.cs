@@ -12,9 +12,13 @@ namespace PixelBot.Orchestrator.Actors
 	{
 		private readonly IChannelConfigurationContext _Context;
 
+		public static string InstancePath { get; private set; }
+
 		public ChannelConfigurationActor(IChannelConfigurationContext context)
 		{
 			_Context = context;
+
+			InstancePath = Context.Self.Path.ToStringWithAddress();
 
 			Receive<GetConfigurationForChannel>(this.GetConfigurationForChannel);
 			Receive<SaveConfigurationForChannel>(this.SaveConfigurationForChannel);

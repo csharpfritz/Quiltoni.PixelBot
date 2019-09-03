@@ -4,7 +4,8 @@ using System;
 namespace Quiltoni.PixelBot.Core.Messages
 {
 	[Serializable]
-	public class SaveConfigurationForChannel {
+	public class SaveConfigurationForChannel
+	{
 
 		public SaveConfigurationForChannel(string channelName, ChannelConfiguration config)
 		{
@@ -13,6 +14,7 @@ namespace Quiltoni.PixelBot.Core.Messages
 		}
 
 		public string ChannelName { get; }
+
 		public ChannelConfiguration Config { get; }
 	}
 
