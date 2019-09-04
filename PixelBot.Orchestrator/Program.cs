@@ -20,7 +20,9 @@ namespace PixelBot.Orchestrator
 		public static IHostBuilder CreateHostBuilder(string[] args) =>
 				Host.CreateDefaultBuilder(args)
 						.ConfigureWebHostDefaults(webBuilder => {
-							webBuilder.UseStartup<Startup>();
+							webBuilder
+								.UseSetting(WebHostDefaults.DetailedErrorsKey, "true")
+								.UseStartup<Startup>();
 						});
 	}
 }

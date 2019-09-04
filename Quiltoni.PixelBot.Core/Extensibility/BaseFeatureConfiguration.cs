@@ -6,6 +6,7 @@ namespace Quiltoni.PixelBot.Core.Extensibility
 	public class BaseFeatureConfiguration
 	{
 
+		//NOTE: Do we really need this one if the FeatureConfiguration is included in the ChannelConfiguration
 		public string ChannelName { get; set; }
 
 		/// <summary>
@@ -18,11 +19,11 @@ namespace Quiltoni.PixelBot.Core.Extensibility
 		/// </summary>
 		public bool IsVisible { get; set; } = true;
 
-		public void ParseConfiguration(string jsonConfiguration) {
+		//public void ParseConfiguration(string jsonConfiguration) {
 
-			// TODO: Load JSON Configuration and assign to properties
+		//	// TODO: Load JSON Configuration and assign to properties
 
-		}
+		//}
 
 	}
 

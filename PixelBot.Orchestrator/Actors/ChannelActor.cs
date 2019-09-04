@@ -28,7 +28,7 @@ namespace PixelBot.Orchestrator.Actors
 	{
 
 		private TwitchClient _Client;
-		private PluginBootstrapper _Bootstrapper = new PluginBootstrapper();
+		private PluginBootstrapper _Bootstrapper;
 		
 		private IActorRef _ChatCommand;
 		private IActorRef _GiftSub;
@@ -45,6 +45,7 @@ namespace PixelBot.Orchestrator.Actors
 		public ChannelActor(ChannelConfiguration config) {
 
 			this.Config = config;
+			this._Bootstrapper = new PluginBootstrapper(config);
 
 			Receive<MSG.WhisperMessage>(msg => WhisperMessage(msg));
 			Receive<MSG.BroadcastMessage>(msg => BroadcastMessage(msg));
@@ -140,7 +141,7 @@ namespace PixelBot.Orchestrator.Actors
 
 			IActorRef CreateActor<T>(StreamEvent evt, params object[] args) where T : ReceiveActor {
 
-				var features = _Bootstrapper.GetFeaturesForStreamEvent(evt, Config);
+				var features = _Bootstrapper.GetFeaturesForStreamEvent(evt);
 				var realArgs = new object[] { Config, features };
 				realArgs = realArgs.Concat(args).ToArray();
 				var props = Akka.Actor.Props.Create<T>(realArgs);

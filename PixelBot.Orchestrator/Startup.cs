@@ -113,16 +113,9 @@ namespace PixelBot.Orchestrator
 
 			// Configure plugged in features
 			PluginBootstrapper.ServiceProvider = app.ApplicationServices;
-			var plugins = new PluginBootstrapper();
-			var features = plugins.GetFeaturesForStreamEvent(StreamEvent.All, null);
+			PluginBootstrapper.InitializeFeatures(app);
 
 			app.UseEndpoints(routes => {
-
-				foreach (var f in features) {
-
-					f.RegisterRoutes(routes);
-
-				}
 
 				routes.MapHub<LoggerHub>("/loggerhub");
 				MapExternalHubs(routes);

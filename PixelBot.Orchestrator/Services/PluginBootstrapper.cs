@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using PixelBot.StandardFeatures.ScreenWidgets.ChatRoom;
 using Quiltoni.PixelBot.Core;
@@ -20,12 +21,15 @@ namespace PixelBot.Orchestrator.Services
 	{
 
 		private static IEnumerable<Type> _Features;
+		private readonly ChannelConfiguration _Configuration;
 
 		static PluginBootstrapper() {
 			LoadFeatures();
 		}
 
-		public PluginBootstrapper() { }
+		public PluginBootstrapper(ChannelConfiguration configuration) {
+			_Configuration = configuration;
+		}
 
 		public static IServiceProvider ServiceProvider { get; internal set; }
 
@@ -47,7 +51,28 @@ namespace PixelBot.Orchestrator.Services
 
 		}
 
-		internal IEnumerable<IFeature> GetFeaturesForStreamEvent(StreamEvent evt, ChannelConfiguration config) {
+		/// <summary>
+		/// Initialize the features of the application.  This method should be called in Startup
+		/// </summary>
+		public static void InitializeFeatures(IApplicationBuilder app) {
+
+			app.UseEndpoints(routes =>
+			{
+
+				foreach (var f in _Features)
+				{
+
+					var newFeature = ActivatorUtilities.CreateInstance(ServiceProvider, f) as IFeature;
+					newFeature.RegisterRoutes(routes);
+
+				}
+
+
+			});
+
+		}
+
+		internal IEnumerable<IFeature> GetFeaturesForStreamEvent(StreamEvent evt) {
 
 			var outFeatures = new List<IFeature>();
 
@@ -63,9 +88,12 @@ namespace PixelBot.Orchestrator.Services
 			foreach (var f in featuresToMake) {
 
 				var newFeature = ActivatorUtilities.CreateInstance(ServiceProvider, f) as IFeature;
-				var featureConfig = config?.GetFeatureConfiguration(newFeature.Name);
-				if (featureConfig != null) newFeature.Configure(featureConfig);
-				if (featureConfig == null || newFeature.IsVisible) outFeatures.Add(newFeature);
+				var featureConfig = _Configuration?.FeatureConfigurations[newFeature.Name];
+				if (featureConfig.IsEnabled)
+				{
+					if (featureConfig != null) newFeature.Configure(featureConfig);
+					if (featureConfig == null || newFeature.IsVisible) outFeatures.Add(newFeature);
+				}
 
 			}
 

@@ -29,7 +29,7 @@ namespace PixelBot.Orchestrator.Actors
 		{
 
 			_Context.SaveConfigurationForChannel(msg.ChannelName, msg.Config);
-			ChannelManagerActor.Instance.Tell((NotifyChannelOfConfigurationUpdate)msg);
+			ChannelManagerActor.Instance.Tell(new NotifyChannelOfConfigurationUpdate (msg.ChannelName, msg.Config));
 
 		}
 

@@ -46,8 +46,12 @@ namespace PixelBot.Orchestrator.Data
 			if (string.IsNullOrWhiteSpace(channelName)) throw new ArgumentNullException(nameof(channelName));
 			if (config == null) throw new ArgumentNullException(nameof(config));
 
-			var targetFile = _StorageFolder.GetFiles($"{channelName.ToLowerInvariant()}.json").FirstOrDefault();
-			File.WriteAllText(targetFile.FullName, JsonConvert.SerializeObject(config));
+			var targetFile = new FileInfo(Path.Combine(_StorageFolder.FullName, $"{channelName.ToLowerInvariant()}.json"));
+			File.WriteAllText(targetFile.FullName, JsonConvert.SerializeObject(config, Formatting.Indented,
+				new JsonSerializerSettings
+				{
+					TypeNameHandling = TypeNameHandling.All
+				}));
 			
 		}
 	}

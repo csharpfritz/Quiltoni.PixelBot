@@ -1,16 +1,46 @@
 ﻿@page "/configuration"
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
 @inherits ConfigurationModel
+@using PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 
-<h3>Channel Configuration</h3>
+<h1>Channel Configuration</h1>
 
+@if (Configuration == null)
+{
+
+	<span>Loading...</span>
+
+}
+else
+{
 <fieldset>
 
 	<label>Channel Name: @Configuration.ChannelName</label>
 
+	<EditForm Model="@Configuration" OnSubmit="SaveChanges">
+
+		<h2>User Activity Train</h2>
+
+		<label for="UatEnabled">Enabled?</label>
+		<InputCheckbox @bind-Value="UserActivityConfiguration.IsEnabled"></InputCheckbox>
+
+		<br />
+
+		<label for="UatType">Activity Type:</label>
+		<InputSelect id="UatType" T="UserActivityConfiguration.UserActivityTrainType" @bind-Value="UserActivityConfiguration.Type">
+			<option value="Follow">Follow</option>
+			<option value="Subscription">Subscription</option>
+			<option value="Cheer">Cheer</option>
+		</InputSelect>
+
+		<br />
+
+		<label for="UatTime">Time in Seconds to continue train:</label>
+		<InputNumber @bind-Value="UserActivityConfiguration.MaxTimeBetweenActionsInSeconds"></InputNumber>
+
+		<button type="submit">Save Changes</button>
+
+	</EditForm>
+
 </fieldset>
-
-
-@code {
-
 }
