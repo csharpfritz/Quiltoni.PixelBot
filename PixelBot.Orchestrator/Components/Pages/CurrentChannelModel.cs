@@ -21,7 +21,7 @@ namespace PixelBot.Orchestrator.Components.Pages
 		public ClaimsPrincipal CurrentUser { get; set; }
 
 		[Inject]
-		public IUriHelper UriHelper { get; set; }
+		public NavigationManager NavigationManager { get; set; }
 
 		[Inject]
 		public IActorRef ChannelManager { get; set; }
@@ -33,10 +33,10 @@ namespace PixelBot.Orchestrator.Components.Pages
 
 		public string[] TheCurrentChannels = new string[] { };
 
-		protected override async Task OnAfterRenderAsync() {
+		protected override async Task OnAfterRenderAsync(bool firstRender) {
 
-			if (!(await AuthorizationService.AuthorizeAsync(CurrentUser, "GlobalAdmin")).Succeeded) {
-				UriHelper.NavigateTo("/");
+			if (firstRender && !(await AuthorizationService.AuthorizeAsync(CurrentUser, "GlobalAdmin")).Succeeded) {
+				NavigationManager.NavigateTo("/");
 				return;
 			}
 

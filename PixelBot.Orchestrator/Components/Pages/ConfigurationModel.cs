@@ -1,5 +1,6 @@
 ﻿using Akka.Actor;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Routing;
 using PixelBot.Orchestrator.Actors;
 using PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain;
@@ -51,6 +52,8 @@ namespace PixelBot.Orchestrator.Components.Pages
 		}
 
 		public async Task SaveChanges() {
+
+			// Cheer 642 cpayette 05/9/19 
 
 			// TODO: Validate changes
 			var User = (await authenticationStateTask).User;

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.VisualBasic.ApplicationServices;
 
 namespace PixelBot.StandardFeatures.ScreenWidgets.ChatRoom
 {

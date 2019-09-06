@@ -1,6 +1,6 @@
 ﻿@inherits LayoutComponentBase
 @inject System.Security.Claims.ClaimsPrincipal CurrentUser
-@inject IUriHelper UriHelper
+@inject NavigationManager NavManager
 
 <div class="sidebar">
     <NavMenu />
@@ -12,13 +12,13 @@
 
         @if (CurrentUser.Identity.IsAuthenticated)
         {
-            <a href="" @onclick="@(() => UriHelper.NavigateTo("/Account/Profile"))">Hello @CurrentUser.Identity.Name!</a>
+            <a href="" @onclick="@(() => NavManager.NavigateTo("/Account/Profile"))">Hello @CurrentUser.Identity.Name!</a>
             <text>&nbsp;</text>
-            <a href="" @onclick="@(() => UriHelper.NavigateTo("/Account/Logout", true))">Logout</a>
+            <a href="" @onclick="@(() => NavManager.NavigateTo("/Account/Logout", true))">Logout</a>
         }
         else
         {
-            <a href="" @onclick="@(() => UriHelper.NavigateTo("/Account/Login", true))">Login</a>
+            <a href="" @onclick="@(() => NavManager.NavigateTo("/Account/Login", true))">Login</a>
         }
 
     </div>

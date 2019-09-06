@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Akka.Actor;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualBasic.ApplicationServices;
+using PixelBot.Orchestrator.Services;
 using Quiltoni.PixelBot.Core.Domain;
 using Quiltoni.PixelBot.Core.Messages;
 using TwitchLib.Api;
@@ -18,8 +19,10 @@ namespace PixelBot.Orchestrator.Actors
 	{
 		private TwitchAPI _API;
 		private FollowerService _FollowerService;
+		private Dictionary<string, (string ChannelName, DateTime StartTime)> _Channels = new Dictionary<string, (string, DateTime)>();
+		private readonly IHubContext<FollowerHub, IFollowerClient> _FollowHubContext;
 
-		public FollowerServiceActor() {
+		public FollowerServiceActor(IHubContext<FollowerHub,IFollowerClient> followHubContext) {
 
 			// Cheer 16300 clintonrocksmith 30/8/19 
 			// Cheer 5000 fixterjake14 30/8/19 
@@ -29,17 +32,28 @@ namespace PixelBot.Orchestrator.Actors
 			this.ChatLogger = Context.ActorSelection(ChatLoggerActor.Path)
 				.ResolveOne(TimeSpan.FromSeconds(5)).GetAwaiter().GetResult();
 
-			this.Receive<TrackNewFollowers>(AddChannelToTrack);
+			this.ReceiveAsync<TrackNewFollowers>(AddChannelToTrack);
+			_FollowHubContext = followHubContext;
 
 		}
 
-		private void AddChannelToTrack(TrackNewFollowers msg) {
+		private async Task AddChannelToTrack(TrackNewFollowers msg) {
+
+			var thisUser = await ConvertUserNameToUserId(new[] { msg.ChannelName });
+			_Channels.Add(thisUser.First().Id, (msg.ChannelName, DateTime.UtcNow));
+			if (_FollowerService.ChannelsToMonitor == null)
+			{
+				_FollowerService.SetChannelsByName(new List<string> { msg.ChannelName });
+			}
+			else
+			{
+				_FollowerService.ChannelsToMonitor.Add(msg.ChannelName);
+			}
 
 			if (!_FollowerService.Enabled) {
 				_FollowerService.Start();
 			}
 
-			_FollowerService.ChannelsToMonitor.Add(msg.ChannelName);
 		}
 
 		private void ConfigureFollowerService() {
@@ -47,7 +61,7 @@ namespace PixelBot.Orchestrator.Actors
 			_API = new TwitchLib.Api.TwitchAPI();
 			_API.Settings.ClientId = BotConfiguration.LoginName;
 			_API.Settings.AccessToken = BotConfiguration.Password;
-			_FollowerService = new TwitchLib.Api.Services.FollowerService(_API);
+			_FollowerService = new TwitchLib.Api.Services.FollowerService(_API, 5);
 			_FollowerService.OnNewFollowersDetected += _FollowerService_OnNewFollowersDetected;
 
 		}
@@ -56,13 +70,25 @@ namespace PixelBot.Orchestrator.Actors
 
 			// TODO: Notify the appopriate ChannelActor for the channel with a new follower
 
-			var users = ConvertUserIdToUserName(e.NewFollowers.Select(f => f.ToUserId)).GetAwaiter().GetResult();
+			var filteredFollowers = e.NewFollowers.Where(f => _Channels[f.ToUserId].StartTime < f.FollowedAt);
 
-			foreach (var newFollower in e.NewFollowers) {
+			if (!filteredFollowers.Any()) return;
 
-				var thisUser = users.First(u => u.Id == newFollower.ToUserId);
+			var users = ConvertUserIdToUserName(filteredFollowers.Select(f => f.FromUserId)).GetAwaiter().GetResult();
+
+			foreach (var newFollower in filteredFollowers) {
+
+				var thisUser = users.First(u => u.Id == newFollower.FromUserId);
 				ChatLogger.Tell(new MSG.ChatLogMessage(LogLevel.Information, e.Channel, $"New Follower on channel ({e.Channel}): {thisUser.DisplayName}"));
-				Context.Parent.Tell(e);
+
+				// TODO: Trigger features listening for Follower events
+
+				// TODO: Notify the ChannelActor for this channel
+				//Context.Parent.Tell(e); 
+
+				
+
+				_FollowHubContext.Clients.Group(_Channels[newFollower.ToUserId].ChannelName).NewFollower(thisUser.DisplayName);
 
 			}
 
@@ -71,6 +97,14 @@ namespace PixelBot.Orchestrator.Actors
 		private async Task<TwitchLib.Api.Helix.Models.Users.User[]> ConvertUserIdToUserName(IEnumerable<string> userIds) {
 
 			var response = await _API.Helix.Users.GetUsersAsync(userIds.ToList());
+			return response.Users;
+
+		}
+
+		private async Task<TwitchLib.Api.Helix.Models.Users.User[]> ConvertUserNameToUserId(IEnumerable<string> userNames)
+		{
+
+			var response = await _API.Helix.Users.GetUsersAsync(logins: userNames.ToList());
 			return response.Users;
 
 		}

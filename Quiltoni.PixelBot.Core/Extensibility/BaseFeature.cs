@@ -15,9 +15,9 @@ namespace Quiltoni.PixelBot.Core.Extensibility
 
 		public Action<string, string> WhisperMessage { get; set; }
 
-		protected BaseFeatureConfiguration Configuration { get; private set; }
+		protected IFeatureConfiguration Configuration { get; private set; }
 
-		public virtual void Configure(BaseFeatureConfiguration configuration) {
+		public virtual void Configure(IFeatureConfiguration configuration) {
 			this.Configuration = configuration;
 			this.IsEnabled = Configuration.IsEnabled;
 			this.IsVisible = Configuration.IsVisible;

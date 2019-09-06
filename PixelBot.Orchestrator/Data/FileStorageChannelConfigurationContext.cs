@@ -36,7 +36,10 @@ namespace PixelBot.Orchestrator.Data
 				};
 			}
 
-			return JsonConvert.DeserializeObject<ChannelConfiguration>(File.ReadAllText(configFile.FullName));
+			return JsonConvert.DeserializeObject<ChannelConfiguration>(File.ReadAllText(configFile.FullName), new JsonSerializerSettings
+			{
+				TypeNameHandling = TypeNameHandling.All
+			});
 
 		}
 
@@ -52,7 +55,7 @@ namespace PixelBot.Orchestrator.Data
 				{
 					TypeNameHandling = TypeNameHandling.All
 				}));
-			
+
 		}
 	}
 }

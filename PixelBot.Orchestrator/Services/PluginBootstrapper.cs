@@ -88,6 +88,7 @@ namespace PixelBot.Orchestrator.Services
 			foreach (var f in featuresToMake) {
 
 				var newFeature = ActivatorUtilities.CreateInstance(ServiceProvider, f) as IFeature;
+				if (!(_Configuration?.FeatureConfigurations.ContainsKey(newFeature.Name) ?? false)) continue;
 				var featureConfig = _Configuration?.FeatureConfigurations[newFeature.Name];
 				if (featureConfig.IsEnabled)
 				{

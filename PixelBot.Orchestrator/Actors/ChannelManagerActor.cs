@@ -35,21 +35,22 @@ namespace PixelBot.Orchestrator.Actors
 		public static IActorRef Create(
 			ActorSystem system, 
 			IChannelConfigurationContext dataContext, 
-			IHubContext<LoggerHub, IChatLogger> chatLogger) {
+			IHubContext<LoggerHub, IChatLogger> chatLogger, 
+			IHubContext<FollowerHub, IFollowerClient> followHubContext) {
 
-			var props = Props.Create<ChannelManagerActor>(dataContext, chatLogger);
+			var props = Props.Create<ChannelManagerActor>(dataContext, chatLogger, followHubContext);
 			Instance = system.ActorOf(props, Name);
 			return Instance;
 
 		}
 
-		public ChannelManagerActor(IChannelConfigurationContext dataContext, IHubContext<LoggerHub, IChatLogger> chatLogger) {
+		public ChannelManagerActor(IChannelConfigurationContext dataContext, IHubContext<LoggerHub, IChatLogger> chatLogger, IHubContext<FollowerHub, IFollowerClient> followHubContext) {
 
 			Logger = Context.GetLogger();
 
 			_ChatLogger = ChatLoggerActor.Create(chatLogger);
 
-			CreateFollowerActor();
+			CreateFollowerActor(followHubContext);
 			_ChannelConfigurationActor = Context.ActorOf(Props.Create<ChannelConfigurationActor>(dataContext), nameof(ChannelConfigurationActor));
 
 			Receive<JoinChannel>(this.GetChannelActor);
@@ -82,13 +83,15 @@ namespace PixelBot.Orchestrator.Actors
 		private void UpdateChannelWithConfiguration(NotifyChannelOfConfigurationUpdate msg)
 		{
 
+			if (!_ChannelActors.ContainsKey(msg.ChannelName)) return;
+
 			_ChannelActors[msg.ChannelName].Tell(msg);
 
 		}
 
-		private void CreateFollowerActor() {
+		private void CreateFollowerActor(IHubContext<FollowerHub, IFollowerClient> followHubContext) {
 
-			_FollowerActor = Context.ActorOf<FollowerServiceActor>();
+			_FollowerActor = Context.ActorOf(Props.Create<FollowerServiceActor>(new[] { followHubContext }));
 
 		}
 
@@ -109,6 +112,9 @@ namespace PixelBot.Orchestrator.Actors
 
 			var child = Context.ActorOf(ChannelActor.Props(config), $"channel_{msg.ChannelName}");
 			_ChannelActors.Add(msg.ChannelName, child);
+
+			// Track followers for that channel?
+			_FollowerActor.Tell(new TrackNewFollowers(msg.ChannelName));
 
 			return true;
 
