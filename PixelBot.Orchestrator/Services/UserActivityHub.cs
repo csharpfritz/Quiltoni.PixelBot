@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Quiltoni.PixelBot.Core.Client;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace PixelBot.Orchestrator.Services
 {
-	public class FollowerHub : Hub<IFollowerClient> {
+	public class UserActivityHub : Hub<IUserActivityClient> {
 
 		public override Task OnConnectedAsync()
 		{
@@ -16,13 +17,6 @@ namespace PixelBot.Orchestrator.Services
 			return base.OnConnectedAsync();
 		}
 
-
-	}
-
-	public interface IFollowerClient
-	{
-
-		Task NewFollower(string newFollowerName);
 
 	}
 

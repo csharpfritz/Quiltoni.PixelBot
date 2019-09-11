@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using PixelBot.Orchestrator.Data;
 using PixelBot.Orchestrator.Services;
+using Quiltoni.PixelBot.Core.Client;
 using Quiltoni.PixelBot.Core.Domain;
 using Quiltoni.PixelBot.Core.Messages;
 using TwitchLib.Api.Services.Events.FollowerService;
@@ -36,7 +37,7 @@ namespace PixelBot.Orchestrator.Actors
 			ActorSystem system, 
 			IChannelConfigurationContext dataContext, 
 			IHubContext<LoggerHub, IChatLogger> chatLogger, 
-			IHubContext<FollowerHub, IFollowerClient> followHubContext) {
+			IHubContext<UserActivityHub, IUserActivityClient> followHubContext) {
 
 			var props = Props.Create<ChannelManagerActor>(dataContext, chatLogger, followHubContext);
 			Instance = system.ActorOf(props, Name);
@@ -44,7 +45,7 @@ namespace PixelBot.Orchestrator.Actors
 
 		}
 
-		public ChannelManagerActor(IChannelConfigurationContext dataContext, IHubContext<LoggerHub, IChatLogger> chatLogger, IHubContext<FollowerHub, IFollowerClient> followHubContext) {
+		public ChannelManagerActor(IChannelConfigurationContext dataContext, IHubContext<LoggerHub, IChatLogger> chatLogger, IHubContext<UserActivityHub, IUserActivityClient> followHubContext) {
 
 			Logger = Context.GetLogger();
 
@@ -89,7 +90,7 @@ namespace PixelBot.Orchestrator.Actors
 
 		}
 
-		private void CreateFollowerActor(IHubContext<FollowerHub, IFollowerClient> followHubContext) {
+		private void CreateFollowerActor(IHubContext<UserActivityHub, IUserActivityClient> followHubContext) {
 
 			_FollowerActor = Context.ActorOf(Props.Create<FollowerServiceActor>(new[] { followHubContext }));
 

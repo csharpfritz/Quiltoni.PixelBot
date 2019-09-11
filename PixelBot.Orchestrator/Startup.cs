@@ -85,7 +85,7 @@ namespace PixelBot.Orchestrator
 				provider.GetService<ActorSystem>(),
 				provider.GetService<IChannelConfigurationContext>(),
 				provider.GetService<IHubContext<LoggerHub, IChatLogger>>(),
-				provider.GetService<IHubContext<FollowerHub, IFollowerClient>>()
+				provider.GetService<IHubContext<UserActivityHub, IUserActivityClient>>()
 			));
 
 		}
@@ -119,7 +119,7 @@ namespace PixelBot.Orchestrator
 			app.UseEndpoints(routes => {
 
 				routes.MapHub<LoggerHub>("/loggerhub");
-				routes.MapHub<FollowerHub>("/followerhub");
+				routes.MapHub<UserActivityHub>("/useractivityhub");
 				MapExternalHubs(routes);
 				routes.MapRazorPages();
 				routes.MapDefaultControllerRoute();

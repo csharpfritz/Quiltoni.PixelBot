@@ -6,6 +6,7 @@ using Akka.Actor;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using PixelBot.Orchestrator.Services;
+using Quiltoni.PixelBot.Core.Client;
 using Quiltoni.PixelBot.Core.Domain;
 using Quiltoni.PixelBot.Core.Messages;
 using TwitchLib.Api;
@@ -20,9 +21,9 @@ namespace PixelBot.Orchestrator.Actors
 		private TwitchAPI _API;
 		private FollowerService _FollowerService;
 		private Dictionary<string, (string ChannelName, DateTime StartTime)> _Channels = new Dictionary<string, (string, DateTime)>();
-		private readonly IHubContext<FollowerHub, IFollowerClient> _FollowHubContext;
+		private readonly IHubContext<UserActivityHub, IUserActivityClient> _FollowHubContext;
 
-		public FollowerServiceActor(IHubContext<FollowerHub,IFollowerClient> followHubContext) {
+		public FollowerServiceActor(IHubContext<UserActivityHub,IUserActivityClient> followHubContext) {
 
 			// Cheer 16300 clintonrocksmith 30/8/19 
 			// Cheer 5000 fixterjake14 30/8/19 
