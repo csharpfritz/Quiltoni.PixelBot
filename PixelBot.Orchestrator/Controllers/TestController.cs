@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using PixelBot.Orchestrator.Services;
+using Quiltoni.PixelBot.Core.Client;
 using Quiltoni.PixelBot.Core.Messages;
 
 namespace PixelBot.Orchestrator.Controllers
@@ -16,20 +17,20 @@ namespace PixelBot.Orchestrator.Controllers
 	[ApiController]
 	public class TestController : ControllerBase
 	{
-		// IHubContext<LoggerHub, IChatLogger> loggerContext
-		public TestController(IActorRef channelMgr) {
 
-			this.ChannelManager = channelMgr;
+		public TestController(IHubContext<UserActivityHub, IUserActivityClient> context) {
+
+			this.HubContext = context;
 
 		}
 
-		public IActorRef ChannelManager { get; }
+		public IHubContext<UserActivityHub, IUserActivityClient> HubContext { get; }
 
 		public IHubContext<LoggerHub, IChatLogger> LoggerContext { get; }
 
-		public async Task<IActionResult> Get(string channelName) {
+		public async Task<IActionResult> Get(string followerName) {
 
-			ChannelManager.Tell(new JoinChannel(channelName));
+			await HubContext.Clients.All.NewFollower(followerName);
 			return Ok();
 
 		}

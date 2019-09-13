@@ -70,7 +70,8 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 		[JSInvokable]
 		public Task NewFollower(string newFollowerName)
 		{
-			throw new NotImplementedException();
+			Console.WriteLine($"new follower reached Blazor: {newFollowerName}");
+			return Task.CompletedTask;
 		}
 
 		[JSInvokable]

@@ -20,7 +20,7 @@ using PixelBot.Orchestrator.Data;
 using PixelBot.Orchestrator.Services;
 using PixelBot.Orchestrator.Services.Authentication;
 using PixelBot.StandardFeatures.ScreenWidgets.ChatRoom;
-using Quiltoni.PixelBot.Core;
+using Quiltoni.PixelBot.Core.Client;
 using Quiltoni.PixelBot.Core.Domain;
 
 namespace PixelBot.Orchestrator

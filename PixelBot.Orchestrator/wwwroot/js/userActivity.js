@@ -16,6 +16,9 @@
 			.build();
 
 		// Setup the event handlers for the various methods from UserActivityClient
+		_Connection.on("NewFollower", (name) => NewFollower(name));
+		_Connection.on("NewSubscriber", (newSubscribedName, numberOfMonths, numberOfMonthsInRow, message) => NewSubscriber(newSubscribedName, numberOfMonths, numberOfMonthsInRow, message));
+		_Connection.on("NewCheer", (name) => NewCheer(cheererName, amountCheered, message));
 
 		_Connection.start().catch(function (err) {
 			return console.error(err.toString());
@@ -46,5 +49,7 @@
 		_Connection.stop();
 
 	};
+
+	window.UserActivity = this;
 
 })();
