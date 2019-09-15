@@ -22,13 +22,22 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 		[Parameter]
 		public string ChannelName { get; set; }
 
+		public UserActivityConfiguration Configuration { get; set; }
+
 		protected override async Task OnInitializedAsync()
 		{
+
+			GetWidgetConfiguration();
 
 			await JSRuntime.InvokeVoidAsync("UserActivity.Connect", args: new object[] { ChannelName, DotNetObjectReference.Create(this) });
 
 			await base.OnInitializedAsync();
 
+		}
+
+		public void GetWidgetConfiguration()
+		{
+			// throw new NotImplementedException();
 		}
 
 		#region IDisposable Support
@@ -70,8 +79,12 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 		[JSInvokable]
 		public Task NewFollower(string newFollowerName)
 		{
+
+			// Cheer 200 goranhal 15/9/19 
+
 			Console.WriteLine($"new follower reached Blazor: {newFollowerName}");
 			return Task.CompletedTask;
+
 		}
 
 		[JSInvokable]
