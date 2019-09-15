@@ -1,12 +1,11 @@
-﻿"use strict";
-
-(function UserActivity() {
+﻿function UserActivity() {
 
 	var _Connection;
 	var _Component;
 
-	this.Connect = new function (channel, component) {
+	this.Connect = function (channel, component) {
 
+		console.log("Channel: " + channel);
 		_Component = component;
 
 		// Use SignalR to connect to the hub for this channel
@@ -26,8 +25,15 @@
 
 	};
 
+	this.Stop = function () {
+
+		if (_Connection) _Connection.stop();
+
+	};
+
 	function NewFollower(newFollowerName)
 	{
+		console.log(`New Follower: ${newFollowerName}`);
 		_Component.invokeMethodAsync("NewFollower", newFollowerName);
 	}
 
@@ -42,14 +48,6 @@
 	}
 
 
+}
 
-
-	this.Stop = new function () {
-
-		_Connection.stop();
-
-	};
-
-	window.UserActivity = this;
-
-})();
+window.UserActivity = new UserActivity();
