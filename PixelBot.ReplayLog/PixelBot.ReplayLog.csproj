@@ -8,8 +8,8 @@
   <ItemGroup>
     <PackageReference Include="Google.Apis.Sheets.v4" Version="1.38.2.1565" />
     <PackageReference Include="LINQtoCSV.Core" Version="1.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.0.0-*" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="3.0.0-*" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="$(AspNetCoreCloseEnough)" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="$(AspNetCoreCloseEnough)" />
   </ItemGroup>
 
   <ItemGroup>
