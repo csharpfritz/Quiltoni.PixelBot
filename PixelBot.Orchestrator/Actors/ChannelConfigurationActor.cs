@@ -1,5 +1,6 @@
 ﻿using Akka.Actor;
 using PixelBot.Orchestrator.Data;
+using Quiltoni.PixelBot.Core.Domain;
 using Quiltoni.PixelBot.Core.Messages;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,10 @@ namespace PixelBot.Orchestrator.Actors
 	{
 		private readonly IChannelConfigurationContext _Context;
 
-		public static string InstancePath { get; private set; }
+		public static string InstancePath { 
+			get { return BotConfiguration.ChannelConfigurationInstancePath; }
+			private set { BotConfiguration.ChannelConfigurationInstancePath = value; }
+		}
 
 		public ChannelConfigurationActor(IChannelConfigurationContext context)
 		{

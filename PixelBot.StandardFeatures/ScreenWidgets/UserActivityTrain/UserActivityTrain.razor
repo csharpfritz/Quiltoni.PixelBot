@@ -11,3 +11,14 @@
 	Animate the HTML properly
 
 -->
+
+@if (base.Configuration == null) {
+
+	<span>Waiting...</span>
+
+} else {
+
+	<h2>Train Type:  @base.Configuration.Type.ToString()</h2>
+
+}
+

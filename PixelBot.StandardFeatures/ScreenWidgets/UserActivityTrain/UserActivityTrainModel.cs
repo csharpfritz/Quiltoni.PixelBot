@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Akka.Actor;
+using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.ObjectPool;
 using Microsoft.JSInterop;
 using Quiltoni.PixelBot.Core.Client;
+using Quiltoni.PixelBot.Core.Domain;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using MSG = Quiltoni.PixelBot.Core.Messages;
 
 namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 {
@@ -15,6 +18,9 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 
 		// Cheer 110 ultramark 11/9/19 
 		// Cheer 500 cpayette 11/9/19 
+
+		[Inject]
+		public ActorSystem ActorSystem { get; set; }
 
 		[Inject]
 		public IJSRuntime JSRuntime { get; set; }
@@ -37,7 +43,12 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 
 		public void GetWidgetConfiguration()
 		{
-			// throw new NotImplementedException();
+
+			var configActorRef = ActorSystem.ActorSelection(BotConfiguration.ChannelConfigurationInstancePath).ResolveOne(TimeSpan.FromSeconds(5)).GetAwaiter().GetResult();
+
+			var channelConfiguration = configActorRef.Ask<ChannelConfiguration>(new MSG.GetConfigurationForChannel(ChannelName)).GetAwaiter().GetResult();
+			Configuration = channelConfiguration.FeatureConfigurations[nameof(UserActivityConfiguration)] as UserActivityConfiguration;
+
 		}
 
 		#region IDisposable Support
