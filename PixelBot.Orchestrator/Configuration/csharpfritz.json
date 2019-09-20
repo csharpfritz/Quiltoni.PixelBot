@@ -21,8 +21,8 @@
     "$type": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[Quiltoni.PixelBot.Core.Extensibility.BaseFeatureConfiguration, Quiltoni.PixelBot.Core]], System.Private.CoreLib",
     "UserActivityConfiguration": {
       "$type": "PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain.UserActivityConfiguration, PixelBot.StandardFeatures",
-      "Type": 1,
-      "MaxTimeBetweenActionsInSeconds": 100,
+      "Type": 0,
+      "MaxTimeBetweenActionsInSeconds": 600,
       "ChannelName": null,
       "IsEnabled": true,
       "IsVisible": true

@@ -20,6 +20,8 @@ else
 	<EditForm Model="@Configuration" OnSubmit="SaveChanges">
 
 		<h2>User Activity Train</h2>
+		<a href="/widgets/train/@Configuration.ChannelName">View Widget</a>
+		<br/>
 
 		<label for="UatEnabled">Enabled?</label>
 		<InputCheckbox @bind-Value="UserActivityConfiguration.IsEnabled"></InputCheckbox>

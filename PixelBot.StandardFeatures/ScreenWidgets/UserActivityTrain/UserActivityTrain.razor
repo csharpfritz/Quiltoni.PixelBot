@@ -1,13 +1,10 @@
 ﻿@page "/widgets/train/{ChannelName}"
 @inherits UserActivityTrainModel
 
-<h3>UserActivityTrain</h3>
-
 <!--
 	
 	Get widget configuration for this channel
 	Format the HTML properly
-	Set a timer
 	Animate the HTML properly
 
 -->
@@ -18,7 +15,12 @@
 
 } else {
 
-	<h2>Train Type:  @base.Configuration.Type.ToString()</h2>
+
+	<span id="counter">Train length:  @Counter</span>
+	<br/>
+	<span id="timeRemaining">@TimeRemaining.ToString("m\\:ss")</span>
+	<br/>
+	<span id="duration">Train has been going for: @TrainDuration.ToString("h\\:mm\\:ss")</span>
 
 }
 
