@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Logging;
 using PixelBot.Orchestrator.Actors;
 using PixelBot.Orchestrator.Components;
 using PixelBot.Orchestrator.Data;
@@ -40,12 +41,16 @@ namespace PixelBot.Orchestrator
 		// For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
 		public void ConfigureServices(IServiceCollection services) {
 
+			IdentityModelEventSource.ShowPII = true;
+
 			services.Configure<CookiePolicyOptions>(options => {
 				options.CheckConsentNeeded = context => true;
 				options.MinimumSameSitePolicy = SameSiteMode.None;
 			});
 
 			services.AddAuthentication(options => {
+
+				options.
 				options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 				options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 				options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
