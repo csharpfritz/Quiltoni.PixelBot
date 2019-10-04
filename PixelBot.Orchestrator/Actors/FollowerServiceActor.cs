@@ -11,6 +11,7 @@ using Quiltoni.PixelBot.Core.Domain;
 using Quiltoni.PixelBot.Core.Messages;
 using TwitchLib.Api;
 using TwitchLib.Api.Services;
+using TwitchLib.Api.Services.Events;
 using TwitchLib.Api.Services.Events.FollowerService;
 using MSG = Quiltoni.PixelBot.Core.Messages;
 
@@ -63,13 +64,22 @@ namespace PixelBot.Orchestrator.Actors
 			_API.Settings.ClientId = BotConfiguration.LoginName;
 			_API.Settings.AccessToken = BotConfiguration.Password;
 			_FollowerService = new TwitchLib.Api.Services.FollowerService(_API, 5);
+			_FollowerService.OnServiceTick += _FollowerService_OnServiceTick;
 			_FollowerService.OnNewFollowersDetected += _FollowerService_OnNewFollowersDetected;
 
 		}
 
-		private void _FollowerService_OnNewFollowersDetected(object sender, OnNewFollowersDetectedArgs e) {
+        private void _FollowerService_OnServiceTick(object sender, OnServiceTickArgs e)
+        {
+            
+			ChatLogger.Tell(new MSG.ChatLogMessage(LogLevel.Information, "- global -", $"Follower Service Tick"));
+
+        }
+
+        private void _FollowerService_OnNewFollowersDetected(object sender, OnNewFollowersDetectedArgs e) {
 
 			// TODO: Notify the appopriate ChannelActor for the channel with a new follower
+			ChatLogger.Tell(new MSG.ChatLogMessage(LogLevel.Information, "- global -", $"New Follower Detected"));
 
 			var filteredFollowers = e.NewFollowers.Where(f => _Channels[f.ToUserId].StartTime < f.FollowedAt);
 

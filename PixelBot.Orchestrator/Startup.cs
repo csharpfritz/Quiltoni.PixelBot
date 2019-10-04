@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Logging;
 using PixelBot.Orchestrator.Actors;
@@ -43,14 +44,13 @@ namespace PixelBot.Orchestrator
 
 			IdentityModelEventSource.ShowPII = true;
 
+
 			services.Configure<CookiePolicyOptions>(options => {
 				options.CheckConsentNeeded = context => true;
 				options.MinimumSameSitePolicy = SameSiteMode.None;
 			});
 
 			services.AddAuthentication(options => {
-
-				options.
 				options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 				options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 				options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -96,7 +96,13 @@ namespace PixelBot.Orchestrator
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IOptions<BotConfiguration> botConfig) {
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IOptions<BotConfiguration> botConfig, ILoggerFactory loggerFactory) {
+
+			// cheer 142 cpayette 4/10/2019
+			// cheer 300 tbdgamer 4/10/2019
+
+			var logger = loggerFactory.CreateLogger("Startup");
+			logger.LogDebug($"Our Auth0 Domain is:  {Configuration["Auth0:Domain"]}");
 
 			BotConfiguration = botConfig.Value;
 

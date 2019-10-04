@@ -62,6 +62,8 @@ namespace PixelBot.Orchestrator.Services.Authentication
         //for adding profile
         options.SaveTokens = true;
 
+        // Cheer 100 nothing_else_matters 4/10/19
+
 				options.Events = new OpenIdConnectEvents {
 					// handle the logout redirection
 					OnRedirectToIdentityProviderForSignOut = (context) => {
