@@ -84,6 +84,14 @@ namespace PixelBot.Orchestrator
 
 			services.AddTransient<IChannelConfigurationContext, FileStorageChannelConfigurationContext>();
 
+			services.AddHttpClient("TwitchWebHook", config => {
+
+				config.BaseAddress = new Uri("https://api.twitch.tv/helix/webhooks");
+				config.DefaultRequestHeaders.Add("Content-Type", @"application/json");
+				config.DefaultRequestHeaders.Add("Authorization", $"Bearer {Configuration["BotConfig:Password"]}");
+
+			});
+
 			// Cheer 100 ramblinggeek 19/4/19 
 
 			services.AddSingleton<IActorRef>(provider => ChannelManagerActor.Create(
