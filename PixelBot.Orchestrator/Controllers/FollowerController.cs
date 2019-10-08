@@ -1,8 +1,11 @@
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using PixelBot.Orchestrator.Data;
+using PixelBot.Orchestrator.Services;
+using Quiltoni.PixelBot.Core.Client;
 
 namespace PixelBot.Orchestrator.Controllers
 {
@@ -11,10 +14,12 @@ namespace PixelBot.Orchestrator.Controllers
     [Route("api/{controller}")]
     public class FollowerController : ControllerBase {
         private readonly ILogger _Logger;
+        private readonly IHubContext<UserActivityHub, IUserActivityClient> hubContext;
 
-        public FollowerController(ILoggerFactory loggerFactory)
+        public FollowerController(IHubContext<UserActivityHub, IUserActivityClient> hubContext, ILoggerFactory loggerFactory)
         {
             _Logger = loggerFactory.CreateLogger("FollowerControllerAPI");
+            this.hubContext = hubContext;
         }
 
 
@@ -41,6 +46,8 @@ namespace PixelBot.Orchestrator.Controllers
             // Receive webhook notification
             // 
             _Logger.LogDebug($"New follower reported: {model.Data[0].FromName}");
+
+            await hubContext.Clients.Group(model.Data[0].ToName).NewFollower(model.Data[0].FromName);
 
             return Ok();
 
