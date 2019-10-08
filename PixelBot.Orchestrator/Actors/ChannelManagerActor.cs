@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.Event;
@@ -37,22 +38,27 @@ namespace PixelBot.Orchestrator.Actors
 			ActorSystem system, 
 			IChannelConfigurationContext dataContext, 
 			IHubContext<LoggerHub, IChatLogger> chatLogger, 
-			IHubContext<UserActivityHub, IUserActivityClient> followHubContext) {
+			IHubContext<UserActivityHub, IUserActivityClient> followHubContext,
+			IHttpClientFactory clientFactory) {
 
-			var props = Props.Create<ChannelManagerActor>(dataContext, chatLogger, followHubContext);
+			var props = Props.Create<ChannelManagerActor>(dataContext, chatLogger, followHubContext, clientFactory);
 			Instance = system.ActorOf(props, Name);
 			return Instance;
 
 		}
 
-		public ChannelManagerActor(IChannelConfigurationContext dataContext, IHubContext<LoggerHub, IChatLogger> chatLogger, IHubContext<UserActivityHub, IUserActivityClient> followHubContext) {
+		public ChannelManagerActor(IChannelConfigurationContext dataContext, 
+			IHubContext<LoggerHub, IChatLogger> chatLogger,
+			IHubContext<UserActivityHub, IUserActivityClient> followHubContext,
+			IHttpClientFactory httpClientFactory) {
 
 			Logger = Context.GetLogger();
+			_HttpClientFactory = httpClientFactory;
 
 			_ChatLogger = ChatLoggerActor.Create(chatLogger);
 
 			CreateFollowerActor(followHubContext);
-			_ChannelConfigurationActor = Context.ActorOf(Props.Create<ChannelConfigurationActor>(dataContext), nameof(ChannelConfigurationActor));
+			_ChannelConfigurationActor = Context.ActorOf(Props.Create<ChannelConfigurationActor>(dataContext, httpClientFactory), nameof(ChannelConfigurationActor));
 
 			Receive<JoinChannel>(this.GetChannelActor);
 			Receive<ReportCurrentChannels>(_ => {
@@ -92,7 +98,7 @@ namespace PixelBot.Orchestrator.Actors
 
 		private void CreateFollowerActor(IHubContext<UserActivityHub, IUserActivityClient> followHubContext) {
 
-			_FollowerActor = Context.ActorOf(Props.Create<FollowerServiceActor>(new[] { followHubContext }));
+			_FollowerActor = Context.ActorOf(Props.Create<FollowerServiceActor>(new object[] { followHubContext, _HttpClientFactory }));
 
 		}
 
@@ -100,7 +106,9 @@ namespace PixelBot.Orchestrator.Actors
 
 		public ILoggingAdapter Logger { get; }
 
-		private bool GetChannelActor(JoinChannel msg) {
+        private readonly IHttpClientFactory _HttpClientFactory;
+
+        private bool GetChannelActor(JoinChannel msg) {
 
 			if (string.IsNullOrEmpty(msg.ChannelName)) return false;
 
@@ -115,7 +123,7 @@ namespace PixelBot.Orchestrator.Actors
 			_ChannelActors.Add(msg.ChannelName, child);
 
 			// Track followers for that channel?
-			_FollowerActor.Tell(new TrackNewFollowers(msg.ChannelName));
+			_FollowerActor.Tell(new TrackNewFollowers(msg.ChannelName, config.ChannelId));
 
 			return true;
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Akka.Actor;
@@ -84,10 +85,10 @@ namespace PixelBot.Orchestrator
 
 			services.AddTransient<IChannelConfigurationContext, FileStorageChannelConfigurationContext>();
 
-			services.AddHttpClient("TwitchWebHook", config => {
+			services.AddHttpClient("TwitchHelixApi", config => {
 
-				config.BaseAddress = new Uri("https://api.twitch.tv/helix/webhooks");
-				config.DefaultRequestHeaders.Add("Content-Type", @"application/json");
+				config.BaseAddress = new Uri("https://api.twitch.tv/helix/");
+				config.DefaultRequestHeaders.Add("Accept", @"application/json");
 				config.DefaultRequestHeaders.Add("Authorization", $"Bearer {Configuration["BotConfig:Password"]}");
 
 			});
@@ -98,7 +99,8 @@ namespace PixelBot.Orchestrator
 				provider.GetService<ActorSystem>(),
 				provider.GetService<IChannelConfigurationContext>(),
 				provider.GetService<IHubContext<LoggerHub, IChatLogger>>(),
-				provider.GetService<IHubContext<UserActivityHub, IUserActivityClient>>()
+				provider.GetService<IHubContext<UserActivityHub, IUserActivityClient>>(),
+				provider.GetService<IHttpClientFactory>()
 			));
 
 		}

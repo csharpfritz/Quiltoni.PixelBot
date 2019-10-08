@@ -17,6 +17,7 @@ using Quiltoni.PixelBot.Core.Extensibility;
 using TwitchLib.Api;
 using TwitchLib.Api.Services;
 using TwitchLib.Api.Services.Events.FollowerService;
+using Akka.Event;
 
 namespace PixelBot.Orchestrator.Actors
 {
@@ -102,6 +103,9 @@ namespace PixelBot.Orchestrator.Actors
 		public IActorRef Self { get; private set; }
 
 		private void StartTwitchConnection() {
+
+			var logger = Context.GetLogger();
+			logger.Log(LogLevel.DebugLevel, $"Connecting to channel {Config.ChannelName} with bot username {BotConfig.LoginName}");	
 
 			var creds = new ConnectionCredentials(BotConfig.LoginName, BotConfig.Password);
 			_Client = new TwitchClient();
