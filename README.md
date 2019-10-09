@@ -23,3 +23,7 @@ https://www.facebook.com/LiQWYD
 https://creativecommons.org/licenses/by/3.0/
 
 Music provided by RFM: https://youtu.be/9QDADYhEzXg
+
+## Developing
+
+To find information on how to get started deveoping and enhancing the PixelBot, please refer to [DEVELOPMENT.md](./DEVELOPMENT.md).
