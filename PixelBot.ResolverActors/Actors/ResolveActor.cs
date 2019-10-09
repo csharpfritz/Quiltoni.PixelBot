@@ -11,7 +11,7 @@ namespace PixelBot.ResolverActors.Actors
 	/// <typeparam name="Message">The IResolveMessage<type>.</typeparam>
 	/// <typeparam name="Container">The container to get something out from.</typeparam>
 	/// <typeparam name="ActorBase">The ActorBase that is the parent actor of this actor</typeparam>
-	public abstract class ResovlveActor<Message, Container, ActorBase> : ReceiveActor
+	public abstract class ResolveActor<Message, Container, ActorBase> : ReceiveActor
 		where Message : IResolveMessage<Type>
 		where ActorBase : Akka.Actor.ActorBase
 	{
@@ -33,7 +33,7 @@ namespace PixelBot.ResolverActors.Actors
 		/// </summary>
 		public abstract Func<Container, Container> ReplaceContainer { get; }
 
-		protected ResovlveActor(Container resolverContainer)
+		protected ResolveActor(Container resolverContainer)
 		{
 			_ResolverContainer = resolverContainer;
 

@@ -10,7 +10,7 @@ namespace PixelBot.ResolverActors.Actors
 	/// <summary>
 	/// Specializes a ResolveActor to use the Message RequestService, the .net Core dependency container IServiceProvider
 	/// </summary>
-	public class ResolveServicesActor : ResovlveActor<RequestService, IServiceProvider, ResolveServicesActor>
+	public class ResolveServicesActor : ResolveActor<RequestService, IServiceProvider, ResolveServicesActor>
 	{
 		public const string Name = "ResolveServices";
 
