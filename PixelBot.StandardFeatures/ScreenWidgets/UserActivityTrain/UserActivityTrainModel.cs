@@ -52,6 +52,8 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 		[Parameter]
 		public string ChannelName { get; set; }
 
+		public string LatestFollower {get;set;} = "";
+
 		public UserActivityConfiguration Configuration { get; set; }
 
 		protected override async Task OnInitializedAsync()
@@ -137,6 +139,7 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 			}
 			LastEventTime = DateTime.Now;
 			this.Counter++;
+			LatestFollower = newFollowerName;
 			await StartAnimation();
 			TrainTimer.Start();
 			InvokeAsync(StateHasChanged);

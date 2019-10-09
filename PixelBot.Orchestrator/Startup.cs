@@ -66,6 +66,7 @@ namespace PixelBot.Orchestrator
 				});
 			});
 
+
 			services.AddMvc()
 					.AddNewtonsoftJson();
 
@@ -97,10 +98,7 @@ namespace PixelBot.Orchestrator
 
 			services.AddSingleton<IActorRef>(provider => ChannelManagerActor.Create(
 				provider.GetService<ActorSystem>(),
-				provider.GetService<IChannelConfigurationContext>(),
-				provider.GetService<IHubContext<LoggerHub, IChatLogger>>(),
-				provider.GetService<IHubContext<UserActivityHub, IUserActivityClient>>(),
-				provider.GetService<IHttpClientFactory>()
+				provider
 			));
 
 		}

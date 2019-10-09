@@ -5,9 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.Event;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using PixelBot.Orchestrator.Services;
 using Quiltoni.PixelBot.Core.Client;
 using Quiltoni.PixelBot.Core.Messages;
@@ -18,21 +22,24 @@ namespace PixelBot.Orchestrator.Actors
     public class FollowerServiceActor : ReceiveActor
     {
         public const string TWITCH_SECRET = "MYSECRET";
-        private readonly IHubContext<UserActivityHub, IUserActivityClient> _FollowHubContext;
-        private readonly HttpClient _Client;
+        private readonly IHttpClientFactory _ClientFactory;
         private static readonly HashSet<string> _FollowerChannels = new HashSet<string>();
 
-        public FollowerServiceActor(IHubContext<UserActivityHub,IUserActivityClient> followHubContext, 
-            IHttpClientFactory httpClientFactory)
+        public FollowerServiceActor( 
+            IHttpClientFactory httpClientFactory, 
+            IConfiguration configuration, 
+            IWebHostEnvironment env)
         {
             
+            _Configuration = configuration;
+            _Env = env;
+
 			this.ChatLogger = Context.ActorSelection(ChatLoggerActor.Path)
 				.ResolveOne(TimeSpan.FromSeconds(5)).GetAwaiter().GetResult();
 
 			this.ReceiveAsync<TrackNewFollowers>(AddChannelToTrack);
 
-			_FollowHubContext = followHubContext;
-            this._Client = httpClientFactory.CreateClient("TwitchHelixApi");
+            _ClientFactory = httpClientFactory;
 
         }
 
@@ -55,14 +62,13 @@ namespace PixelBot.Orchestrator.Actors
 
             // TODO: Renew leases when they expire
            
-#if DEBUG           
-            var leaseInSeconds = 300;
-#else
-            var leaseInSeconds = 3600;
-#endif            
+            var leaseInSeconds = _Env.IsDevelopment() ? 300 : 3600;
+
+            var callbackUrl = _Env.IsDevelopment() ? await GetNgrokTunnelUri() : new Uri(_Configuration["HostUrl"]);
+
 
             var payload = new TwitchWebhookSubscriptionPayload {
-                callback = "https://76c45e26.ngrok.io/api/follower",
+                callback = new Uri(callbackUrl, "/api/follower").ToString(),
                 mode = "subscribe",
                 topic = $"https://api.twitch.tv/helix/users/follows?first=1&to_id={channelId}",
                 lease_seconds = leaseInSeconds,
@@ -73,23 +79,51 @@ namespace PixelBot.Orchestrator.Actors
             var logger = Context.GetLogger();
             logger.Log(Akka.Event.LogLevel.WarningLevel, $"Payload sending to Twitch: {stringPayload}");
 
-            var responseMessage = await _Client.PostAsync(@"webhooks/hub", new StringContent(stringPayload, Encoding.UTF8, @"application/json"));
-            if (!responseMessage.IsSuccessStatusCode) {
-                var responseBody = await responseMessage.Content.ReadAsStringAsync();
-                logger.Log(Akka.Event.LogLevel.ErrorLevel, $"Error response body: {responseBody}");
+            using (var client = _ClientFactory.CreateClient("TwitchHelixApi")) {
+
+                var responseMessage = await client.PostAsync(@"webhooks/hub", new StringContent(stringPayload, Encoding.UTF8, @"application/json"));
+                if (!responseMessage.IsSuccessStatusCode) {
+                    var responseBody = await responseMessage.Content.ReadAsStringAsync();
+                    logger.Log(Akka.Event.LogLevel.ErrorLevel, $"Error response body: {responseBody}");
+                }
+
             }
 
         }
+
+        private readonly IConfiguration _Configuration;
+        private readonly IWebHostEnvironment _Env;
 
         public IActorRef ChatLogger { get; }
 
         public override void AroundPostStop()  {
 
-            _Client.Dispose();
+            // TODO: Should we unsubscribe from our Webhook subscriptions?
 
             base.AroundPostStop();
 
         }
+
+        private async Task<Uri> GetNgrokTunnelUri() {
+
+            Uri outValue = null;
+
+            using (var client = _ClientFactory.CreateClient()) {
+
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                var payload = await client.GetStringAsync("http://127.0.0.1:4040/api/tunnels");
+
+                outValue = new Uri(JObject.Parse(payload)["tunnels"][0]["public_url"].ToString());
+                
+                var logger = Context.GetLogger();
+                logger.Log(Akka.Event.LogLevel.DebugLevel, $"Fetched NGROK public url of : {outValue}");
+
+            }
+
+            return outValue;
+
+        }
+
 
         public class TwitchWebhookSubscriptionPayload {
 

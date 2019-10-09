@@ -7,7 +7,10 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.Event;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PixelBot.Orchestrator.Data;
 using PixelBot.Orchestrator.Services;
@@ -36,29 +39,29 @@ namespace PixelBot.Orchestrator.Actors
 
 		public static IActorRef Create(
 			ActorSystem system, 
-			IChannelConfigurationContext dataContext, 
-			IHubContext<LoggerHub, IChatLogger> chatLogger, 
-			IHubContext<UserActivityHub, IUserActivityClient> followHubContext,
-			IHttpClientFactory clientFactory) {
+			IServiceProvider serviceProvider) {
 
-			var props = Props.Create<ChannelManagerActor>(dataContext, chatLogger, followHubContext, clientFactory);
+			var props = Props.Create<ChannelManagerActor>(serviceProvider);
 			Instance = system.ActorOf(props, Name);
 			return Instance;
 
 		}
 
-		public ChannelManagerActor(IChannelConfigurationContext dataContext, 
-			IHubContext<LoggerHub, IChatLogger> chatLogger,
-			IHubContext<UserActivityHub, IUserActivityClient> followHubContext,
-			IHttpClientFactory httpClientFactory) {
+		public ChannelManagerActor(IServiceProvider serviceProvider) {
+
+			this.ServiceProvider = serviceProvider;
 
 			Logger = Context.GetLogger();
-			_HttpClientFactory = httpClientFactory;
+			_HttpClientFactory = serviceProvider.GetService<IHttpClientFactory>();
 
-			_ChatLogger = ChatLoggerActor.Create(chatLogger);
+			_ChatLogger = ChatLoggerActor.Create(serviceProvider.GetService<IHubContext<LoggerHub, IChatLogger>>());
 
-			CreateFollowerActor(followHubContext);
-			_ChannelConfigurationActor = Context.ActorOf(Props.Create<ChannelConfigurationActor>(dataContext, httpClientFactory), nameof(ChannelConfigurationActor));
+			CreateFollowerActor();
+			_ChannelConfigurationActor = Context.ActorOf(
+				Props.Create<ChannelConfigurationActor>(
+					serviceProvider.GetService<IChannelConfigurationContext>(), 
+					_HttpClientFactory), 
+					nameof(ChannelConfigurationActor));
 
 			Receive<JoinChannel>(this.GetChannelActor);
 			Receive<ReportCurrentChannels>(_ => {
@@ -83,7 +86,6 @@ namespace PixelBot.Orchestrator.Actors
 			//	var theChannelActor = _ChannelActors[f.Channel];
 			//	Sender.Tell(await theChannelActor.Ask(new GetFeatureFromChannel(f.FeatureType)));
 			//});
-			this.DataContext = dataContext;
 
 		}
 
@@ -96,15 +98,19 @@ namespace PixelBot.Orchestrator.Actors
 
 		}
 
-		private void CreateFollowerActor(IHubContext<UserActivityHub, IUserActivityClient> followHubContext) {
+		private void CreateFollowerActor() {
 
-			_FollowerActor = Context.ActorOf(Props.Create<FollowerServiceActor>(new object[] { followHubContext, _HttpClientFactory }));
+			
+			_FollowerActor = Context.ActorOf(Props.Create<FollowerServiceActor>(new object[] { 
+				_HttpClientFactory,
+				ServiceProvider.GetService<IConfiguration>(),
+				ServiceProvider.GetService<IWebHostEnvironment>() 
+			}));
 
 		}
 
-		public IChannelConfigurationContext DataContext { get; }
-
-		public ILoggingAdapter Logger { get; }
+        public IServiceProvider ServiceProvider { get; }
+        public ILoggingAdapter Logger { get; }
 
         private readonly IHttpClientFactory _HttpClientFactory;
 
