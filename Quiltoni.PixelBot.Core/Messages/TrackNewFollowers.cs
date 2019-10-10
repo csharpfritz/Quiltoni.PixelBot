@@ -2,7 +2,7 @@
 
 namespace Quiltoni.PixelBot.Core.Messages
 {
-	[Serializable]
+    [Serializable]
 	public class TrackNewFollowers
 	{
 

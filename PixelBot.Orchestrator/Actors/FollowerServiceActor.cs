@@ -38,6 +38,7 @@ namespace PixelBot.Orchestrator.Actors
 				.ResolveOne(TimeSpan.FromSeconds(5)).GetAwaiter().GetResult();
 
 			this.ReceiveAsync<TrackNewFollowers>(AddChannelToTrack);
+            this.ReceiveAsync<RenewFollowerWebHook>(m => SubscribeToTwitchWebhook(m.ChannelId));
 
             _ClientFactory = httpClientFactory;
 
@@ -85,6 +86,13 @@ namespace PixelBot.Orchestrator.Actors
                 if (!responseMessage.IsSuccessStatusCode) {
                     var responseBody = await responseMessage.Content.ReadAsStringAsync();
                     logger.Log(Akka.Event.LogLevel.ErrorLevel, $"Error response body: {responseBody}");
+                } else {
+
+                    // Schedule a lease renewal
+                    logger.Log(Akka.Event.LogLevel.WarningLevel, $"Scheduling lease renewal for: {channelId}");
+                    Context.System.Scheduler.ScheduleTellOnce(TimeSpan.FromSeconds(leaseInSeconds-30),
+                        Self, new RenewFollowerWebHook(channelId), Self);
+
                 }
 
             }
