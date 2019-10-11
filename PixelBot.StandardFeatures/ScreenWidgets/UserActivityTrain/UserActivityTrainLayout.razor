@@ -1,0 +1,10 @@
+@page "/widgets/design/train/{ChannelName}"
+
+<UserActivityTrain ChannelName="@ChannelName"></UserActivityTrain>
+
+@code {
+
+    [Parameter]
+    public string ChannelName { get; set;}
+
+}
