@@ -1,4 +1,6 @@
-﻿using Akka.TestKit.Xunit2;
+﻿using System;
+using System.Net.Http;
+using Akka.TestKit.Xunit2;
 using Moq;
 using PixelBot.Orchestrator.Data;
 using Quiltoni.PixelBot.Core.Domain;

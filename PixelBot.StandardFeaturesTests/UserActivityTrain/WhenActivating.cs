@@ -19,7 +19,7 @@ namespace PixelBot.StandardFeaturesTests.UserActivityTrain
 
 			// arrange
 			const string CHANNELNAME = "TestChannel";
-			var config = new ChannelConfiguration();
+			var config = new ChannelConfiguration() { ChannelId = "1234" };
 			config.FeatureConfigurations.Add("UserActivityConfiguration", new UserActivityConfiguration
 			{
 				ChannelName = CHANNELNAME,
@@ -28,7 +28,7 @@ namespace PixelBot.StandardFeaturesTests.UserActivityTrain
 			});
 			base.AddChannelConfiguration(CHANNELNAME, config);
 
-			var configActor = this.Sys.ActorOf(Props.Create<CORE.ChannelConfigurationActor>(base.ConfigurationContext), "TestConfig");
+			var configActor = this.Sys.ActorOf(Props.Create<CORE.ChannelConfigurationActor>(base.ConfigurationContext, null), "TestConfig");
 			BotConfiguration.ChannelConfigurationInstancePath = configActor.Path.ToStringWithAddress();
 
 			// act
