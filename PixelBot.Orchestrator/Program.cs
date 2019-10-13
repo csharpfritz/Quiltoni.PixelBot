@@ -24,6 +24,7 @@ namespace PixelBot.Orchestrator
 						.ConfigureWebHostDefaults(webBuilder => {
 							webBuilder
 								.UseSetting(WebHostDefaults.DetailedErrorsKey, "true")
+								.UseStaticWebAssets()
 								.UseStartup<Startup>();
 						});
 	}
