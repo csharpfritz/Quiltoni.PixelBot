@@ -12,20 +12,22 @@
 
 	#traintrack_horizontal {
 		width: 100%;
-		clear: both;
+		margin: 2px;
+		position: relative;
 	}
 
 	#traintrack_horizontal #end {
-	position: absolute;
-    width: 100px;
-    height: 100px;
-    padding: 2px;
-    border: 2px solid black;
-    text-align: center;
-    vertical-align: middle;
-    font-size: 36pt;
-    line-height: 110px;
-    font-weight: bold;
+		position: absolute;
+		width: 100px;
+		height: 100px;
+		padding: 2px;
+		border: 2px solid black;
+		text-align: center;
+		vertical-align: middle;
+		font-size: 36pt;
+		line-height: 110px;
+		font-weight: bold;
+		z-index: 10;
 	}
 
 	#traintrack_horizontal img {
@@ -34,22 +36,21 @@
 
 	#train {
 		height: 100px;
+		z-index: -1;
 		position: absolute;
-		right: 10px;
+		top: 0px;
+	}
+
+	.moveTrain {
 		animation-name: moveTrain;
-		animation-duration: 30s;
-		animation-iteration-count: 1;
+		animation-duration: 5s;
+		animation-timing-function: cubic-bezier(0.785, 0.135, 0.15, 0.86);
+		animation-fill-mode: forwards;
 	}
 
 	@@keyframes moveTrain {
-		17%  { transform : translateX(0%) }
-		20%  { transform : translateX(-20%) }
-		37%  { transform : translateX(-20%) }
-		40%  { transform : translateX(-40%) }
-		57%  { transform : translateX(-40%) }
-		60%  { transform : translateX(-60%) }
-		77%  { transform : translateX(-60%) }
-		80%  { transform : translateX(-80%) }
+		from { right: 0px }
+		to   { right: calc(100% - 102px);}
 	}
 
 </style>
@@ -66,10 +67,12 @@
 
 		<div id="end">@Counter</div>
 
-		<div id="train">
+		<div id="train" class="@(UiTimer.Enabled ? "moveTrain" : "")">
 			<img src="/_content/PixelBot.StandardFeatures/img/UserActivityTrain/train_1.png" />
-			<img src="/_content/PixelBot.StandardFeatures/img/UserActivityTrain/train_2.png" />
-			<img src="/_content/PixelBot.StandardFeatures/img/UserActivityTrain/train_3.png" />
+			@for (int i = 2; i < Counter+2; i++)
+			{
+				<img src="/_content/PixelBot.StandardFeatures/img/UserActivityTrain/train_@i.png" />
+			}
 		</div>
 
 	</div>
