@@ -86,7 +86,8 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 		private async Task StartAnimation()
 		{
 
-			// ?? what to do here?
+			UiTimer.Stop();
+			await InvokeAsync(StateHasChanged);
 
 		}
 

@@ -17,15 +17,15 @@
 	}
 
 	#traintrack_horizontal #end {
-		position: absolute;
+		position: relative;
 		width: 100px;
 		height: 100px;
-		padding: 2px;
+		background-color: #FFF;
 		border: 2px solid black;
 		text-align: center;
 		vertical-align: middle;
 		font-size: 36pt;
-		line-height: 110px;
+		line-height: 100px;
 		font-weight: bold;
 		z-index: 10;
 	}
@@ -43,14 +43,18 @@
 
 	.moveTrain {
 		animation-name: moveTrain;
-		animation-duration: 5s;
+		animation-duration: 30s; /* @(Configuration.MaxTimeBetweenActionsInSeconds)s; */
 		animation-timing-function: cubic-bezier(0.785, 0.135, 0.15, 0.86);
 		animation-fill-mode: forwards;
 	}
 
+	.hidden {
+		display: none;
+	}
+
 	@@keyframes moveTrain {
 		from { right: 0px }
-		to   { right: calc(100% - 102px);}
+		to   { right: calc(100% - @(80 + 43 * (Counter-1))px);}
 	}
 
 </style>
@@ -67,11 +71,11 @@
 
 		<div id="end">@Counter</div>
 
-		<div id="train" class="@(UiTimer.Enabled ? "moveTrain" : "")">
+		<div id="train" class="@(UiTimer.Enabled ? "moveTrain" : "hidden")">
 			<img src="/_content/PixelBot.StandardFeatures/img/UserActivityTrain/train_1.png" />
-			@for (int i = 2; i < Counter+2; i++)
+			@for (int i = 2; i < Counter+1; i++)
 			{
-				<img src="/_content/PixelBot.StandardFeatures/img/UserActivityTrain/train_@i.png" />
+				<img src="/_content/PixelBot.StandardFeatures/img/UserActivityTrain/train_@(2 + (i%2)).png" />
 			}
 		</div>
 

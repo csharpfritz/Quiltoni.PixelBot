@@ -23,7 +23,7 @@
     "UserActivityConfiguration": {
       "$type": "PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain.UserActivityConfiguration, PixelBot.StandardFeatures",
       "Type": 0,
-      "MaxTimeBetweenActionsInSeconds": 600,
+      "MaxTimeBetweenActionsInSeconds": 300,
       "ChannelName": null,
       "IsEnabled": true,
       "IsVisible": true
