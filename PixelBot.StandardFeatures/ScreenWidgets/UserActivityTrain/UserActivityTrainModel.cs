@@ -130,6 +130,9 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 
 			}
 
+			// cheer 1000 jamesmontemagno 15/10/19
+			// cheer 1050 tbdgamer 15/10/19
+
 			TrackNewFollowers();
 
 			TrainTimer.Stop();

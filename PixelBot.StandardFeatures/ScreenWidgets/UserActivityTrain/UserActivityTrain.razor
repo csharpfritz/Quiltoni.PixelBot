@@ -43,7 +43,7 @@
 
 	.moveTrain {
 		animation-name: moveTrain;
-		animation-duration: 30s; /* @(Configuration.MaxTimeBetweenActionsInSeconds)s; */
+		animation-duration: @(Configuration.MaxTimeBetweenActionsInSeconds)s;
 		animation-timing-function: cubic-bezier(0.785, 0.135, 0.15, 0.86);
 		animation-fill-mode: forwards;
 	}
@@ -81,6 +81,11 @@
 
 	</div>
 
+	@*
+
+	This should conditionally appear if we are in dev mode
+
+
 	<div id="stats">
 	<span id="counter">Train length:  @Counter</span>
 	<br/>
@@ -90,5 +95,7 @@
 	<br/>
 	<span id="latestFollower">Latest Follower: @LatestFollower</span>
 	</div>
+
+	*@
 }
 

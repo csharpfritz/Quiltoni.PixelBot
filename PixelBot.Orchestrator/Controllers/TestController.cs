@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Akka.Actor;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using PixelBot.Orchestrator.Services;
 using Quiltoni.PixelBot.Core.Client;
@@ -17,12 +19,13 @@ namespace PixelBot.Orchestrator.Controllers
 	[ApiController]
 	public class TestController : ControllerBase
 	{
+        private readonly IWebHostEnvironment env;
 
-		public TestController(IHubContext<UserActivityHub, IUserActivityClient> context) {
+        public TestController(IHubContext<UserActivityHub, IUserActivityClient> context, IWebHostEnvironment env ) {
 
 			this.HubContext = context;
-
-		}
+            this.env = env;
+        }
 
 		public IHubContext<UserActivityHub, IUserActivityClient> HubContext { get; }
 
@@ -30,7 +33,9 @@ namespace PixelBot.Orchestrator.Controllers
 
 		public async Task<IActionResult> Get(string followerName) {
 
-			await HubContext.Clients.All.NewFollower(followerName);
+			if (env.IsDevelopment()) {
+				await HubContext.Clients.All.NewFollower(followerName);
+			}
 			return Ok();
 
 		}
