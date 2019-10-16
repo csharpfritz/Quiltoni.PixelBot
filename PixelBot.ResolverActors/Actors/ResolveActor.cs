@@ -49,8 +49,6 @@ namespace PixelBot.ResolverActors.Actors
 			Receive<ReplaceContainer<Container>>(msg => _ResolverContainer = ReplaceContainer(msg.ReplacementContainer));
 		}
 
-		//BecomeActive();
-
 		private void Resolve(Message msg)
 		{
 			if (msg.ResolveMany)
@@ -83,6 +81,7 @@ namespace PixelBot.ResolverActors.Actors
 		/// <param name="resolverContainer"></param>
 		/// <param name="actorContext"></param>
 		/// <param name="name"></param>
+		/// <param name="args"></param>
 		/// <returns></returns>
 		protected static IActorRef Create(Container resolverContainer, IActorRefFactory actorContext, string name = null, params object[] args)
 		{
