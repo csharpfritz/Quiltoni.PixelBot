@@ -15,7 +15,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Logging;
 using PixelBot.Orchestrator.Actors;
 using PixelBot.Orchestrator.Components;
@@ -34,8 +33,6 @@ namespace PixelBot.Orchestrator
 	public class Startup
 	{
 		public static IConfiguration Configuration { get; private set; }
-
-		public static BotConfiguration BotConfiguration { get; private set; }
 
 		public Startup(IConfiguration config)
 		{
@@ -116,7 +113,7 @@ namespace PixelBot.Orchestrator
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IOptions<BotConfiguration> botConfig, ILoggerFactory loggerFactory)
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
 		{
 
 			// cheer 142 cpayette 4/10/2019
@@ -124,8 +121,6 @@ namespace PixelBot.Orchestrator
 
 			var logger = loggerFactory.CreateLogger("Startup");
 			logger.LogDebug($"Our Auth0 Domain is:  {Configuration["Auth0:Domain"]}");
-
-			BotConfiguration = botConfig.Value;
 
 			if (env.IsDevelopment())
 			{

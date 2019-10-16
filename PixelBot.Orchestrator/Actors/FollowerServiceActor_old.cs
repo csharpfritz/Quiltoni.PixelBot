@@ -1,14 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Akka.Actor;
+﻿using Akka.Actor;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using PixelBot.Orchestrator.Services;
+using PixelBot.ResolverActors;
 using Quiltoni.PixelBot.Core.Client;
 using Quiltoni.PixelBot.Core.Domain;
 using Quiltoni.PixelBot.Core.Messages;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using TwitchLib.Api;
 using TwitchLib.Api.Services;
 using TwitchLib.Api.Services.Events;
@@ -24,10 +26,12 @@ namespace PixelBot.Orchestrator.Actors
 		private Dictionary<string, (string ChannelName, DateTime StartTime)> _Channels = new Dictionary<string, (string, DateTime)>();
 		private readonly IHubContext<UserActivityHub, IUserActivityClient> _FollowHubContext;
 
-		public FollowerServiceActor_old(IHubContext<UserActivityHub,IUserActivityClient> followHubContext) {
+		public FollowerServiceActor_old(IHubContext<UserActivityHub, IUserActivityClient> followHubContext)
+		{
+			BotConfiguration = this.RequestService<IOptions<BotConfiguration>>().Value;
 
-			// Cheer 16300 clintonrocksmith 30/8/19 
-			// Cheer 5000 fixterjake14 30/8/19 
+			// Cheer 16300 clintonrocksmith 30/8/19
+			// Cheer 5000 fixterjake14 30/8/19
 
 			ConfigureFollowerService();
 
@@ -39,7 +43,8 @@ namespace PixelBot.Orchestrator.Actors
 
 		}
 
-		private async Task AddChannelToTrack(TrackNewFollowers msg) {
+		private async Task AddChannelToTrack(TrackNewFollowers msg)
+		{
 
 			var thisUser = await ConvertUserNameToUserId(new[] { msg.ChannelName });
 			_Channels.Add(thisUser.First().Id, (msg.ChannelName, DateTime.UtcNow));
@@ -52,13 +57,15 @@ namespace PixelBot.Orchestrator.Actors
 				_FollowerService.ChannelsToMonitor.Add(msg.ChannelName);
 			}
 
-			if (!_FollowerService.Enabled) {
+			if (!_FollowerService.Enabled)
+			{
 				_FollowerService.Start();
 			}
 
 		}
 
-		private void ConfigureFollowerService() {
+		private void ConfigureFollowerService()
+		{
 
 			_API = new TwitchLib.Api.TwitchAPI();
 			_API.Settings.ClientId = BotConfiguration.LoginName;
@@ -69,14 +76,15 @@ namespace PixelBot.Orchestrator.Actors
 
 		}
 
-        private void _FollowerService_OnServiceTick(object sender, OnServiceTickArgs e)
-        {
-            
+		private void _FollowerService_OnServiceTick(object sender, OnServiceTickArgs e)
+		{
+
 			ChatLogger.Tell(new MSG.ChatLogMessage(LogLevel.Information, "- global -", $"Follower Service Tick"));
 
-        }
+		}
 
-        private void _FollowerService_OnNewFollowersDetected(object sender, OnNewFollowersDetectedArgs e) {
+		private void _FollowerService_OnNewFollowersDetected(object sender, OnNewFollowersDetectedArgs e)
+		{
 
 			// TODO: Notify the appopriate ChannelActor for the channel with a new follower
 			ChatLogger.Tell(new MSG.ChatLogMessage(LogLevel.Information, "- global -", $"New Follower Detected"));
@@ -87,7 +95,8 @@ namespace PixelBot.Orchestrator.Actors
 
 			var users = ConvertUserIdToUserName(filteredFollowers.Select(f => f.FromUserId)).GetAwaiter().GetResult();
 
-			foreach (var newFollower in filteredFollowers) {
+			foreach (var newFollower in filteredFollowers)
+			{
 
 				var thisUser = users.First(u => u.Id == newFollower.FromUserId);
 				ChatLogger.Tell(new MSG.ChatLogMessage(LogLevel.Information, e.Channel, $"New Follower on channel ({e.Channel}): {thisUser.DisplayName}"));
@@ -95,9 +104,9 @@ namespace PixelBot.Orchestrator.Actors
 				// TODO: Trigger features listening for Follower events
 
 				// TODO: Notify the ChannelActor for this channel
-				//Context.Parent.Tell(e); 
+				//Context.Parent.Tell(e);
 
-				
+
 
 				_FollowHubContext.Clients.Group(_Channels[newFollower.ToUserId].ChannelName).NewFollower(thisUser.DisplayName);
 
@@ -105,7 +114,8 @@ namespace PixelBot.Orchestrator.Actors
 
 		}
 
-		private async Task<TwitchLib.Api.Helix.Models.Users.User[]> ConvertUserIdToUserName(IEnumerable<string> userIds) {
+		private async Task<TwitchLib.Api.Helix.Models.Users.User[]> ConvertUserIdToUserName(IEnumerable<string> userIds)
+		{
 
 			var response = await _API.Helix.Users.GetUsersAsync(userIds.ToList());
 			return response.Users;
@@ -120,7 +130,8 @@ namespace PixelBot.Orchestrator.Actors
 
 		}
 
-		public override void AroundPostStop() {
+		public override void AroundPostStop()
+		{
 
 			if (_FollowerService.Enabled)
 			{
@@ -130,7 +141,7 @@ namespace PixelBot.Orchestrator.Actors
 			base.AroundPostStop();
 		}
 
-		public BotConfiguration BotConfiguration { get; } = Startup.BotConfiguration;
+		public BotConfiguration BotConfiguration { get; }
 
 		public IActorRef ChatLogger { get; }
 	}
