@@ -1,0 +1,63 @@
+<html>
+    <head>
+
+        <style>
+
+            #traintrack_horizontal {
+                width: 100%;
+                margin: 2px;
+                position: relative;
+            }
+        
+            #traintrack_horizontal #end {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border: 2px solid black;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 36pt;
+            line-height: 100px;
+            font-weight: bold;
+            z-index: 10;
+            }
+        
+            #traintrack_horizontal img {
+                height: 100px;
+            }
+        
+            #train {
+                height: 100px;
+                width: 100px;
+                z-index: -1;
+                position: absolute;
+                background-color: lime;
+                border: 1px solid black;
+                top: 0px;
+                animation-name: moveTrain;
+                animation-duration: 5s;
+                animation-timing-function: cubic-bezier(0.785, 0.135, 0.15, 0.86);
+                animation-fill-mode: forwards;
+            }
+        
+            @keyframes moveTrain {
+                from { right: 0px }
+                to   { right: calc(100% - 102px);}
+            }
+        
+        </style>
+    </head>
+    <body>
+
+        
+            <div id="traintrack_horizontal">
+        
+                <div id="end">110</div>
+        
+                <div id="train">
+                </div>
+
+            </div>
+        
+    </body>
+</html>
