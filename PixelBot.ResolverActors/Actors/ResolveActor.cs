@@ -89,15 +89,8 @@ namespace PixelBot.ResolverActors.Actors
 			{
 				name = typeof(ActorBase).Name;
 			}
-			var arguments = new object[] { resolverContainer };
-			if (args.Length > 0)
-			{
-				int argLength = args.Length + 1;
-				arguments = new object[argLength];
-				arguments[0] = resolverContainer;
-				args.CopyTo(arguments, 1);
-			}
-			var props = Props.Create<ActorBase>(arguments);
+
+			var props = Props.Create<ActorBase>(args.BuildArgs(resolverContainer));
 			Instance = actorContext.ActorOf(props, name);
 			return Instance;
 		}
