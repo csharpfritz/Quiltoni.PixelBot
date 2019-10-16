@@ -38,13 +38,18 @@ namespace PixelBot.ResolverActors.Actors
 		protected ResolveActor(Container resolverContainer)
 		{
 			_ResolverContainer = resolverContainer;
+			Receive<RequestInstance>(ResolveInstance);
 			Receive<InitReslolveActor>(msg =>
 			{
 				Become(BecomeActive);
 			});
 		}
+
+		private void ResolveInstance(RequestInstance obj) => Sender.Tell(this, Self);
+
 		private void BecomeActive()
 		{
+			Receive<RequestInstance>(ResolveInstance);
 			Receive<Message>(msg => Resolve(msg));
 			Receive<ReplaceContainer<Container>>(msg => _ResolverContainer = ReplaceContainer(msg.ReplacementContainer));
 		}

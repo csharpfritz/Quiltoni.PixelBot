@@ -24,16 +24,13 @@ namespace PixelBot.ResolverActors
 
 		private static IResolveActor AddResolver(IServiceProvider provider, Type type, params object[] args)
 		{
-			var creater = type.GetMethod("Create", BindingFlags.Static)
+			var creater = type.GetMethod("Create", BindingFlags.Static | BindingFlags.Public)
 				?? throw new ArgumentException($"{type.FullName} doesn't implements a public static Create method!");
-			var instance = type.GetProperty("Instance", BindingFlags.Static) ?? throw new ArgumentException($"{type.FullName} doesn't implements a public static Instance property!");
-
 
 			var actorRefFactory = provider.GetService<ActorSystem>();
 			var resolver = (IActorRef)creater.Invoke(null, args.BuildArgs(provider, actorRefFactory));
-			resolver.Tell(new InitReslolveActor());
-
-			return (IResolveActor)instance.GetGetMethod().Invoke(null, null);
+			//resolver.Tell(new InitReslolveActor());
+			return (IResolveActor)resolver.Ask(new RequestInstance()).GetAwaiter().GetResult();
 		}
 	}
 }
