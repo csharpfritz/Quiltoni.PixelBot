@@ -2,7 +2,6 @@
 using Akka.Event;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
-using PixelBot.Orchestrator.Data;
 using PixelBot.Orchestrator.Services;
 using Quiltoni.PixelBot.Core.Domain;
 using Quiltoni.PixelBot.Core.Messages;
@@ -53,9 +52,7 @@ namespace PixelBot.Orchestrator.Actors
 
 			CreateFollowerActor();
 			_ChannelConfigurationActor = Context.ActorOf(
-				Props.Create<ChannelConfigurationActor>(
-					serviceProvider.GetService<IChannelConfigurationContext>(),
-					_HttpClientFactory),
+				Props.Create<ChannelConfigurationActor>(),
 					nameof(ChannelConfigurationActor));
 
 			Receive<JoinChannel>(this.GetChannelActor);

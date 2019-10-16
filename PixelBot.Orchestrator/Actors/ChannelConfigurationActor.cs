@@ -1,6 +1,7 @@
 ﻿using Akka.Actor;
 using Newtonsoft.Json.Linq;
 using PixelBot.Orchestrator.Data;
+using PixelBot.ResolverActors;
 using Quiltoni.PixelBot.Core.Domain;
 using Quiltoni.PixelBot.Core.Messages;
 using System;
@@ -20,11 +21,11 @@ namespace PixelBot.Orchestrator.Actors
 			private set { BotConfiguration.ChannelConfigurationInstancePath = value; }
 		}
 
-		public ChannelConfigurationActor(IChannelConfigurationContext context, IHttpClientFactory httpClientFactory)
+		public ChannelConfigurationActor()
 		{
-			_Context = context;
+			_Context = this.RequestService<IChannelConfigurationContext>();
 
-			_ClientFactory = httpClientFactory;
+			_ClientFactory = this.RequestService<IHttpClientFactory>();
 
 			InstancePath = Context.Self.Path.ToStringWithAddress();
 
