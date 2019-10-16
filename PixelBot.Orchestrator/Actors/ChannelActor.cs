@@ -10,6 +10,14 @@ using System.Reflection;
 using MSG = Quiltoni.PixelBot.Core.Messages;
 using Quiltoni.PixelBot.Core.Messages.Currency;
 using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
+using PixelBot.Orchestrator.Services;
+using Quiltoni.PixelBot.Core;
+using Quiltoni.PixelBot.Core.Extensibility;
+using TwitchLib.Api;
+using TwitchLib.Api.Services;
+using TwitchLib.Api.Services.Events.FollowerService;
+using Akka.Event;
 
 namespace PixelBot.Orchestrator.Actors
 {
@@ -21,22 +29,32 @@ namespace PixelBot.Orchestrator.Actors
 	{
 
 		private TwitchClient _Client;
+		private PluginBootstrapper _Bootstrapper;
 		
-		private IActorRef ChatCommand;
-		private IActorRef GiftSub;
-		private IActorRef NewMessage;
-		private IActorRef NewSub;
-		private IActorRef Raid;
-		private IActorRef ReSub;
+		private IActorRef _ChatCommand;
+		private IActorRef _GiftSub;
+		private IActorRef _NewMessage;
+		private IActorRef _NewSub;
+		private IActorRef _Raid;
+		private IActorRef _ReSub;
+		private IActorRef _NewFollower;
+		private TwitchAPI _API;
+		private FollowerService _FollowerService;
+
+		private IActorRef[] EventActors { get { return new[] { _ChatCommand, _GiftSub, _NewMessage, _NewSub, _Raid, _ReSub }; } }
 
 		public ChannelActor(ChannelConfiguration config) {
 
 			this.Config = config;
+			this._Bootstrapper = new PluginBootstrapper(config);
 
 			Receive<MSG.WhisperMessage>(msg => WhisperMessage(msg));
 			Receive<MSG.BroadcastMessage>(msg => BroadcastMessage(msg));
 			Receive<MSG.Currency.AddCurrencyMessage>(msg => AddCurrency(msg));
 			Receive<MSG.Currency.MyCurrencyMessage>(msg => ReportCurrency(msg));
+			Receive<OnNewFollowersDetectedArgs>(args => _NewFollower.Tell(args, this.Self));
+			Receive<MSG.NotifyChannelOfConfigurationUpdate>(msg => this.Config = config);
+			//Receive<MSG.GetFeatureFromChannel>(msg => Sender.Tell(GetFeature(msg.FeatureType)));
 
 			Self = Context.Self;
 
@@ -69,7 +87,7 @@ namespace PixelBot.Orchestrator.Actors
 
 		}
 
-		public ChannelConfiguration Config { get; }
+		public ChannelConfiguration Config { get; private set; }
 
 		public BotConfiguration BotConfig { get; } = Startup.BotConfiguration;
 
@@ -86,6 +104,9 @@ namespace PixelBot.Orchestrator.Actors
 
 		private void StartTwitchConnection() {
 
+			var logger = Context.GetLogger();
+			logger.Log(LogLevel.DebugLevel, $"Connecting to channel {Config.ChannelName} with bot username {BotConfig.LoginName}");	
+
 			var creds = new ConnectionCredentials(BotConfig.LoginName, BotConfig.Password);
 			_Client = new TwitchClient();
 			_Client.Initialize(creds);
@@ -99,12 +120,12 @@ namespace PixelBot.Orchestrator.Actors
 
 			StartEventHandlerActors();
 
-			_Client.OnNewSubscriber += (o, args) => NewSub.Tell(args, this.Self);
-			_Client.OnReSubscriber += (o, args) => ReSub.Tell(args, this.Self);
-			_Client.OnGiftedSubscription += (o, args) => GiftSub.Tell(args, this.Self);
-			_Client.OnRaidNotification += (o, args) => Raid.Tell(args, this.Self);
-			_Client.OnChatCommandReceived += (o, args) => ChatCommand.Tell(args, this.Self);
-			_Client.OnMessageReceived += (o, args) => NewMessage.Tell(args, this.Self);
+			_Client.OnNewSubscriber += (o, args) => _NewSub.Tell(args, this.Self);
+			_Client.OnReSubscriber += (o, args) => _ReSub.Tell(args, this.Self);
+			_Client.OnGiftedSubscription += (o, args) => _GiftSub.Tell(args, this.Self);
+			_Client.OnRaidNotification += (o, args) => _Raid.Tell(args, this.Self);
+			_Client.OnChatCommandReceived += (o, args) => _ChatCommand.Tell(args, this.Self);
+			_Client.OnMessageReceived += (o, args) => _NewMessage.Tell(args, this.Self);
 
 			_Client.Connect();
 
@@ -112,18 +133,23 @@ namespace PixelBot.Orchestrator.Actors
 
 		private void StartEventHandlerActors() {
 
-			this.ChatCommand = CreateActor<ChatCommandActor>();
-			this.GiftSub = CreateActor<GiftSubscriberActor>(CurrencyRepository);
-			this.NewMessage = CreateActor<NewMessageActor>();
-			this.NewSub = CreateActor<NewSubscriberActor>(CurrencyRepository);
-			this.Raid = CreateActor<RaidActor>(CurrencyRepository);
-			this.ReSub = CreateActor<ReSubscriberActor>(CurrencyRepository);
+			// TODO: Inject features appropriate for each StreamEvent
 
-			IActorRef CreateActor<T>(params object[] args) where T : ReceiveActor {
+			this._ChatCommand = CreateActor<ChatCommandActor>(StreamEvent.OnCommand);
+			this._GiftSub = CreateActor<GiftSubscriberActor>(StreamEvent.OnGiftSubscribe, CurrencyRepository);
+			this._NewMessage = CreateActor<NewMessageActor>(StreamEvent.OnMessage);
+			this._NewSub = CreateActor<NewSubscriberActor>(StreamEvent.OnSubscribe, CurrencyRepository);
+			this._Raid = CreateActor<RaidActor>(StreamEvent.OnRaid, CurrencyRepository);
+			this._ReSub = CreateActor<ReSubscriberActor>(StreamEvent.OnResubscribe, CurrencyRepository);
+			this._NewFollower = CreateActor<NewFollowerActor>(StreamEvent.OnFollow);
 
-				var realArgs = new object[] { Config };
+			IActorRef CreateActor<T>(StreamEvent evt, params object[] args) where T : ReceiveActor {
+
+				var features = _Bootstrapper.GetFeaturesForStreamEvent(evt);
+				var realArgs = new object[] { Config, features };
 				realArgs = realArgs.Concat(args).ToArray();
 				var props = Akka.Actor.Props.Create<T>(realArgs);
+
 				return Context.ActorOf(props, $"event_{typeof(T).Name}");
 
 			}
@@ -151,6 +177,24 @@ namespace PixelBot.Orchestrator.Actors
 				CurrencyRepository = Activator.CreateInstance(Type.GetType(sheetType), Config, null) as ICurrencyRepository;
 
 			}
+
+		}
+
+		public IFeature GetFeature(Type featureType) {
+
+			foreach (var a in EventActors) {
+
+				if (a.GetType().GetProperty("Features") != null) {
+
+					var featureProperty = a.GetType().GetProperty("Features");
+					var features = featureProperty.GetValue(a) as IFeature[];
+					return features.FirstOrDefault(f => f.GetType() == featureType);
+
+				}
+
+			}
+
+			return null;
 
 		}
 

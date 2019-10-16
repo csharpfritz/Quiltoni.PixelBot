@@ -1,0 +1,101 @@
+﻿@layout PixelBot.UI.EmptyLayout
+@page "/widgets/train/{ChannelName}"
+@inherits UserActivityTrainModel
+
+<!--
+	
+	Format the HTML properly
+	Animate the HTML properly
+
+-->
+<style>
+
+	#traintrack_horizontal {
+		width: 100%;
+		margin: 2px;
+		position: relative;
+	}
+
+	#traintrack_horizontal #end {
+		position: relative;
+		width: 100px;
+		height: 100px;
+		background-color: #FFF;
+		border: 2px solid black;
+		text-align: center;
+		vertical-align: middle;
+		font-size: 36pt;
+		line-height: 100px;
+		font-weight: bold;
+		z-index: 10;
+	}
+
+	#traintrack_horizontal img {
+		height: 100px;
+	}
+
+	#train {
+		height: 100px;
+		z-index: -1;
+		position: absolute;
+		top: 0px;
+	}
+
+	.moveTrain {
+		animation-name: moveTrain;
+		animation-duration: @(Configuration.MaxTimeBetweenActionsInSeconds)s;
+		animation-timing-function: cubic-bezier(0.785, 0.135, 0.15, 0.86);
+		animation-fill-mode: forwards;
+	}
+
+	.hidden {
+		display: none;
+	}
+
+	@@keyframes moveTrain {
+		from { right: 0px }
+		to   { right: calc(100% - @(80 + 43 * (Counter-1))px);}
+	}
+
+</style>
+
+
+@if (base.Configuration == null) {
+
+	<span>Waiting...</span>
+
+} else {
+
+
+	<div id="traintrack_horizontal">
+
+		<div id="end">@Counter</div>
+
+		<div id="train" class="@(UiTimer.Enabled ? "moveTrain" : "hidden")">
+			<img src="/_content/PixelBot.StandardFeatures/img/UserActivityTrain/train_1.png" />
+			@for (int i = 2; i < Counter+1; i++)
+			{
+				<img src="/_content/PixelBot.StandardFeatures/img/UserActivityTrain/train_@(2 + (i%2)).png" />
+			}
+		</div>
+
+	</div>
+
+	@*
+
+	This should conditionally appear if we are in dev mode
+
+
+	<div id="stats">
+	<span id="counter">Train length:  @Counter</span>
+	<br/>
+	<span id="timeRemaining">@TimeRemaining.ToString("m\\:ss")</span>
+	<br/>
+	<span id="duration">Train has been going for: @TrainDuration.ToString("h\\:mm\\:ss")</span>
+	<br/>
+	<span id="latestFollower">Latest Follower: @LatestFollower</span>
+	</div>
+
+	*@
+}
+

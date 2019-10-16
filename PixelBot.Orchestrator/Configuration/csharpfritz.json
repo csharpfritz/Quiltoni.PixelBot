@@ -1,0 +1,32 @@
+{
+  "$type": "Quiltoni.PixelBot.Core.Domain.ChannelConfiguration, Quiltoni.PixelBot.Core",
+  "ChannelName": "csharpfritz",
+  "ChannelId": "96909659",
+  "GuessGameEnabled": false,
+  "Currency": {
+    "$type": "Quiltoni.PixelBot.Core.Domain.CurrencyConfiguration, Quiltoni.PixelBot.Core",
+    "Enabled": false,
+    "Name": "Coins",
+    "MyCommand": "mycoins",
+    "AwardForSub_Prime": 10,
+    "AwardForSub_Tier1": 10,
+    "AwardForSub_Tier2": 25,
+    "AwardForSub_Tier3": 60,
+    "AwardForGiftSub": 2,
+    "AwardForRaid_Min": 3,
+    "AwardForRaid_PerViewer": 1,
+    "AwardForRaid_Max": 200,
+    "Google": null
+  },
+  "FeatureConfigurations": {
+    "$type": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[Quiltoni.PixelBot.Core.Extensibility.BaseFeatureConfiguration, Quiltoni.PixelBot.Core]], System.Private.CoreLib",
+    "UserActivityConfiguration": {
+      "$type": "PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain.UserActivityConfiguration, PixelBot.StandardFeatures",
+      "Type": 0,
+      "MaxTimeBetweenActionsInSeconds": 300,
+      "ChannelName": null,
+      "IsEnabled": true,
+      "IsVisible": true
+    }
+  }
+}

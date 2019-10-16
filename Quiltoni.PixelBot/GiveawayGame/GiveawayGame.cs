@@ -76,7 +76,7 @@ namespace Quiltoni.PixelBot.GiveawayGame
 
 			using (var client = _ClientFactory.CreateClient("giveaway")) {
 
-				var response = await client.PostJsonAsync<HttpResponseMessage>(_Config.RelayUrl, _entrants);
+				var response = await client.PostAsJsonAsync(_Config.RelayUrl, _entrants);
 				_TheWinner = await response.Content.ReadAsStringAsync();
 
 			}
@@ -115,7 +115,7 @@ namespace Quiltoni.PixelBot.GiveawayGame
 
 			using (var client = _ClientFactory.CreateClient("giveaway")) {
 
-				client.PutJsonAsync(_Config.RelayUrl, new[] { userName }).GetAwaiter().GetResult();
+				client.PutAsJsonAsync(_Config.RelayUrl, new[] { userName }).GetAwaiter().GetResult();
 
 			}
 
@@ -149,7 +149,7 @@ namespace Quiltoni.PixelBot.GiveawayGame
 
 				using (var client = _ClientFactory.CreateClient("giveaway")) {
 
-					client.PutJsonAsync(_Config.RelayUrl + "?id=1", _entrants.ToArray()).GetAwaiter().GetResult();
+					client.PutAsJsonAsync(_Config.RelayUrl + "?id=1", _entrants.ToArray()).GetAwaiter().GetResult();
 
 				}
 

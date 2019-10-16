@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using Akka.Actor;
 using Quiltoni.PixelBot.Core.Data;
 using Quiltoni.PixelBot.Core.Domain;
+using Quiltoni.PixelBot.Core.Extensibility;
 using TwitchLib.Client.Events;
 
 namespace PixelBot.Orchestrator.Actors.ChannelEvents
@@ -12,7 +14,7 @@ namespace PixelBot.Orchestrator.Actors.ChannelEvents
 		public ChannelConfiguration Config { get; }
 		public ICurrencyRepository CurrencyRepository { get; }
 
-		public ReSubscriberActor(ChannelConfiguration config, ICurrencyRepository currencyRepository) {
+		public ReSubscriberActor(ChannelConfiguration config, IEnumerable<IFeature> features, ICurrencyRepository currencyRepository) {
 
 			this.Config = config;
 			this.CurrencyRepository = currencyRepository;

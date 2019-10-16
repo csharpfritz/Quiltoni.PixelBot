@@ -7,6 +7,8 @@ namespace PixelBot.Orchestrator.Data
 
 		ChannelConfiguration GetConfigurationForChannel(string channelName);
 
+		void SaveConfigurationForChannel(string channelName, ChannelConfiguration config);
+
 	}
 
 }

@@ -14,7 +14,6 @@ namespace PixelBot.Orchestrator.Data
 		private static readonly IList<ChannelConfiguration> _Configs = new List<ChannelConfiguration> {
 			new ChannelConfiguration { ChannelName="csharpfritz", GuessGameEnabled=true },
 			new ChannelConfiguration { ChannelName="instafluff" },
-			new ChannelConfiguration { ChannelName="elliface" },
 			new ChannelConfiguration { ChannelName="banzaibaby" },
 			new ChannelConfiguration { ChannelName="visualstudio" },
 			new ChannelConfiguration { ChannelName="chiefcll" },
@@ -33,6 +32,11 @@ namespace PixelBot.Orchestrator.Data
 			return _Configs.FirstOrDefault(c => c.ChannelName == channelName) ??
 				new ChannelConfiguration { ChannelName = channelName };
 
+		}
+
+		public void SaveConfigurationForChannel(string channelName, ChannelConfiguration config)
+		{
+			throw new NotImplementedException();
 		}
 	}
 

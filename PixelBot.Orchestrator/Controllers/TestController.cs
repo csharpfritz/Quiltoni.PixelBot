@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Akka.Actor;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using PixelBot.Orchestrator.Services;
+using Quiltoni.PixelBot.Core.Client;
 using Quiltoni.PixelBot.Core.Messages;
 
 namespace PixelBot.Orchestrator.Controllers
@@ -16,25 +19,23 @@ namespace PixelBot.Orchestrator.Controllers
 	[ApiController]
 	public class TestController : ControllerBase
 	{
-		// IHubContext<LoggerHub, IChatLogger> loggerContext
-		public TestController(IActorRef channelMgr, ChatLogProxy proxy) {
+        private readonly IWebHostEnvironment env;
 
-			this.ChannelManager = channelMgr;
-			// this.LoggerContext = loggerContext;
-			this.Proxy = proxy;
+        public TestController(IHubContext<UserActivityHub, IUserActivityClient> context, IWebHostEnvironment env ) {
 
-		}
+			this.HubContext = context;
+            this.env = env;
+        }
 
-		public IActorRef ChannelManager { get; }
-
-		private ChatLogProxy Proxy;
+		public IHubContext<UserActivityHub, IUserActivityClient> HubContext { get; }
 
 		public IHubContext<LoggerHub, IChatLogger> LoggerContext { get; }
 
-		public async Task<IActionResult> Get(string channelName) {
+		public async Task<IActionResult> Get(string followerName) {
 
-			ChannelManager.Tell(new JoinChannel(channelName));
-			await Proxy.LogMessage(LogLevel.Information, "Test message");
+			if (env.IsDevelopment()) {
+				await HubContext.Clients.All.NewFollower(followerName);
+			}
 			return Ok();
 
 		}

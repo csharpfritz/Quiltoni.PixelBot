@@ -13,14 +13,19 @@ namespace PixelBot.Orchestrator
 {
 	public class Program
 	{
-		public static void Main(string[] args) {
-			CreateHostBuilder(args).Build().Run();
+		public static async Task Main(string[] args) {
+			var host = CreateHostBuilder(args).Build();
+			
+			host.Run();
 		}
 
 		public static IHostBuilder CreateHostBuilder(string[] args) =>
 				Host.CreateDefaultBuilder(args)
 						.ConfigureWebHostDefaults(webBuilder => {
-							webBuilder.UseStartup<Startup>();
+							webBuilder
+								.UseSetting(WebHostDefaults.DetailedErrorsKey, "true")
+								.UseStaticWebAssets()
+								.UseStartup<Startup>();
 						});
 	}
 }

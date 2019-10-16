@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Akka.Actor;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using MSG = Quiltoni.PixelBot.Core.Messages;
 
 namespace PixelBot.Orchestrator.Components.Pages
@@ -20,23 +21,35 @@ namespace PixelBot.Orchestrator.Components.Pages
 		public ClaimsPrincipal CurrentUser { get; set; }
 
 		[Inject]
-		public IUriHelper UriHelper { get; set; }
+		public NavigationManager NavigationManager { get; set; }
 
 		[Inject]
 		public IActorRef ChannelManager { get; set; }
+
+		[Inject]
+		public IJSRuntime JSRuntime { get; set; }
 
 		public string channelName { get; set; }
 
 		public string[] TheCurrentChannels = new string[] { };
 
-		protected override async Task OnAfterRenderAsync() {
+		protected override async Task OnAfterRenderAsync(bool firstRender) {
 
-			if (!(await AuthorizationService.AuthorizeAsync(CurrentUser, "GlobalAdmin")).Succeeded) {
-				UriHelper.NavigateTo("/");
+			if (firstRender && !(await AuthorizationService.AuthorizeAsync(CurrentUser, "GlobalAdmin")).Succeeded) {
+				NavigationManager.NavigateTo("/");
 				return;
 			}
 
+			// TODO: Activate the JavaScript to connect the SignalR log
+			await JSRuntime.InvokeAsync<string>("StartLogging", null);
+
+		}
+
+		protected override async Task OnParametersSetAsync() {
+
 			TheCurrentChannels = (await ChannelManager.Ask(new MSG.ReportCurrentChannels())) as string[];
+
+			await base.OnParametersSetAsync();
 
 		}
 

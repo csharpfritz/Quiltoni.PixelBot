@@ -3,36 +3,45 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28711.60
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quiltoni.PixelBot", "Quiltoni.PixelBot\Quiltoni.PixelBot.csproj", "{5FC0E5E4-D241-4365-9D92-87FAD0ADAE35}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quiltoni.PixelBot.Relay", "Quiltoni.PixelBot.Relay\Quiltoni.PixelBot.Relay.csproj", "{C08432CA-DE89-4550-850C-682A77AB7953}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quiltoni.PixelBot.Core", "Quiltoni.PixelBot.Core\Quiltoni.PixelBot.Core.csproj", "{03AB9C6F-ADBF-49D8-B957-5A9C229C02B1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quiltoni.Test", "Quiltoni.Test\Quiltoni.Test.csproj", "{4E209FFE-9971-4BEC-9A75-79A868B22F79}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0. SolutionItems", "0. SolutionItems", "{C5967143-96DF-4726-85AC-B7B40DE2A339}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		Directory.Build.props = Directory.Build.props
 		global.json = global.json
+		Build\props\Project.BuildProperties.props = Build\props\Project.BuildProperties.props
 		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBot.Orchestrator", "PixelBot.Orchestrator\PixelBot.Orchestrator.csproj", "{C68CFF33-594D-40B0-9CD9-7AB18FCA8486}"
+	ProjectSection(ProjectDependencies) = postProject
+		{41F9D724-B454-4018-A220-5C4B37CB5D14} = {41F9D724-B454-4018-A220-5C4B37CB5D14}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBot.Workers", "PixelBot.Workers\PixelBot.Workers.csproj", "{82346639-FB33-468E-9BBE-12153506700A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBot.ReplayLog", "PixelBot.ReplayLog\PixelBot.ReplayLog.csproj", "{CA3F8B63-F4FB-468E-B09A-00329925A378}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBot.OrchestratorTests", "PixelBot.OrchestratorTests\PixelBot.OrchestratorTests.csproj", "{326AE880-9CE0-45C2-A89D-3D9F07286AED}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{A16EF417-050E-42B6-AACB-1D34EFFDEBBE}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. Test", "2. Test", "{A16EF417-050E-42B6-AACB-1D34EFFDEBBE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. Source", "1. Source", "{D55C59AE-D5C9-42C4-A626-5F1FD54F3C80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PixelBot.Games.GuessGame", "PixelBot.Games.GuessGame\PixelBot.Games.GuessGame.csproj", "{9DE821AE-A4B3-45EA-BFE3-3057CE75846B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBot.Games.GuessGame", "PixelBot.Games.GuessGame\PixelBot.Games.GuessGame.csproj", "{9DE821AE-A4B3-45EA-BFE3-3057CE75846B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PixelBot.Google", "PixelBot.Google\PixelBot.Google.csproj", "{EC82777A-FC02-4874-BBE1-84F46415E799}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBot.Google", "PixelBot.Google\PixelBot.Google.csproj", "{EC82777A-FC02-4874-BBE1-84F46415E799}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBot.StandardFeatures", "PixelBot.StandardFeatures\PixelBot.StandardFeatures.csproj", "{41F9D724-B454-4018-A220-5C4B37CB5D14}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBot.UI", "PixelBot.UI\PixelBot.UI.csproj", "{84564158-C1E8-4985-B9CE-E3300F8BAD8C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBot.StandardFeaturesTests", "PixelBot.StandardFeaturesTests\PixelBot.StandardFeaturesTests.csproj", "{976517EA-3A5C-477D-9DF7-C82CED59AF1C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Z. Old", "Z. Old", "{D02E0618-3B90-4CA1-AFB2-B54BAF19FE68}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quiltoni.PixelBot", "Quiltoni.PixelBot\Quiltoni.PixelBot.csproj", "{50E2F1E4-DD97-414B-8BD9-FDBF135A127E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,10 +49,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5FC0E5E4-D241-4365-9D92-87FAD0ADAE35}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5FC0E5E4-D241-4365-9D92-87FAD0ADAE35}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5FC0E5E4-D241-4365-9D92-87FAD0ADAE35}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5FC0E5E4-D241-4365-9D92-87FAD0ADAE35}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C08432CA-DE89-4550-850C-682A77AB7953}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C08432CA-DE89-4550-850C-682A77AB7953}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C08432CA-DE89-4550-850C-682A77AB7953}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -52,10 +57,6 @@ Global
 		{03AB9C6F-ADBF-49D8-B957-5A9C229C02B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03AB9C6F-ADBF-49D8-B957-5A9C229C02B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03AB9C6F-ADBF-49D8-B957-5A9C229C02B1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4E209FFE-9971-4BEC-9A75-79A868B22F79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4E209FFE-9971-4BEC-9A75-79A868B22F79}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4E209FFE-9971-4BEC-9A75-79A868B22F79}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4E209FFE-9971-4BEC-9A75-79A868B22F79}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C68CFF33-594D-40B0-9CD9-7AB18FCA8486}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C68CFF33-594D-40B0-9CD9-7AB18FCA8486}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C68CFF33-594D-40B0-9CD9-7AB18FCA8486}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -64,10 +65,6 @@ Global
 		{82346639-FB33-468E-9BBE-12153506700A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82346639-FB33-468E-9BBE-12153506700A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82346639-FB33-468E-9BBE-12153506700A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CA3F8B63-F4FB-468E-B09A-00329925A378}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CA3F8B63-F4FB-468E-B09A-00329925A378}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CA3F8B63-F4FB-468E-B09A-00329925A378}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CA3F8B63-F4FB-468E-B09A-00329925A378}.Release|Any CPU.Build.0 = Release|Any CPU
 		{326AE880-9CE0-45C2-A89D-3D9F07286AED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{326AE880-9CE0-45C2-A89D-3D9F07286AED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{326AE880-9CE0-45C2-A89D-3D9F07286AED}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -80,21 +77,38 @@ Global
 		{EC82777A-FC02-4874-BBE1-84F46415E799}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC82777A-FC02-4874-BBE1-84F46415E799}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC82777A-FC02-4874-BBE1-84F46415E799}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41F9D724-B454-4018-A220-5C4B37CB5D14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41F9D724-B454-4018-A220-5C4B37CB5D14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41F9D724-B454-4018-A220-5C4B37CB5D14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41F9D724-B454-4018-A220-5C4B37CB5D14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84564158-C1E8-4985-B9CE-E3300F8BAD8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84564158-C1E8-4985-B9CE-E3300F8BAD8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84564158-C1E8-4985-B9CE-E3300F8BAD8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84564158-C1E8-4985-B9CE-E3300F8BAD8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{976517EA-3A5C-477D-9DF7-C82CED59AF1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{976517EA-3A5C-477D-9DF7-C82CED59AF1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{976517EA-3A5C-477D-9DF7-C82CED59AF1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{976517EA-3A5C-477D-9DF7-C82CED59AF1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50E2F1E4-DD97-414B-8BD9-FDBF135A127E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50E2F1E4-DD97-414B-8BD9-FDBF135A127E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50E2F1E4-DD97-414B-8BD9-FDBF135A127E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50E2F1E4-DD97-414B-8BD9-FDBF135A127E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{5FC0E5E4-D241-4365-9D92-87FAD0ADAE35} = {D55C59AE-D5C9-42C4-A626-5F1FD54F3C80}
 		{C08432CA-DE89-4550-850C-682A77AB7953} = {D55C59AE-D5C9-42C4-A626-5F1FD54F3C80}
 		{03AB9C6F-ADBF-49D8-B957-5A9C229C02B1} = {D55C59AE-D5C9-42C4-A626-5F1FD54F3C80}
-		{4E209FFE-9971-4BEC-9A75-79A868B22F79} = {A16EF417-050E-42B6-AACB-1D34EFFDEBBE}
 		{C68CFF33-594D-40B0-9CD9-7AB18FCA8486} = {D55C59AE-D5C9-42C4-A626-5F1FD54F3C80}
 		{82346639-FB33-468E-9BBE-12153506700A} = {D55C59AE-D5C9-42C4-A626-5F1FD54F3C80}
-		{CA3F8B63-F4FB-468E-B09A-00329925A378} = {D55C59AE-D5C9-42C4-A626-5F1FD54F3C80}
 		{326AE880-9CE0-45C2-A89D-3D9F07286AED} = {A16EF417-050E-42B6-AACB-1D34EFFDEBBE}
 		{9DE821AE-A4B3-45EA-BFE3-3057CE75846B} = {D55C59AE-D5C9-42C4-A626-5F1FD54F3C80}
 		{EC82777A-FC02-4874-BBE1-84F46415E799} = {D55C59AE-D5C9-42C4-A626-5F1FD54F3C80}
+		{41F9D724-B454-4018-A220-5C4B37CB5D14} = {D55C59AE-D5C9-42C4-A626-5F1FD54F3C80}
+		{84564158-C1E8-4985-B9CE-E3300F8BAD8C} = {D55C59AE-D5C9-42C4-A626-5F1FD54F3C80}
+		{976517EA-3A5C-477D-9DF7-C82CED59AF1C} = {A16EF417-050E-42B6-AACB-1D34EFFDEBBE}
+		{50E2F1E4-DD97-414B-8BD9-FDBF135A127E} = {D02E0618-3B90-4CA1-AFB2-B54BAF19FE68}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {80C2E5C5-DABC-434D-8809-E8E15A0F452C}

@@ -22,11 +22,13 @@
 </head>
 <body>
 	<app>
-		@(await Html.RenderComponentAsync<App>())</App>
+		@(await Html.RenderComponentAsync<App>(RenderMode.Server))
+	</app>
 
 		<script src="_framework/blazor.server.js"></script>
 		<script src="~/lib/signalr/dist/browser/signalr.js"></script>
 		<script src="~/js/chatlog.js"></script>
+		<script src="~/js/userActivity.js"></script>
 
 
 </body>

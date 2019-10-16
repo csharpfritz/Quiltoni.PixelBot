@@ -7,6 +7,8 @@
 
 		public string Password { get; set; }
 
+		public static string ChannelConfigurationInstancePath { get; set; }
+
 	}
 
 }

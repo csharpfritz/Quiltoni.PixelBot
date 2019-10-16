@@ -18,4 +18,5 @@ namespace Quiltoni.PixelBot.Core.Messages
 
 
 	}
+
 }

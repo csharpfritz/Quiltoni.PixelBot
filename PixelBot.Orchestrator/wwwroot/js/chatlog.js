@@ -9,12 +9,27 @@ connection.on("LogMessage", function (level, message) {
 	console.debug("Received message: " + message);
 	var li = document.createElement("li");
 	li.textContent = message;
-	document.getElementById("messagesList").appendChild(li);
+	if (document.getElementById("messagesList") != null) {
+		document.getElementById("messagesList").appendChild(li);
+	} else {
+		StopLogging();
+		return;
+	}
 	li.scrollIntoView();
 });
 
 console.log("Created signalR connection");
 
-connection.start().catch(function (err) {
-	return console.error(err.toString());
-});
+function StartLogging() {
+
+	connection.start().catch(function (err) {
+		return console.error(err.toString());
+	});
+
+}
+
+function StopLogging() {
+
+	connection.stop();
+
+}
