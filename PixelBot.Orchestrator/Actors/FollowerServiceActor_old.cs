@@ -39,7 +39,9 @@ namespace PixelBot.Orchestrator.Actors
 				.ResolveOne(TimeSpan.FromSeconds(5)).GetAwaiter().GetResult();
 
 			this.ReceiveAsync<TrackNewFollowers>(AddChannelToTrack);
-			_FollowHubContext = followHubContext;
+
+			IHubContext<UserActivityHub, IUserActivityClient>
+			_FollowHubContext = this.RequestService<IHubContext<UserActivityHub, IUserActivityClient>>();
 
 		}
 

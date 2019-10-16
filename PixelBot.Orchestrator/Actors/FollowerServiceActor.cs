@@ -24,8 +24,6 @@ namespace PixelBot.Orchestrator.Actors
 
 		public FollowerServiceActor()
 		{
-
-
 			_Configuration = this.RequestService<IConfiguration>();
 			_Env = this.RequestService<IWebHostEnvironment>();
 

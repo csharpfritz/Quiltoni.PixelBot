@@ -1,14 +1,9 @@
 ﻿using Akka.Actor;
 using Akka.Event;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.DependencyInjection;
-using PixelBot.Orchestrator.Services;
 using Quiltoni.PixelBot.Core.Domain;
 using Quiltoni.PixelBot.Core.Messages;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using TwitchLib.Api.Services.Events.FollowerService;
 
 namespace PixelBot.Orchestrator.Actors
@@ -29,31 +24,24 @@ namespace PixelBot.Orchestrator.Actors
 
 		public static IActorRef Instance { get; private set; }
 
-		public static IActorRef Create(
-			ActorSystem system,
-			IServiceProvider serviceProvider)
+		public static IActorRef Create(ActorSystem system)
 		{
 
-			var props = Props.Create<ChannelManagerActor>(serviceProvider);
+			var props = Props.Create<ChannelManagerActor>();
 			Instance = system.ActorOf(props, Name);
 			return Instance;
 
 		}
 
-		public ChannelManagerActor(IServiceProvider serviceProvider)
+		public ChannelManagerActor()
 		{
-
-			this.ServiceProvider = serviceProvider;
-
 			Logger = Context.GetLogger();
-			_HttpClientFactory = serviceProvider.GetService<IHttpClientFactory>();
 
-			_ChatLogger = ChatLoggerActor.Create(serviceProvider.GetService<IHubContext<LoggerHub, IChatLogger>>());
+			_ChatLogger = ChatLoggerActor.Create();
 
 			CreateFollowerActor();
 			_ChannelConfigurationActor = Context.ActorOf(
-				Props.Create<ChannelConfigurationActor>(),
-					nameof(ChannelConfigurationActor));
+				Props.Create<ChannelConfigurationActor>(), nameof(ChannelConfigurationActor));
 
 			Receive<JoinChannel>(this.GetChannelActor);
 			ReceiveAsync<LeaveChannel>(this.LeaveChannel);
@@ -102,10 +90,7 @@ namespace PixelBot.Orchestrator.Actors
 			_FollowerActor = Context.ActorOf(Props.Create<FollowerServiceActor>());
 		}
 
-		public IServiceProvider ServiceProvider { get; }
 		public ILoggingAdapter Logger { get; }
-
-		private readonly IHttpClientFactory _HttpClientFactory;
 
 		private bool GetChannelActor(JoinChannel msg)
 		{
