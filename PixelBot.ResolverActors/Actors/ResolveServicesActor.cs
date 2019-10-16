@@ -14,7 +14,7 @@ namespace PixelBot.ResolverActors.Actors
 	{
 		public const string Name = "ResolveServices";
 
-		private ResolveServicesActor(IServiceProvider services) : base(services)
+		public ResolveServicesActor(IServiceProvider services) : base(services)
 		{
 		}
 

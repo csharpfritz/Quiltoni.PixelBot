@@ -2,6 +2,7 @@
 using PixelBot.ResolverActors.Messages;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace PixelBot.ResolverActors.Actors
 {
@@ -17,6 +18,7 @@ namespace PixelBot.ResolverActors.Actors
 	{
 
 		protected Container _ResolverContainer;
+		private static IActorRef _Instance;
 
 		/// <summary>
 		/// Delegate that resolves one object from the Container
@@ -36,10 +38,18 @@ namespace PixelBot.ResolverActors.Actors
 		protected ResolveActor(Container resolverContainer)
 		{
 			_ResolverContainer = resolverContainer;
-
+			Receive<InitReslolveActor>(msg =>
+			{
+				Become(BecomeActive);
+			});
+		}
+		private void BecomeActive()
+		{
 			Receive<Message>(msg => Resolve(msg));
 			Receive<ReplaceContainer<Container>>(msg => _ResolverContainer = ReplaceContainer(msg.ReplacementContainer));
 		}
+
+		//BecomeActive();
 
 		private void Resolve(Message msg)
 		{
@@ -53,7 +63,19 @@ namespace PixelBot.ResolverActors.Actors
 			}
 		}
 
-		public static IActorRef Instance { get; private set; }
+		public static IActorRef Instance
+		{
+			get
+			{
+				while (_Instance == null)
+				{
+					Thread.Sleep(1);
+				}
+				return _Instance;
+			}
+
+			private set => _Instance = value;
+		}
 
 		/// <summary>
 		///
@@ -68,15 +90,16 @@ namespace PixelBot.ResolverActors.Actors
 			{
 				name = typeof(ActorBase).Name;
 			}
-			var arguments = new object[] { resolverContainer };
-			if (args.Length > 0)
-			{
-				int argLength = args.Length + 1;
-				arguments = new object[argLength];
-				arguments[0] = resolverContainer;
-				args.CopyTo(arguments, 1);
-			}
-			var props = Props.Create<ActorBase>(arguments);
+			//var arguments = new object[] { resolverContainer };
+			//if (args.Length > 0)
+			//{
+			//	int argLength = args.Length + 1;
+			//	arguments = new object[argLength];
+			//	arguments[0] = resolverContainer;
+			//	args.CopyTo(arguments, 1);
+			//}
+			//var props = Props.Create<ActorBase>(arguments);
+			var props = Props.Create<ActorBase>((Container)resolverContainer);
 			Instance = actorContext.ActorOf(props, name);
 			return Instance;
 		}

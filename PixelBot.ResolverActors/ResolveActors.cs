@@ -1,5 +1,6 @@
 ﻿using Akka.Actor;
 using PixelBot.ResolverActors.Actors;
+using PixelBot.ResolverActors.Messages;
 using System;
 
 namespace PixelBot.ResolverActors
@@ -22,6 +23,7 @@ namespace PixelBot.ResolverActors
 		public ResolveActors(IServiceProvider provider, IActorRefFactory actorRefFactory)
 		{
 			ServicesActor = ResolveServicesActor.Create(provider, actorRefFactory);
+			ServicesActor.Tell(new InitReslolveActor());
 		}
 	}
 }
