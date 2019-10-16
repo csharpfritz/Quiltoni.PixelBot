@@ -1,12 +1,14 @@
 ﻿@page "/"
+@using Microsoft.Extensions.Hosting;
 @inject System.Security.Claims.ClaimsPrincipal CurrentUser
 @inject IActorRef channelManager
 @inject NavigationManager NavigationManager
+@inject IWebHostEnvironment env
 
 
 <h1>Welcome to the PixelBot!</h1>
 
-@if (CurrentUser.Identity.IsAuthenticated)
+@if (env.IsDevelopment() && CurrentUser.Identity.IsAuthenticated)
 {
 <h4>My Claims:</h4>
 <dl>
@@ -17,7 +19,3 @@
 	}
 	</dl>
 }
-
-	@code {
-
-	}

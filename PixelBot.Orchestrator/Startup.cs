@@ -88,7 +88,7 @@ namespace PixelBot.Orchestrator
 
 			services.AddHttpClient("TwitchHelixApi", config => {
 
-				config.BaseAddress = new Uri("https://api.twitch.tv/helix/");
+				config.BaseAddress = new Uri(Configuration["TwitchAPI:EndpointURL"]);
 				config.DefaultRequestHeaders.Add("Accept", @"application/json");
 				config.DefaultRequestHeaders.Add("Authorization", $"Bearer {Configuration["BotConfig:Password"]}");
 
