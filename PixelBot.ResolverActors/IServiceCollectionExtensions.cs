@@ -10,13 +10,12 @@ namespace PixelBot.ResolverActors
 	public static class IServiceCollectionExtensions
 	{
 
-		//public ResolveActors(IServiceProvider provider, IActorRefFactory actorRefFactory)
-		//{
-		//	ServicesActor = ResolveServicesActor.Create(provider, actorRefFactory);
-		//	ServicesActor.Tell(new InitReslolveActor());
-		//}
-
-
+		/// <summary>
+		/// Creates and adds a concrete implementation of a IResolveActor to the DI system.
+		/// </summary>
+		/// <typeparam name="Resolver">Concrete implementation of a IResolveActor</typeparam>
+		/// <param name="services">Service collection of the DI</param>
+		/// <param name="args">Additional parameters to pass on to the public static Create method of the IResolveActor</param>
 		public static void AddResolveActor<Resolver>(this IServiceCollection services, params object[] args)
 			where Resolver : IResolveActor
 		{
@@ -36,15 +35,5 @@ namespace PixelBot.ResolverActors
 
 			return (IResolveActor)instance.GetGetMethod().Invoke(null, null);
 		}
-
-		/// <summary>
-		/// Add the ResolveActors to the root ActorSystem under akka://user/
-		/// </summary>
-		/// <param name="services">DI ServiceCollection</param>
-		public static void AddResolveActors(this IServiceCollection services)
-		{
-
-		}
-
 	}
 }
