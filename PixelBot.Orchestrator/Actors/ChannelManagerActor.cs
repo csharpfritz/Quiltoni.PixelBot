@@ -14,7 +14,6 @@ namespace PixelBot.Orchestrator.Actors
 	/// </summary>
 	public class ChannelManagerActor : ReceiveActor
 	{
-
 		private static readonly Dictionary<string, IActorRef> _ChannelActors = new Dictionary<string, IActorRef>();
 
 		private readonly IActorRef _ChatLogger;
