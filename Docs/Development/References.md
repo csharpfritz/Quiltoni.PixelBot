@@ -32,4 +32,4 @@
 [README.md]: /Docs/Development/README.md ""
 [References.md]: /Docs/Development/References.md ""
 [Twitch.md]: /Docs/Development/Twitch.md ""
-[Main README]: /README.md "The Quiltoni.PixelBot's main project README.md"
+[Main README]: /README.md "The FritzBot's main project README.md"

@@ -2,7 +2,7 @@
 
 ## Language And Frameworks
 
-The PixelBot is written in [C#](https://docs.microsoft.com/dotnet/csharp), using the [.Net Core](https://dotnet.microsoft.com/learn/dotnet/what-is-dotnet) framework v3.0 targetting [ASP.net core](https://asp.net). It is also written as a [Blazor](https://blazor.net) project.
+The FritzBot is written in [C#](https://docs.microsoft.com/dotnet/csharp), using the [.Net Core](https://dotnet.microsoft.com/learn/dotnet/what-is-dotnet) framework v3.0 targetting [ASP.net core](https://asp.net). It is also written as a [Blazor](https://blazor.net) project.
 
 ## Tooling
 

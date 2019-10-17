@@ -1,4 +1,4 @@
-# Quiltoni.PixelBot Development Documentation
+# FritzBot Development Documentation
 a
 If you are looking for information on how to configure and use the bot for your own channel, these are not the docs you're looking for. Instead, refer to the topmost [README.md](../../README.md).
 

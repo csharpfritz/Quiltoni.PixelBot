@@ -1,4 +1,4 @@
-# Contributing To The PixelBot Project
+# Contributing To The FritzBot Project
 
 ## Repository
 

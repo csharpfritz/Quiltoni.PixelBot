@@ -1,4 +1,4 @@
-# Developing on the Quiltoni.Pixelbot
+# Developing on the FritzBot
 
 ## Environment
 
