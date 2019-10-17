@@ -17,3 +17,6 @@ If you prefer an alternate editor or <abbr title="Integrated Development Environ
 [Visual Studio for PC]: https://visualstudio.microsoft.com/vs/ "Visual Studio for PC (classic Visual Studio) product page"
 [Visual Studio for Mac]: https://visualstudio.microsoft.com/vs/mac "Visual Studio for Max product page"
 [.editorconfig]: https://editorconfig.org "Explanation of the EditorConfig file"
+
+
+<!-- #include virtual="./References.md" -->

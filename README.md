@@ -26,4 +26,4 @@ Music provided by RFM: https://youtu.be/9QDADYhEzXg
 
 ## Developing
 
-Are you interested in contributing to the project? To find information on how to get started deveoping and enhancing the PixelBot, please refer to the [Docs/Development](./Docs/Development/) documents.
+Are you interested in contributing to the project? To find information on how to get started developing and enhancing the PixelBot, please refer to the [Docs/Development](./Docs/Development/) documents.
