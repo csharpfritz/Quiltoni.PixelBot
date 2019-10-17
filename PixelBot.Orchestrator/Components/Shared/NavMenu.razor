@@ -4,50 +4,56 @@
 
 
 <div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">PixelBot.Orchestrator</a>
-    <button class="navbar-toggler" @onclick="ToggleNavMenu">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+	<a class="navbar-brand" href="">PixelBot Orchestrator</a>
+	<button class="navbar-toggler" @onclick="ToggleNavMenu">
+		<span class="navbar-toggler-icon"></span>
+	</button>
 </div>
 
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </li>
+	<ul class="nav flex-column">
+		<li class="nav-item px-3">
+			<NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+				<span class="oi oi-home" aria-hidden="true"></span> Home
+			</NavLink>
+		</li>
 
-				@if (CurrentUser.Identity.IsAuthenticated)
-				{
-				<li class="nav-item px-3">
-					<NavLink class="nav-link" href="Configuration" Match="NavLinkMatch.All">
-						Configuration
-					</NavLink>
-				</li>
-				}
+		<li class="nav-item px-3">
+			<NavLink class="nav-link" href="About" Match="NavLinkMatch.All">
+				<span class="oi oi-info" aria-hidden="true"></span> About
+			</NavLink>
+		</li>
 
-        @if (AuthorizationService.Authorize(CurrentUser, Services.Policy.GlobalAdmin))
-        {
+		@if (CurrentUser.Identity.IsAuthenticated)
+		{
+		<li class="nav-item px-3">
+			<NavLink class="nav-link" href="Configuration" Match="NavLinkMatch.All">
+				Configuration
+			</NavLink>
+		</li>
+		}
 
-            <li class="nav-item px-3">
-                <NavLink class="nav-link" href="CurrentChannels">
-                    <span class="oi oi-chat" aria-hidden="true"></span> Current Channels
-                </NavLink>
-            </li>
+		@if (AuthorizationService.Authorize(CurrentUser, Services.Policy.GlobalAdmin))
+		{
 
-        }
+		<li class="nav-item px-3">
+			<NavLink class="nav-link" href="CurrentChannels">
+				<span class="oi oi-chat" aria-hidden="true"></span> Current Channels
+			</NavLink>
+		</li>
 
-    </ul>
+		}
+
+	</ul>
 </div>
 
 @code {
-    bool collapseNavMenu = true;
+	bool collapseNavMenu = true;
 
-    string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+	string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
-    void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
+	void ToggleNavMenu()
+	{
+		collapseNavMenu = !collapseNavMenu;
+	}
 }

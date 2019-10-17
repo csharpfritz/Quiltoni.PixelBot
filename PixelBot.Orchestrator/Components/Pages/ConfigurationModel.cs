@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Logging;
 using PixelBot.Orchestrator.Actors;
 using PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain;
 using Quiltoni.PixelBot.Core.Domain;
@@ -11,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using MSG = Quiltoni.PixelBot.Core.Messages;
 
 namespace PixelBot.Orchestrator.Components.Pages
 {
@@ -19,6 +21,12 @@ namespace PixelBot.Orchestrator.Components.Pages
 
 		[Inject]
 		public ActorSystem ActorSystem { get; set; }
+
+		[Inject]
+		public IActorRef ChannelManager { get; set; }
+
+		[Inject]
+		public ILoggerFactory LoggerFactory {get; set;}
 
 		[CascadingParameter]
 		private Task<AuthenticationState> authenticationStateTask { get; set; }
@@ -33,10 +41,11 @@ namespace PixelBot.Orchestrator.Components.Pages
 		protected override async Task OnInitializedAsync()
 		{
 
-			// Cheer 500 faniereynders 03/9/19 
-			// Cheer 550 tbdgamer 04/9/19 
+			// Cheer 500 faniereynders 03/9/19
+			// Cheer 550 tbdgamer 04/9/19
 
 			var User = (await authenticationStateTask).User;
+			//doe
 			var configActor = GetConfigurationActor();
 			Configuration = await configActor.Ask<ChannelConfiguration>(new GetConfigurationForChannel(User.Identity.Name));
 
@@ -51,9 +60,10 @@ namespace PixelBot.Orchestrator.Components.Pages
 			return ActorSystem.ActorSelection(ChannelConfigurationActor.InstancePath).ResolveOne(TimeSpan.FromSeconds(5)).GetAwaiter().GetResult();
 		}
 
-		public async Task SaveChanges() {
+		public async Task SaveChanges()
+		{
 
-			// Cheer 642 cpayette 05/9/19 
+			// Cheer 642 cpayette 05/9/19
 
 			// TODO: Validate changes
 			var User = (await authenticationStateTask).User;
@@ -63,6 +73,24 @@ namespace PixelBot.Orchestrator.Components.Pages
 			Configuration.FeatureConfigurations[nameof(UserActivityConfiguration)] = UserActivityConfiguration;
 
 			actor.Tell(new SaveConfigurationForChannel(User.Identity.Name, Configuration));
+
+		}
+
+		public async Task JoinChannel()
+		{
+
+			// cheer 600 cpayette 17/10/2019
+			// cheer 1000 faniereynders 17/10/2019
+			// cheer 500 roberttables 17/10/2019 - [containers, containers, containers]
+		
+		    if (ChannelManager == null) {
+				var logger = LoggerFactory.CreateLogger("JoinChannel");
+				logger.LogCritical("Unable to get a ChannelManagerActor");
+				return;
+			} 
+			ChannelManager.Tell(new MSG.JoinChannel(User.Identity.Name));
+
+			await Task.CompletedTask;
 
 		}
 

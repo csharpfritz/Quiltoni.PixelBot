@@ -8,7 +8,7 @@
 @if (Configuration == null)
 {
 
-	<span>Loading...</span>
+<span>Loading...</span>
 
 }
 else
@@ -21,7 +21,7 @@ else
 
 		<h2>User Activity Train</h2>
 		<a href="/widgets/train/@Configuration.ChannelName">View Widget</a>
-		<br/>
+		<br />
 
 		<label for="UatEnabled">Enabled?</label>
 		<InputCheckbox @bind-Value="UserActivityConfiguration.IsEnabled"></InputCheckbox>
@@ -43,6 +43,8 @@ else
 		<button type="submit">Save Changes</button>
 
 	</EditForm>
+
+	<button @onclick="@(async ()=> await this.JoinChannel())">Join my channel</button>
 
 </fieldset>
 }
