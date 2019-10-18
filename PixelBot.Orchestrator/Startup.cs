@@ -85,6 +85,7 @@ namespace PixelBot.Orchestrator
 			services.AddSingleton<ActorSystem>(_ => ActorSystem.Create("BotService"));
 
 			services.AddTransient<IChannelConfigurationContext, FileStorageChannelConfigurationContext>();
+			services.AddTransient<IFollowerDedupeService, InMemoryFollowerDedupeService>();
 
 			services.AddHttpClient("TwitchHelixApi", config => {
 
