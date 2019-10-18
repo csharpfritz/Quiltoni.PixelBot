@@ -15,11 +15,16 @@ namespace PixelBot.Orchestrator.Controllers
     public class FollowerController : ControllerBase {
         private readonly ILogger _Logger;
         private readonly IHubContext<UserActivityHub, IUserActivityClient> hubContext;
+        private readonly IFollowerDedupeService dedupeService;
 
-        public FollowerController(IHubContext<UserActivityHub, IUserActivityClient> hubContext, ILoggerFactory loggerFactory)
+        public FollowerController(  
+            IHubContext<UserActivityHub, IUserActivityClient> hubContext, 
+            IFollowerDedupeService dedupeService,
+            ILoggerFactory loggerFactory)
         {
             _Logger = loggerFactory.CreateLogger("FollowerControllerAPI");
             this.hubContext = hubContext;
+            this.dedupeService = dedupeService;
         }
 
 
@@ -45,9 +50,14 @@ namespace PixelBot.Orchestrator.Controllers
 
             // Receive webhook notification
             // 
-            _Logger.LogDebug($"New follower reported: {model.Data[0].FromName}");
+            foreach (var d in model.Data)
+            {
+                _Logger.LogDebug($"New follower reported: {d.FromName}");
 
-            await hubContext.Clients.Group(model.Data[0].ToName).NewFollower(model.Data[0].FromName);
+                if (!dedupeService.CheckNewFollower(d.ToName, d.FromName)) continue;
+
+                await hubContext.Clients.Group(d.ToName).NewFollower(d.FromName);
+            } 
 
             return Ok();
 

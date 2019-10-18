@@ -82,12 +82,9 @@ namespace PixelBot.Orchestrator.Components.Pages
 			// cheer 600 cpayette 17/10/2019
 			// cheer 1000 faniereynders 17/10/2019
 			// cheer 500 roberttables 17/10/2019 - [containers, containers, containers]
+			// cheer 400 cpayette 18/10/2019
 		
-		    if (ChannelManager == null) {
-				var logger = LoggerFactory.CreateLogger("JoinChannel");
-				logger.LogCritical("Unable to get a ChannelManagerActor");
-				return;
-			} 
+			var User = (await authenticationStateTask).User;
 			ChannelManager.Tell(new MSG.JoinChannel(User.Identity.Name));
 
 			await Task.CompletedTask;
