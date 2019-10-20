@@ -74,6 +74,8 @@ namespace PixelBot.Orchestrator.Actors
 			});
 			Receive<NotifyChannelOfConfigurationUpdate>(UpdateChannelWithConfiguration);
 
+			Receive<IsChannelConnected>(c => Sender.Tell(new IsChannelConnectedResponse(_ChannelActors.ContainsKey(c.ChannelName))));
+
 			Receive<GetConfigurationForChannel>(msg =>
 			{
 

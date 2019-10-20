@@ -81,7 +81,7 @@ namespace PixelBot.Orchestrator.Components.Pages
 
 		}
 
-		public async Task JoinChannel()
+		public async Task ToggleChannel()
 		{
 
 			// cheer 600 cpayette 17/10/2019
@@ -90,7 +90,14 @@ namespace PixelBot.Orchestrator.Components.Pages
 			// cheer 400 cpayette 18/10/2019
 		
 			var User = (await authenticationStateTask).User;
-			ChannelManager.Tell(new MSG.JoinChannel(User.Identity.Name));
+
+			if (IsConnected) {
+				// TODO: Write a method to leave the channel
+			} else {
+				ChannelManager.Tell(new MSG.JoinChannel(User.Identity.Name));
+				IsConnected = (await ChannelManager.Ask<IsChannelConnectedResponse>(new IsChannelConnected(User.Identity.Name))).IsConnected;
+				base.StateHasChanged();
+			}
 
 			await Task.CompletedTask;
 
