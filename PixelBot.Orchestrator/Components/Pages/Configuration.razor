@@ -40,11 +40,11 @@ else
 		<label for="UatTime">Time in Seconds to continue train:</label>
 		<InputNumber @bind-Value="UserActivityConfiguration.MaxTimeBetweenActionsInSeconds"></InputNumber>
 
-		<button type="submit">Save Changes</button>
+		<button type="submit" class="btn btn-success">Save Changes</button>
 
 	</EditForm>
 
-	<button @onclick="@(async ()=> await this.JoinChannel())">Join my channel</button>
+	<button class="btn btn-prime" @onclick="@(async ()=> await this.JoinChannel())">Join my channel</button>
 
 </fieldset>
 }
