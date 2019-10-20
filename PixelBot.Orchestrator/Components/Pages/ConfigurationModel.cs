@@ -38,16 +38,21 @@ namespace PixelBot.Orchestrator.Components.Pages
 
 		public ClaimsPrincipal User { get; private set; }
 
+		public bool IsConnected { get; private set; }
+
 		protected override async Task OnInitializedAsync()
 		{
 
 			// Cheer 500 faniereynders 03/9/19
 			// Cheer 550 tbdgamer 04/9/19
+			// cheer 1000 cpayette 20/10/2019
 
 			var User = (await authenticationStateTask).User;
 			//doe
 			var configActor = GetConfigurationActor();
 			Configuration = await configActor.Ask<ChannelConfiguration>(new GetConfigurationForChannel(User.Identity.Name));
+
+			IsConnected = (await ChannelManager.Ask<IsChannelConnectedResponse>(new IsChannelConnected(User.Identity.Name))).IsConnected;
 
 			UserActivityConfiguration = Configuration.FeatureConfigurations.GetConfigurationForFeature<UserActivityConfiguration>();
 
