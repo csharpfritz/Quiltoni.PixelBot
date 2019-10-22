@@ -3,18 +3,16 @@ using System;
 namespace Quiltoni.PixelBot.Core.Messages
 {
     [Serializable]
-	public class RenewFollowerWebHook {
+	public sealed class StopTrackingFollowers {
 
-		public RenewFollowerWebHook(string channelName, string channelId)
+		public StopTrackingFollowers(string channelName, string channelId)
 		{
             ChannelName = channelName;
-            this.ChannelId = channelId;
-
-		}
+            ChannelId = channelId;
+        }
 
         public string ChannelName { get; }
         public string ChannelId { get; }
-
-	}
+    }
 
 }

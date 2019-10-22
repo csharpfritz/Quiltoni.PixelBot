@@ -32,7 +32,7 @@ Music provided by RFM: https://youtu.be/9QDADYhEzXg
  - [x] Remove the About link and route it somewhere 
  - [x] Remove the claims on the home page when in Production environment
  - [ ] Join channel feature -- when and how does the bot join and monitor channels
- - [ ] Stop monitoring a channel feature -- stop the Follower / Sub / Cheer notifications
+ - [x] Stop monitoring a channel feature -- stop the Follower / Sub / Cheer notifications
  - [ ] Improve the configuration screen
     - [x] Activate the bot
     - [ ] Activate individual features

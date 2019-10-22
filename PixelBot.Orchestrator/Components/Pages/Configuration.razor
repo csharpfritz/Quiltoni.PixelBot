@@ -44,7 +44,8 @@ else
 
 	</EditForm>
 
-	<button class="btn @(base.IsConnected ? "btn-danger" : "btn-primary")" @onclick="@(async ()=> await this.ToggleChannel())">@(base.IsConnected ? "Leave my channel" : "Join my channel")</button>
+	<button class="btn @(base.IsConnected ? "btn-danger" : "btn-primary")" 
+			@onclick="@(async ()=> await this.ToggleChannel())">@(base.IsConnected ? "Leave my channel" : "Join my channel")</button>
 
 </fieldset>
 }

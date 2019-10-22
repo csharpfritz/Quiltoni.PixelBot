@@ -88,16 +88,20 @@ namespace PixelBot.Orchestrator.Components.Pages
 			// cheer 1000 faniereynders 17/10/2019
 			// cheer 500 roberttables 17/10/2019 - [containers, containers, containers]
 			// cheer 400 cpayette 18/10/2019
+			// cheer 374 cpayette 22/10/2019
 		
 			var User = (await authenticationStateTask).User;
 
+			IMessage msg;
+
 			if (IsConnected) {
-				// TODO: Write a method to leave the channel
+				msg = new MSG.LeaveChannel(User.Identity.Name);
 			} else {
-				ChannelManager.Tell(new MSG.JoinChannel(User.Identity.Name));
-				IsConnected = (await ChannelManager.Ask<IsChannelConnectedResponse>(new IsChannelConnected(User.Identity.Name))).IsConnected;
-				base.StateHasChanged();
+				msg = new MSG.JoinChannel(User.Identity.Name);
 			}
+			ChannelManager.Tell(msg);
+			IsConnected = (await ChannelManager.Ask<IsChannelConnectedResponse>(new IsChannelConnected(User.Identity.Name))).IsConnected;
+			base.StateHasChanged();
 
 			await Task.CompletedTask;
 
