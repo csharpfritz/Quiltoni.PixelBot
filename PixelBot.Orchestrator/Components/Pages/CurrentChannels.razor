@@ -4,7 +4,7 @@
 
 
 <input type="text" @bind="channelName" placeholder="Channel to Join" />
-<button @onclick="@(async () => await this.JoinChannel())">Join</button>
+<button @onclick="@(async () => await this.JoinChannel())" class='btn btn-primary'>Join</button>
 
 <h3>Channels currently joined to:</h3>
 <ul>
