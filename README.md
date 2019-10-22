@@ -27,14 +27,14 @@ Music provided by RFM: https://youtu.be/9QDADYhEzXg
 
 ## Deployment TODO:
 
- - [ ] Some content on the home page
+ - [x] Some content on the home page
  - [ ] Need some design help!  Please... Jeff is an art amateur
- - [ ] Remove the About link and route it somewhere 
- - [ ] Remove the claims on the home page when in Production environment
+ - [x] Remove the About link and route it somewhere 
+ - [x] Remove the claims on the home page when in Production environment
  - [ ] Join channel feature -- when and how does the bot join and monitor channels
- - [ ] Stop monitoring a channel feature -- stop the Follower / Sub / Cheer notifications
+ - [x] Stop monitoring a channel feature -- stop the Follower / Sub / Cheer notifications
  - [ ] Improve the configuration screen
-    - [ ] Activate the bot
+    - [x] Activate the bot
     - [ ] Activate individual features
 
 

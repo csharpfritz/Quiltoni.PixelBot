@@ -38,9 +38,20 @@ namespace PixelBot.Orchestrator.Actors
 				.ResolveOne(TimeSpan.FromSeconds(5)).GetAwaiter().GetResult();
 
 			this.ReceiveAsync<TrackNewFollowers>(AddChannelToTrack);
-            this.ReceiveAsync<RenewFollowerWebHook>(m => SubscribeToTwitchWebhook(m.ChannelId));
+            this.ReceiveAsync<RenewFollowerWebHook>(m => SubscribeToTwitchWebhook(m.ChannelName, m.ChannelId));
+
+            this.Receive<StopTrackingFollowers>(StopTracking);
 
             _ClientFactory = httpClientFactory;
+
+        }
+
+        private void StopTracking(StopTrackingFollowers arg)
+        {
+            
+            if (!_FollowerChannels.Contains(arg.ChannelName)) return;
+
+            _FollowerChannels.Remove(arg.ChannelName);
 
         }
 
@@ -50,18 +61,18 @@ namespace PixelBot.Orchestrator.Actors
             // Check if the channel is already subscribed to with the WebHook API
             if (_FollowerChannels.Contains(arg.ChannelName)) return;
 
-            await SubscribeToTwitchWebhook(arg.ChannelId);
-
             _FollowerChannels.Add(arg.ChannelName);
+
+            await SubscribeToTwitchWebhook(arg.ChannelName, arg.ChannelId);
 
             ChatLogger.Tell(new ChatLogMessage(Microsoft.Extensions.Logging.LogLevel.Debug, "- global -", $"Now tracking followers for channel {arg.ChannelName}"));
 
         }
 
-        private async Task SubscribeToTwitchWebhook(string channelId)
+        private async Task SubscribeToTwitchWebhook(string channelName, string channelId)
         {
 
-            // TODO: Renew leases when they expire
+            if (!_FollowerChannels.Contains(channelName)) return;
            
             var leaseInSeconds = _Env.IsDevelopment() ? 300 : 3600;
 
@@ -91,7 +102,7 @@ namespace PixelBot.Orchestrator.Actors
                     // Schedule a lease renewal
                     logger.Log(Akka.Event.LogLevel.WarningLevel, $"Scheduling lease renewal for: {channelId}");
                     Context.System.Scheduler.ScheduleTellOnce(TimeSpan.FromSeconds(leaseInSeconds-30),
-                        Self, new RenewFollowerWebHook(channelId), Self);
+                        Self, new RenewFollowerWebHook(channelName, channelId), Self);
 
                 }
 

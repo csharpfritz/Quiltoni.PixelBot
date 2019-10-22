@@ -38,16 +38,21 @@ namespace PixelBot.Orchestrator.Components.Pages
 
 		public ClaimsPrincipal User { get; private set; }
 
+		public bool IsConnected { get; private set; }
+
 		protected override async Task OnInitializedAsync()
 		{
 
 			// Cheer 500 faniereynders 03/9/19
 			// Cheer 550 tbdgamer 04/9/19
+			// cheer 1000 cpayette 20/10/2019
 
 			var User = (await authenticationStateTask).User;
 			//doe
 			var configActor = GetConfigurationActor();
 			Configuration = await configActor.Ask<ChannelConfiguration>(new GetConfigurationForChannel(User.Identity.Name));
+
+			IsConnected = (await ChannelManager.Ask<IsChannelConnectedResponse>(new IsChannelConnected(User.Identity.Name))).IsConnected;
 
 			UserActivityConfiguration = Configuration.FeatureConfigurations.GetConfigurationForFeature<UserActivityConfiguration>();
 
@@ -76,16 +81,27 @@ namespace PixelBot.Orchestrator.Components.Pages
 
 		}
 
-		public async Task JoinChannel()
+		public async Task ToggleChannel()
 		{
 
 			// cheer 600 cpayette 17/10/2019
 			// cheer 1000 faniereynders 17/10/2019
 			// cheer 500 roberttables 17/10/2019 - [containers, containers, containers]
 			// cheer 400 cpayette 18/10/2019
+			// cheer 374 cpayette 22/10/2019
 		
 			var User = (await authenticationStateTask).User;
-			ChannelManager.Tell(new MSG.JoinChannel(User.Identity.Name));
+
+			IMessage msg;
+
+			if (IsConnected) {
+				msg = new MSG.LeaveChannel(User.Identity.Name);
+			} else {
+				msg = new MSG.JoinChannel(User.Identity.Name);
+			}
+			ChannelManager.Tell(msg);
+			IsConnected = (await ChannelManager.Ask<IsChannelConnectedResponse>(new IsChannelConnected(User.Identity.Name))).IsConnected;
+			base.StateHasChanged();
 
 			await Task.CompletedTask;
 

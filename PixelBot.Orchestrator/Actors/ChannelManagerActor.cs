@@ -64,6 +64,8 @@ namespace PixelBot.Orchestrator.Actors
 					nameof(ChannelConfigurationActor));
 
 			Receive<JoinChannel>(this.GetChannelActor);
+			ReceiveAsync<LeaveChannel>(this.LeaveChannel);
+
 			Receive<ReportCurrentChannels>(_ => {
 				 Sender.Tell(_ChannelActors.Select(kv => kv.Key).ToArray());
 			});
@@ -73,6 +75,8 @@ namespace PixelBot.Orchestrator.Actors
 
 			});
 			Receive<NotifyChannelOfConfigurationUpdate>(UpdateChannelWithConfiguration);
+
+			Receive<IsChannelConnected>(c => Sender.Tell(new IsChannelConnectedResponse(_ChannelActors.ContainsKey(c.ChannelName))));
 
 			Receive<GetConfigurationForChannel>(msg =>
 			{
@@ -89,7 +93,7 @@ namespace PixelBot.Orchestrator.Actors
 
 		}
 
-		private void UpdateChannelWithConfiguration(NotifyChannelOfConfigurationUpdate msg)
+        private void UpdateChannelWithConfiguration(NotifyChannelOfConfigurationUpdate msg)
 		{
 
 			if (!_ChannelActors.ContainsKey(msg.ChannelName)) return;
@@ -134,6 +138,23 @@ namespace PixelBot.Orchestrator.Actors
 			return true;
 
 		}
+
+		private async Task LeaveChannel(LeaveChannel msg)
+        {
+            
+			if (!_ChannelActors.ContainsKey(msg.ChannelName)) return;
+
+			var actor = _ChannelActors[msg.ChannelName];
+			await actor.GracefulStop(TimeSpan.FromSeconds(10));
+
+			Logger.Log(Akka.Event.LogLevel.InfoLevel, $"Actor for channel '{msg.ChannelName}' has been stopped.");
+			_ChannelActors.Remove(msg.ChannelName);
+
+			_FollowerActor.Tell(new StopTrackingFollowers(msg.ChannelName, ""));
+
+        }
+
+
 
 		public ChannelActor this[string channelName] {
 			get { return _ChannelActors[channelName] as ChannelActor; }
