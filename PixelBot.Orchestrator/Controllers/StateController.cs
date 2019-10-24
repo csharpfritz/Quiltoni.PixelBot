@@ -30,7 +30,7 @@ namespace PixelBot.Orchestrator.Controllers {
             // how do we secure this so that going through the public API from OBS is allowed??
             // CORS?  same source only?
 
-            await Repository.Save(channelName, widgetName, payload);
+            // await Repository.Save(channelName, widgetName, payload);
 
             return Ok();
 
