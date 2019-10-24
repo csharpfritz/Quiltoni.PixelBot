@@ -24,6 +24,7 @@ using PixelBot.Orchestrator.Services;
 using PixelBot.Orchestrator.Services.Authentication;
 using PixelBot.StandardFeatures.ScreenWidgets.ChatRoom;
 using Quiltoni.PixelBot.Core.Client;
+using Quiltoni.PixelBot.Core.Data;
 using Quiltoni.PixelBot.Core.Domain;
 
 namespace PixelBot.Orchestrator
@@ -84,6 +85,7 @@ namespace PixelBot.Orchestrator
 
 			services.AddSingleton<ActorSystem>(_ => ActorSystem.Create("BotService"));
 
+			services.AddTransient<IWidgetStateRepository, AzureWidgetStateRepository>();
 			services.AddTransient<IChannelConfigurationContext, FileStorageChannelConfigurationContext>();
 			services.AddTransient<IFollowerDedupeService, InMemoryFollowerDedupeService>();
 
