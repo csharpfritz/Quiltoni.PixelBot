@@ -5,79 +5,87 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Quiltoni.PixelBot.Core.Data;
 
-namespace PixelBot.Orchestrator.Data {
+namespace PixelBot.Orchestrator.Data
+{
 
-    public class AzureWidgetStateRepository : IWidgetStateRepository
-    {
+	public class AzureWidgetStateRepository : IWidgetStateRepository
+	{
 
-        // cheer cpayette 775 24/10/2019
-        // cheer mholloway 550 24/10/2019        
+		// cheer cpayette 775 24/10/2019
+		// cheer mholloway 550 24/10/2019        
 
-        public AzureWidgetStateRepository(IConfiguration configuration) {
-            this.Connectionstring = configuration["WidgetPersistenceConnectionstring"];
-        }
+		public AzureWidgetStateRepository(IConfiguration configuration)
+		{
+			this.Connectionstring = configuration["WidgetPersistence:Connectionstring"];
+		}
 
-        public string Connectionstring { get; }
+		public string Connectionstring { get; }
 
-        public async Task<Dictionary<string, string>> Get(string channelName, string widgetName)
-        {
+		public async Task<Dictionary<string, string>> Get(string channelName, string widgetName)
+		{
 
-            var table = await GetAzureTable();
+			var table = await GetAzureTable();
 
-            var retrieveOperation = TableOperation.Retrieve<WidgetStateEntity>(channelName, widgetName);
-            var result = await table.ExecuteAsync(retrieveOperation);
-            return (result.Result as WidgetStateEntity).GetPayloadAsDictionary();
+			var retrieveOperation = TableOperation.Retrieve<WidgetStateEntity>(channelName, widgetName);
+			var result = await table.ExecuteAsync(retrieveOperation);
+			if (result.Result == null) return new Dictionary<string, string>();
+			return (result.Result as WidgetStateEntity).GetPayloadAsDictionary();
 
-        }
+		}
 
-        public async Task Save(string channelName, string widgetName, Dictionary<string, string> payload)
-        {
-            
-            var entity = new WidgetStateEntity(channelName, widgetName);
-            entity.SetPayloadFromDictionary(payload);
+		public async Task Save(string channelName, string widgetName, Dictionary<string, string> payload)
+		{
 
-            var table = await GetAzureTable();
-            var insertOrMergeOperation = TableOperation.InsertOrMerge(entity);
-            var result = await table.ExecuteAsync(insertOrMergeOperation);
+			var entity = new WidgetStateEntity(channelName, widgetName);
+			entity.SetPayloadFromDictionary(payload);
 
-        }
+			var table = await GetAzureTable();
+			var insertOrMergeOperation = TableOperation.InsertOrMerge(entity);
+			var result = await table.ExecuteAsync(insertOrMergeOperation);
 
-        private async Task<CloudTable> GetAzureTable()
-        {
-            var account = CloudStorageAccount.Parse(Connectionstring);
-            var tableClient = account.CreateCloudTableClient();
-            var table = tableClient.GetTableReference("WidgetState");
-            await table.CreateIfNotExistsAsync();
-            return table;
-        }
+		}
 
-        public class WidgetStateEntity : TableEntity {
-            
-            public WidgetStateEntity(string channelName, string widgetName)
-            {
-                
-                PartitionKey = channelName;
-                RowKey = widgetName;
+		private async Task<CloudTable> GetAzureTable()
+		{
+			var account = CloudStorageAccount.Parse(Connectionstring);
+			var tableClient = account.CreateCloudTableClient();
+			var table = tableClient.GetTableReference("WidgetState");
+			await table.CreateIfNotExistsAsync();
+			return table;
+		}
 
-            }
+		public class WidgetStateEntity : TableEntity
+		{
 
-            public string Payload { get; set; }
+			public WidgetStateEntity() { } 
 
-            public Dictionary<string,string> GetPayloadAsDictionary() {
+			public WidgetStateEntity(string channelName, string widgetName)
+			{
 
-                return JsonConvert.DeserializeObject<Dictionary<string,string>>(Payload);
+				PartitionKey = channelName;
+				RowKey = widgetName;
 
-            }
+			}
 
-            public void SetPayloadFromDictionary(Dictionary<string,string> newPayload) {
+			public string Payload { get; set; }
 
-                Payload = JsonConvert.SerializeObject(newPayload);
+			public Dictionary<string, string> GetPayloadAsDictionary()
+			{
 
-            }
+				return JsonConvert.DeserializeObject<Dictionary<string, string>>(Payload);
 
-        }
+			}
 
-    }
+			public void SetPayloadFromDictionary(Dictionary<string, string> newPayload)
+			{
+
+				Payload = JsonConvert.SerializeObject(newPayload);
+
+			}
+
+		}
+
+	}
 
 
 }

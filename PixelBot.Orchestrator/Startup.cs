@@ -31,63 +31,24 @@ namespace PixelBot.Orchestrator
 {
 	public class Startup
 	{
-		public IConfiguration Configuration { get; }
+		public static IConfiguration Configuration { get; private set; }
 
 		public static BotConfiguration BotConfiguration { get; private set; }
 
 		public Startup(IConfiguration config) {
 
-			this.Configuration = config;
+			Configuration = config;
 		}
 
 		// This method gets called by the runtime. Use this method to add services to the container.
-		// For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
 		public void ConfigureServices(IServiceCollection services) {
 
-			IdentityModelEventSource.ShowPII = true;
+			services.ConfigureAspNet();
 
-
-			services.Configure<CookiePolicyOptions>(options => {
-				options.CheckConsentNeeded = context => true;
-				options.MinimumSameSitePolicy = SameSiteMode.None;
-			});
-
-			services.AddAuthentication(options => {
-				options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-				options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-				options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-			})
-			.AddCookie()
-			.AddAuth0OpenIdConnect(Configuration);
-
-			services.AddAuthorization(config => {
-
-				config.AddPolicy(nameof(Policy.GlobalAdmin), p => {
-					p.RequireRole("GlobalAdmin");
-				});
-			});
-
-
-			services.AddMvc()
-					.AddNewtonsoftJson();
-
-			services.AddHttpContextAccessor();
-			services.AddScoped<ClaimsPrincipal>(context => context.GetRequiredService<IHttpContextAccessor>()?.HttpContext?.User);
-
-			services.AddControllers();
-
-			services.AddServerSideBlazor();
-			services.AddSignalR(config => {
-				config.EnableDetailedErrors = true;
-			}).AddJsonProtocol();
 
 			services.Configure<BotConfiguration>(Configuration.GetSection("BotConfig"));
 
-			services.AddSingleton<ActorSystem>(_ => ActorSystem.Create("BotService"));
-
-			services.AddTransient<IWidgetStateRepository, AzureWidgetStateRepository>();
-			services.AddTransient<IChannelConfigurationContext, FileStorageChannelConfigurationContext>();
-			services.AddTransient<IFollowerDedupeService, InMemoryFollowerDedupeService>();
+			services.ConfigureApplicationServices();
 
 			services.AddHttpClient("TwitchHelixApi", config => {
 
@@ -99,10 +60,7 @@ namespace PixelBot.Orchestrator
 
 			// Cheer 100 ramblinggeek 19/4/19 
 
-			services.AddSingleton<IActorRef>(provider => ChannelManagerActor.Create(
-				provider.GetService<ActorSystem>(),
-				provider
-			));
+			services.ConfigureActorModel();
 
 		}
 

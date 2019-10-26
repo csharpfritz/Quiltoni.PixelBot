@@ -18,14 +18,14 @@ namespace PixelBot.Orchestrator.Controllers {
 
         public IWidgetStateRepository Repository { get; }
 
-        [HttpGet("[channelName]/[widgetName]")]
+        [HttpGet("{channelName}/{widgetName}")]
         public async Task<IActionResult> Get(string channelName, string widgetName) {
 
             return Ok(await Repository.Get(channelName, widgetName));
 
         }
 
-        [HttpPost("[channelName]/[widgetName]")]
+        [HttpPost("{channelName}/{widgetName}")]
         public async Task<IActionResult> Post(string channelName, string widgetName, [FromBody]Dictionary<string,string> payload) {
 
             // how do we secure this so that going through the public API from OBS is allowed??
@@ -33,7 +33,7 @@ namespace PixelBot.Orchestrator.Controllers {
 
             // await Repository.Save(channelName, widgetName, payload);
 
-            return Ok();
+            return Ok(); 
 
         }
 

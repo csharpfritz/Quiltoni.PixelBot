@@ -155,3 +155,12 @@ app {
 		display: block;
 	}
 }
+
+/** Blazor reconnect block */
+.components-reconnect-hide {
+	display: none;
+}
+
+.components-reconnect-show {
+	display: block;
+}
