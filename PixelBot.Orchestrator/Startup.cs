@@ -59,8 +59,8 @@ namespace PixelBot.Orchestrator
 			});
 
 			// Cheer 100 ramblinggeek 19/4/19 
-
-			services.ConfigureActorModel();
+ 
+			services.ConfigureActorModel(); 
 
 		}
 
@@ -101,6 +101,7 @@ namespace PixelBot.Orchestrator
 				routes.MapHub<LoggerHub>("/loggerhub");
 				routes.MapHub<UserActivityHub>("/useractivityhub");
 				MapExternalHubs(routes);
+				routes.MapHealthChecks("/health");
 				routes.MapRazorPages();
 				routes.MapDefaultControllerRoute();
 				routes.MapBlazorHub();
