@@ -56,6 +56,9 @@ namespace PixelBot.Orchestrator
 			services.AddMvc()
 					.AddNewtonsoftJson();
 
+			services.AddHealthChecks()
+				.AddCheck<ActorSystemHealthCheck>("Actor System Health Check");
+
 			services.AddHttpContextAccessor();
 			services.AddScoped<ClaimsPrincipal>(context => context.GetRequiredService<IHttpContextAccessor>()?.HttpContext?.User);
 

@@ -25,7 +25,9 @@
 		@(await Html.RenderComponentAsync<App>(RenderMode.Server))
 	</app>
 
-	<div id="components-reconnect-modal" class="components-reconnect-hide">Fritz is trying to reconnect</div>
+	<div id="components-reconnect-modal" class="components-reconnect-hide">
+        Fritz is trying to reconnect
+    </div>
 
 	<script src="_framework/blazor.server.js"></script>
 	<script src="~/lib/signalr/dist/browser/signalr.js"></script>
