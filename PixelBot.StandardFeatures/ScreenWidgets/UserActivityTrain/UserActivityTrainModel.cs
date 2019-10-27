@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.ObjectPool;
 using Microsoft.JSInterop;
 using Quiltoni.PixelBot.Core.Client;
+using Quiltoni.PixelBot.Core.Data;
 using Quiltoni.PixelBot.Core.Domain;
 using Quiltoni.PixelBot.Core.Messages;
 using System;
@@ -22,13 +23,11 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 		// Cheer 110 ultramark 11/9/19 
 		// Cheer 500 cpayette 11/9/19 
 
+		private const string WidgetName = "UserActivityTrainModel";
+
 		public UserActivityTrainModel()
 		{
 			TrainTimer.Elapsed += TrainTimer_Elapsed;
-
-			UiTimer.Interval = 1000;
-			UiTimer.AutoReset = true;
-			UiTimer.Elapsed += (o, e) => InvokeAsync(StateHasChanged);
 
 		}
 
@@ -38,8 +37,6 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 			Counter = 0;
 			FirstEventTime = DateTime.MinValue;
 			LastEventTime = DateTime.MinValue;
-
-			UiTimer.Stop();
 
 		}
 
@@ -52,7 +49,10 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 		[Parameter]
 		public string ChannelName { get; set; }
 
-		public string LatestFollower {get;set;} = "";
+		[Inject]
+		public IWidgetStateRepository WidgetStateRepository { get; set; }
+
+		public string LatestFollower { get; set; } = "";
 
 		public UserActivityConfiguration Configuration { get; set; }
 
@@ -61,17 +61,30 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 
 			GetWidgetConfiguration();
 
+			await LoadPersistedConfiguration();
+
 			await JSRuntime.InvokeVoidAsync("UserActivity.Connect", args: new object[] { ChannelName, DotNetObjectReference.Create(this) });
 
 			await base.OnInitializedAsync();
 
 		}
 
-		public void GetWidgetConfiguration()
+		private async Task LoadPersistedConfiguration()
 		{
 
-			var configActorRef = ActorSystem.ActorSelection(BotConfiguration.ChannelConfigurationInstancePath).ResolveOne(TimeSpan.FromSeconds(5)).GetAwaiter().GetResult();
+			var payload = await WidgetStateRepository.Get(ChannelName, WidgetName);
+			if (payload.Count == 0) return;
+			FirstEventTime = DateTime.Parse(payload[nameof(FirstEventTime)]);
+			LastEventTime = DateTime.Parse(payload[nameof(LastEventTime)]);
+			Counter = (TimeRemaining.TotalSeconds > 0) ? int.Parse(payload[nameof(Counter)]) : 0;
 
+		}
+		 
+		public void GetWidgetConfiguration()
+		{
+		  
+			var configActorRef = ActorSystem.ActorSelection(BotConfiguration.ChannelConfigurationInstancePath).ResolveOne(TimeSpan.FromSeconds(5)).GetAwaiter().GetResult();
+			 
 			var channelConfiguration = configActorRef.Ask<ChannelConfiguration>(new MSG.GetConfigurationForChannel(ChannelName)).GetAwaiter().GetResult();
 			Configuration = channelConfiguration.FeatureConfigurations[nameof(UserActivityConfiguration)] as UserActivityConfiguration;
 
@@ -79,14 +92,11 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 
 		public Timer TrainTimer { get; set; } = new Timer();
 
-		public Timer UiTimer { get; set; } = new Timer();
-
 		public int Counter { get; set; }
 
 		private async Task StartAnimation()
 		{
 
-			UiTimer.Stop();
 			await InvokeAsync(StateHasChanged);
 
 		}
@@ -115,7 +125,6 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 			}
 		}
 
-
 		[JSInvokable]
 		public async Task NewFollower(string newFollowerName)
 		{
@@ -127,13 +136,11 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 			{
 
 				return;
-
+				 
 			}
-
+ 
 			// cheer 1000 jamesmontemagno 15/10/19
 			// cheer 1050 tbdgamer 15/10/19
-
-			TrackNewFollowers();
 
 			TrainTimer.Stop();
 			TrainTimer.Interval = TimeSpan.FromSeconds(Configuration.MaxTimeBetweenActionsInSeconds).TotalMilliseconds;
@@ -144,19 +151,13 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 			LastEventTime = DateTime.Now;
 			this.Counter++;
 			LatestFollower = newFollowerName;
-			await StartAnimation();
-			TrainTimer.Start();
-			InvokeAsync(StateHasChanged);
 
-			if (!UiTimer.Enabled) UiTimer.Start();
-			
+			await WidgetStateRepository.Save(ChannelName, WidgetName, CurrentState);
+
+			TrainTimer.Start();
+			await StartAnimation();
 
 			/**
-			 * If the train type isnt FOLLOWER stop processing
-			 * If the train has not started, start it
-			 * ==> animation & timer
-			 * If the train HAS started
-			 * => increment train, restart animation, reset timer
 			 * 
 			 * When the timer expires, clear animation, zero-out the train?
 			 * 
@@ -167,11 +168,6 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 
 
 
-		}
-
-		private void TrackNewFollowers()
-		{
-			// throw new NotImplementedException();
 		}
 
 		[JSInvokable]
@@ -185,6 +181,18 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 		{
 			throw new NotImplementedException();
 
+		}
+
+		public Dictionary<string, string> CurrentState
+		{
+			get
+			{
+				return new Dictionary<string, string>() {
+				{nameof(Counter), Counter.ToString()},
+				{nameof(FirstEventTime), FirstEventTime.ToString()},
+				{nameof(LastEventTime), LastEventTime.ToString()}
+			};
+			}
 		}
 
 		#region IDisposable Support

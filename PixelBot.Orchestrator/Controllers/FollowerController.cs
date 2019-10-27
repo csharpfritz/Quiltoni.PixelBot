@@ -50,7 +50,7 @@ namespace PixelBot.Orchestrator.Controllers
 
             // Receive webhook notification
             // 
-            foreach (var d in model.Data)
+            foreach (var d in model.Data)  
             {
                 _Logger.LogDebug($"New follower reported: {d.FromName}");
 

@@ -40,3 +40,24 @@ Music provided by RFM: https://youtu.be/9QDADYhEzXg
 
  ## After Deployment
  - [ ] How to build and test if you are not actively streaming?
+
+
+
+## Possible solutions to Blazor disconnect
+ >> Persist data between restarts using the StateController and an out-of-process / out-of-container storage service
+ 1. Extend the reconnect timeout
+      - Prevent the screen from going grey
+      - We still lose the in-memory state of the application (THIS IS A PROBLEM)
+ 1. Deploy to a staging slot
+      - Swap slot when the application is running
+      - We still lose the in-memory state of the application (THIS IS A PROBLEM)
+ 1. Make the widget static HTML with JavaScript / Blazor WASM
+      - This might be the BEST solution
+ 
+
+
+
+
+
+
+

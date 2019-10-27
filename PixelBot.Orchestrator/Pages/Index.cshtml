@@ -25,10 +25,15 @@
 		@(await Html.RenderComponentAsync<App>(RenderMode.Server))
 	</app>
 
-		<script src="_framework/blazor.server.js"></script>
-		<script src="~/lib/signalr/dist/browser/signalr.js"></script>
-		<script src="~/js/chatlog.js"></script>
-		<script src="~/js/userActivity.js"></script>
+	<div id="components-reconnect-modal" class="components-reconnect-hide">
+        Fritz is trying to reconnect
+    </div>
+
+	<script src="_framework/blazor.server.js"></script>
+	<script src="~/lib/signalr/dist/browser/signalr.js"></script>
+	<script src="~/js/chatlog.js"></script>
+	<script src="~/js/userActivity.js"></script>
+	<script src="~/js/widgetSupport.js"></script>
 
 
 </body>
