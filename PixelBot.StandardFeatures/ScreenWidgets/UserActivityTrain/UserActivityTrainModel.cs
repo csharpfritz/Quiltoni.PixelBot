@@ -56,6 +56,12 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 
 		public UserActivityConfiguration Configuration { get; set; }
 
+		/// <summary>
+		/// The position of the train when first presented on screen
+		/// </summary>
+		/// <value></value>
+		public decimal InitialPositionPct { get; set; } = 100.0M;
+
 		protected override async Task OnInitializedAsync()
 		{
 
@@ -70,7 +76,7 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 		}
 
 		private async Task LoadPersistedConfiguration()
-		{
+		{ 
 
 			var payload = await WidgetStateRepository.Get(ChannelName, WidgetName);
 			if (payload.Count == 0) return;
@@ -78,9 +84,21 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 			LastEventTime = DateTime.Parse(payload[nameof(LastEventTime)]);
 			Counter = (TimeRemaining.TotalSeconds > 0) ? int.Parse(payload[nameof(Counter)]) : 0;
 
+			if (TimeRemaining.TotalSeconds > 0) {
+				RestorePositionOfTrain();
+				TrainTimer.Interval = TimeRemaining.TotalMilliseconds;
+				TrainTimer.Start();
+				await StartAnimation();
+			}
+
 		}
-		 
-		public void GetWidgetConfiguration()
+
+        private void RestorePositionOfTrain()
+        {
+            InitialPositionPct = 100 * (decimal)TimeRemaining.TotalSeconds / (decimal)Configuration.MaxTimeBetweenActionsInSeconds;
+        }
+
+        public void GetWidgetConfiguration()
 		{
 		  
 			var configActorRef = ActorSystem.ActorSelection(BotConfiguration.ChannelConfigurationInstancePath).ResolveOne(TimeSpan.FromSeconds(5)).GetAwaiter().GetResult();
@@ -150,6 +168,7 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 			}
 			LastEventTime = DateTime.Now;
 			this.Counter++;
+			InitialPositionPct = 100;
 			LatestFollower = newFollowerName;
 
 			await WidgetStateRepository.Save(ChannelName, WidgetName, CurrentState);

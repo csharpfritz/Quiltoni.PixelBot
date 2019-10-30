@@ -43,8 +43,8 @@
 
 	.moveTrain {
 		animation-name: moveTrain;
-		animation-duration: @(Configuration.MaxTimeBetweenActionsInSeconds)s;
-		animation-timing-function: cubic-bezier(0.785, 0.135, 0.15, 0.86);
+		animation-duration: @(TimeRemaining.TotalSeconds)s;
+		animation-timing-function: linear; 
 		animation-fill-mode: forwards;
 	}
 
@@ -53,8 +53,8 @@
 	}
 
 	@@keyframes moveTrain {
-		from { right: 0px }
-		to   { right: calc(100% - @(80 + 43 * (Counter-1))px);}
+		from { left: @($"calc({InitialPositionPct}% - {((100/320*261) + (100/320*135)*(Counter - 1))}px);") }
+		to { left: @($"{100 - ((100/320*261) + (100/320*135)*(Counter - 1))}px;") }
 	}
 
 </style>
