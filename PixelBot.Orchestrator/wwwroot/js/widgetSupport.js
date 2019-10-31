@@ -4,7 +4,6 @@ const reconnectNode = document.getElementById("components-reconnect-modal");
 const reconnectClasses = ["components-reconnect-failed", "components-reconnect-rejected", "components-reconnect-show"];
 var reconnectEnabled = true;
 
-
 function WatchBlazorDisconnect() {
 new MutationObserver((mutations, observer) => {
 

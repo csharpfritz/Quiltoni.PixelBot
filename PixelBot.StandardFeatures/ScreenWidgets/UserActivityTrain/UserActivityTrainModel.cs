@@ -76,7 +76,7 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 		}
 
 		private async Task LoadPersistedConfiguration()
-		{ 
+		{
 
 			var payload = await WidgetStateRepository.Get(ChannelName, WidgetName);
 			if (payload.Count == 0) return;
@@ -98,7 +98,7 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
             InitialPositionPct = 100 * (decimal)TimeRemaining.TotalSeconds / (decimal)Configuration.MaxTimeBetweenActionsInSeconds;
         }
 
-        public void GetWidgetConfiguration()
+public void GetWidgetConfiguration()
 		{
 		  
 			var configActorRef = ActorSystem.ActorSelection(BotConfiguration.ChannelConfigurationInstancePath).ResolveOne(TimeSpan.FromSeconds(5)).GetAwaiter().GetResult();
