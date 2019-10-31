@@ -2,8 +2,10 @@
 using Akka.Event;
 using Quiltoni.PixelBot.Core.Domain;
 using Quiltoni.PixelBot.Core.Messages;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TwitchLib.Api.Services.Events.FollowerService;
 
 namespace PixelBot.Orchestrator.Actors

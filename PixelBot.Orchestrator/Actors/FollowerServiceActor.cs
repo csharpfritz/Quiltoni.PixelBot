@@ -31,9 +31,8 @@ namespace PixelBot.Orchestrator.Actors
 				.ResolveOne(TimeSpan.FromSeconds(5)).GetAwaiter().GetResult();
 
 			this.ReceiveAsync<TrackNewFollowers>(AddChannelToTrack);
-			this.ReceiveAsync<RenewFollowerWebHook>(m => SubscribeToTwitchWebhook(m.ChannelId));
-
 			_ClientFactory = this.RequestService<IHttpClientFactory>();
+			this.ReceiveAsync<RenewFollowerWebHook>(m => SubscribeToTwitchWebhook(m.ChannelId));
 		}
 
 		private async Task AddChannelToTrack(TrackNewFollowers arg)
