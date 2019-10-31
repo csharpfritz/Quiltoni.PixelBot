@@ -26,13 +26,23 @@ namespace PixelBot.Orchestrator.Actors
 		{
 			_Configuration = this.RequestService<IConfiguration>();
 			_Env = this.RequestService<IWebHostEnvironment>();
+			_ClientFactory = this.RequestService<IHttpClientFactory>();
 
 			this.ChatLogger = Context.ActorSelection(ChatLoggerActor.Path)
 				.ResolveOne(TimeSpan.FromSeconds(5)).GetAwaiter().GetResult();
 
 			this.ReceiveAsync<TrackNewFollowers>(AddChannelToTrack);
-			_ClientFactory = this.RequestService<IHttpClientFactory>();
-			this.ReceiveAsync<RenewFollowerWebHook>(m => SubscribeToTwitchWebhook(m.ChannelId));
+			this.ReceiveAsync<RenewFollowerWebHook>(m => SubscribeToTwitchWebhook(m.ChannelName, m.ChannelId));
+			this.Receive<StopTrackingFollowers>(StopTracking);
+		}
+
+		private void StopTracking(StopTrackingFollowers arg)
+		{
+
+			if (!_FollowerChannels.Contains(arg.ChannelName)) return;
+
+			_FollowerChannels.Remove(arg.ChannelName);
+
 		}
 
 		private async Task AddChannelToTrack(TrackNewFollowers arg)
@@ -42,7 +52,7 @@ namespace PixelBot.Orchestrator.Actors
 			if (_FollowerChannels.Contains(arg.ChannelName))
 				return;
 
-			await SubscribeToTwitchWebhook(arg.ChannelId);
+			await SubscribeToTwitchWebhook(arg.ChannelName, arg.ChannelId);
 
 			_FollowerChannels.Add(arg.ChannelName);
 
@@ -50,10 +60,10 @@ namespace PixelBot.Orchestrator.Actors
 
 		}
 
-		private async Task SubscribeToTwitchWebhook(string channelId)
+		private async Task SubscribeToTwitchWebhook(string channelName, string channelId)
 		{
 
-			// TODO: Renew leases when they expire
+			if (!_FollowerChannels.Contains(channelName)) return;
 
 			var leaseInSeconds = _Env.IsDevelopment() ? 300 : 3600;
 
@@ -88,13 +98,14 @@ namespace PixelBot.Orchestrator.Actors
 					// Schedule a lease renewal
 					logger.Log(Akka.Event.LogLevel.WarningLevel, $"Scheduling lease renewal for: {channelId}");
 					Context.System.Scheduler.ScheduleTellOnce(TimeSpan.FromSeconds(leaseInSeconds - 30),
-							Self, new RenewFollowerWebHook(channelId), Self);
+							Self, new RenewFollowerWebHook(channelName, channelId), Self);
 
 				}
 
 			}
 
 		}
+
 
 		private readonly IConfiguration _Configuration;
 		private readonly IWebHostEnvironment _Env;
