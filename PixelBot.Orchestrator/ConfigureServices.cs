@@ -2,41 +2,38 @@
 using Akka.Configuration;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Logging;
 using PixelBot.Orchestrator.Actors;
 using PixelBot.Orchestrator.Data;
 using PixelBot.Orchestrator.Services;
 using PixelBot.Orchestrator.Services.Authentication;
+using PixelBot.ResolverActors;
+using PixelBot.ResolverActors.Actors;
 using Quiltoni.PixelBot.Core.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace PixelBot.Orchestrator
 {
 	public static class ConfigureServices
 	{
 
-		public static IServiceCollection ConfigureAspNet(this IServiceCollection services) {
+		public static IServiceCollection ConfigureAspNet(this IServiceCollection services)
+		{
 
 			IdentityModelEventSource.ShowPII = true;
 
-			#region Security 
+			#region Security
 
-			services.Configure<CookiePolicyOptions>(options => {
+			services.Configure<CookiePolicyOptions>(options =>
+			{
 				options.CheckConsentNeeded = context => true;
 				options.MinimumSameSitePolicy = SameSiteMode.None;
 			});
 
-			services.AddAuthentication(options => {
+			services.AddAuthentication(options =>
+			{
 				options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 				options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 				options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -44,9 +41,11 @@ namespace PixelBot.Orchestrator
 			.AddCookie()
 			.AddAuth0OpenIdConnect(Startup.Configuration);
 
-			services.AddAuthorization(config => {
+			services.AddAuthorization(config =>
+			{
 
-				config.AddPolicy(nameof(Policy.GlobalAdmin), p => {
+				config.AddPolicy(nameof(Policy.GlobalAdmin), p =>
+				{
 					p.RequireRole("GlobalAdmin");
 				});
 			});
@@ -65,7 +64,8 @@ namespace PixelBot.Orchestrator
 			services.AddControllers();
 
 			services.AddServerSideBlazor();
-			services.AddSignalR(config => {
+			services.AddSignalR(config =>
+			{
 				config.EnableDetailedErrors = true;
 			}).AddJsonProtocol();
 
@@ -73,9 +73,10 @@ namespace PixelBot.Orchestrator
 
 		}
 
-		public static IServiceCollection ConfigureApplicationServices(this IServiceCollection services) {
+		public static IServiceCollection ConfigureApplicationServices(this IServiceCollection services)
+		{
 
-			switch (Startup.Configuration["WidgetPersistence:Provider"].ToLowerInvariant()) 
+			switch (Startup.Configuration["WidgetPersistence:Provider"].ToLowerInvariant())
 			{
 				case "azuretable":
 					services.AddTransient<IWidgetStateRepository, AzureWidgetStateRepository>();
@@ -95,14 +96,17 @@ namespace PixelBot.Orchestrator
 
 		}
 
-		public static IServiceCollection ConfigureActorModel(this IServiceCollection services) {
+		public static IServiceCollection ConfigureActorModel(this IServiceCollection services)
+		{
 
 			services.AddSingleton<ActorSystem>(_ => ActorSystem.Create("BotService"));
 
-			services.AddSingleton<IActorRef>(provider => ChannelManagerActor.Create(
-				provider.GetService<ActorSystem>(),
-				provider
-			));
+			// Adds a ResolveServiceActor to the DI system
+			services.AddResolveActor<ResolveServicesActor>();
+
+			services.AddSingleton<IActorRef>(provider
+				=> ChannelManagerActor.Create(provider.GetService<ActorSystem>())
+				);
 
 			return services;
 

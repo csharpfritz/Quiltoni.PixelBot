@@ -1,32 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Akka.Actor;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Logging;
-using PixelBot.Orchestrator.Actors;
-using PixelBot.Orchestrator.Components;
 using PixelBot.Orchestrator.Data;
 using PixelBot.Orchestrator.Services;
 using PixelBot.Orchestrator.Services.Authentication;
 using PixelBot.ResolverActors;
-using PixelBot.ResolverActors.Actors;
 using PixelBot.StandardFeatures.ScreenWidgets.ChatRoom;
-using Quiltoni.PixelBot.Core.Client;
-using Quiltoni.PixelBot.Core.Data;
 using Quiltoni.PixelBot.Core.Domain;
+using System;
+using System.Security.Claims;
 
 namespace PixelBot.Orchestrator
 {
@@ -90,9 +78,6 @@ namespace PixelBot.Orchestrator
 			services.Configure<BotConfiguration>(Configuration.GetSection("BotConfig"));
 
 			services.ConfigureApplicationServices();
-
-			// Adds a ResolveServiceActor to the DI system
-			services.AddResolveActor<ResolveServicesActor>();
 
 			services.AddTransient<IChannelConfigurationContext, FileStorageChannelConfigurationContext>();
 			services.AddTransient<IFollowerDedupeService, InMemoryFollowerDedupeService>();
