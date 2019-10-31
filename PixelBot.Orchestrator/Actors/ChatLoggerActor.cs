@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Akka.Actor;
+﻿using Akka.Actor;
 using Microsoft.AspNetCore.SignalR;
 using PixelBot.Orchestrator.Services;
+using PixelBot.ResolverActors;
 using Quiltoni.PixelBot.Core.Messages;
 
 namespace PixelBot.Orchestrator.Actors
@@ -15,10 +12,9 @@ namespace PixelBot.Orchestrator.Actors
 		public const string Name = "chatlogger";
 		public static string Path;
 
-		public ChatLoggerActor(IHubContext<LoggerHub, IChatLogger> chatContext) {
-
-			this.ChatLogger = chatContext;
-
+		public ChatLoggerActor()
+		{
+			this.ChatLogger = this.RequestService<IHubContext<LoggerHub, IChatLogger>>(); ;
 			Path = Context.Self.Path.ToString();
 
 			ReceiveAsync<ChatLogMessage>(async m => await ChatLogger.Clients.All.LogMessage(m.LogLevel.ToString(), "#" + m.Channel + ": " + m.Message));
@@ -27,9 +23,9 @@ namespace PixelBot.Orchestrator.Actors
 
 		public IHubContext<LoggerHub, IChatLogger> ChatLogger { get; }
 
-		public static IActorRef Create(IHubContext<LoggerHub, IChatLogger> hubContext) {
-
-			var props = Akka.Actor.Props.Create<ChatLoggerActor>(hubContext);
+		public static IActorRef Create()
+		{
+			var props = Akka.Actor.Props.Create<ChatLoggerActor>();
 			return Context.ActorOf(props, Name);
 
 		}

@@ -1,22 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Akka.Actor;
+﻿using Akka.Actor;
 using Akka.Event;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using PixelBot.Orchestrator.Data;
-using PixelBot.Orchestrator.Services;
-using Quiltoni.PixelBot.Core.Client;
 using Quiltoni.PixelBot.Core.Domain;
 using Quiltoni.PixelBot.Core.Messages;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using TwitchLib.Api.Services.Events.FollowerService;
 
 namespace PixelBot.Orchestrator.Actors
@@ -27,7 +16,6 @@ namespace PixelBot.Orchestrator.Actors
 	/// </summary>
 	public class ChannelManagerActor : ReceiveActor
 	{
-
 		private static readonly Dictionary<string, IActorRef> _ChannelActors = new Dictionary<string, IActorRef>();
 
 		private readonly IActorRef _ChatLogger;
@@ -37,39 +25,34 @@ namespace PixelBot.Orchestrator.Actors
 
 		public static IActorRef Instance { get; private set; }
 
-		public static IActorRef Create(
-			ActorSystem system, 
-			IServiceProvider serviceProvider) {
+		public static IActorRef Create(ActorSystem system)
+		{
 
-			var props = Props.Create<ChannelManagerActor>(serviceProvider);
+			var props = Props.Create<ChannelManagerActor>();
 			Instance = system.ActorOf(props, Name);
 			return Instance;
 
 		}
 
-		public ChannelManagerActor(IServiceProvider serviceProvider) {
-
-			this.ServiceProvider = serviceProvider;
-
+		public ChannelManagerActor()
+		{
 			Logger = Context.GetLogger();
-			_HttpClientFactory = serviceProvider.GetService<IHttpClientFactory>();
 
-			_ChatLogger = ChatLoggerActor.Create(serviceProvider.GetService<IHubContext<LoggerHub, IChatLogger>>());
+			_ChatLogger = ChatLoggerActor.Create();
 
 			CreateFollowerActor();
 			_ChannelConfigurationActor = Context.ActorOf(
-				Props.Create<ChannelConfigurationActor>(
-					serviceProvider.GetService<IChannelConfigurationContext>(), 
-					_HttpClientFactory), 
-					nameof(ChannelConfigurationActor));
+				Props.Create<ChannelConfigurationActor>(), nameof(ChannelConfigurationActor));
 
 			Receive<JoinChannel>(this.GetChannelActor);
 			ReceiveAsync<LeaveChannel>(this.LeaveChannel);
 
-			Receive<ReportCurrentChannels>(_ => {
-				 Sender.Tell(_ChannelActors.Select(kv => kv.Key).ToArray());
+			Receive<ReportCurrentChannels>(_ =>
+			{
+				Sender.Tell(_ChannelActors.Select(kv => kv.Key).ToArray());
 			});
-			Receive<OnNewFollowersDetectedArgs>(args => {
+			Receive<OnNewFollowersDetectedArgs>(args =>
+			{
 
 				_ChannelActors[args.Channel].Tell(args);
 
@@ -93,36 +76,31 @@ namespace PixelBot.Orchestrator.Actors
 
 		}
 
-        private void UpdateChannelWithConfiguration(NotifyChannelOfConfigurationUpdate msg)
+		private void UpdateChannelWithConfiguration(NotifyChannelOfConfigurationUpdate msg)
 		{
 
-			if (!_ChannelActors.ContainsKey(msg.ChannelName)) return;
+			if (!_ChannelActors.ContainsKey(msg.ChannelName))
+				return;
 
 			_ChannelActors[msg.ChannelName].Tell(msg);
 
 		}
 
-		private void CreateFollowerActor() {
-
-			
-			_FollowerActor = Context.ActorOf(Props.Create<FollowerServiceActor>(new object[] { 
-				_HttpClientFactory,
-				ServiceProvider.GetService<IConfiguration>(),
-				ServiceProvider.GetService<IWebHostEnvironment>() 
-			}));
-
+		private void CreateFollowerActor()
+		{
+			_FollowerActor = Context.ActorOf(Props.Create<FollowerServiceActor>());
 		}
 
-        public IServiceProvider ServiceProvider { get; }
-        public ILoggingAdapter Logger { get; }
+		public ILoggingAdapter Logger { get; }
 
-        private readonly IHttpClientFactory _HttpClientFactory;
+		private bool GetChannelActor(JoinChannel msg)
+		{
 
-        private bool GetChannelActor(JoinChannel msg) {
+			if (string.IsNullOrEmpty(msg.ChannelName))
+				return false;
 
-			if (string.IsNullOrEmpty(msg.ChannelName)) return false;
-
-			if (_ChannelActors.ContainsKey(msg.ChannelName)) {
+			if (_ChannelActors.ContainsKey(msg.ChannelName))
+			{
 				Logger.Log(Akka.Event.LogLevel.InfoLevel, $"Actor for channel '{msg.ChannelName}' already present.");
 				return false;
 			}
@@ -140,9 +118,10 @@ namespace PixelBot.Orchestrator.Actors
 		}
 
 		private async Task LeaveChannel(LeaveChannel msg)
-        {
-            
-			if (!_ChannelActors.ContainsKey(msg.ChannelName)) return;
+		{
+
+			if (!_ChannelActors.ContainsKey(msg.ChannelName))
+				return;
 
 			var actor = _ChannelActors[msg.ChannelName];
 			await actor.GracefulStop(TimeSpan.FromSeconds(10));
@@ -152,11 +131,12 @@ namespace PixelBot.Orchestrator.Actors
 
 			_FollowerActor.Tell(new StopTrackingFollowers(msg.ChannelName, ""));
 
-        }
+		}
 
 
 
-		public ChannelActor this[string channelName] {
+		public ChannelActor this[string channelName]
+		{
 			get { return _ChannelActors[channelName] as ChannelActor; }
 		}
 

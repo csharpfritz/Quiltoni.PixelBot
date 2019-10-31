@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBot.StandardFeatures",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBot.UI", "PixelBot.UI\PixelBot.UI.csproj", "{84564158-C1E8-4985-B9CE-E3300F8BAD8C}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelBot.ResolverActors", "PixelBot.ResolverActors\PixelBot.ResolverActors.csproj", "{B9D24E02-7F18-4B9F-95DA-AB95B6C9B8A8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,10 @@ Global
 		{84564158-C1E8-4985-B9CE-E3300F8BAD8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84564158-C1E8-4985-B9CE-E3300F8BAD8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84564158-C1E8-4985-B9CE-E3300F8BAD8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9D24E02-7F18-4B9F-95DA-AB95B6C9B8A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9D24E02-7F18-4B9F-95DA-AB95B6C9B8A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9D24E02-7F18-4B9F-95DA-AB95B6C9B8A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9D24E02-7F18-4B9F-95DA-AB95B6C9B8A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,6 +90,7 @@ Global
 		{EC82777A-FC02-4874-BBE1-84F46415E799} = {D55C59AE-D5C9-42C4-A626-5F1FD54F3C80}
 		{41F9D724-B454-4018-A220-5C4B37CB5D14} = {D55C59AE-D5C9-42C4-A626-5F1FD54F3C80}
 		{84564158-C1E8-4985-B9CE-E3300F8BAD8C} = {D55C59AE-D5C9-42C4-A626-5F1FD54F3C80}
+		{B9D24E02-7F18-4B9F-95DA-AB95B6C9B8A8} = {D55C59AE-D5C9-42C4-A626-5F1FD54F3C80}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {80C2E5C5-DABC-434D-8809-E8E15A0F452C}

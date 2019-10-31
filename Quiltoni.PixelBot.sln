@@ -43,6 +43,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Z. Old", "Z. Old", "{D02E06
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quiltoni.PixelBot", "Quiltoni.PixelBot\Quiltoni.PixelBot.csproj", "{50E2F1E4-DD97-414B-8BD9-FDBF135A127E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PixelBot.ResolverActors", "PixelBot.ResolverActors\PixelBot.ResolverActors.csproj", "{476471FD-C5BA-4672-A8CB-FD0A1D7BD18A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,10 @@ Global
 		{50E2F1E4-DD97-414B-8BD9-FDBF135A127E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50E2F1E4-DD97-414B-8BD9-FDBF135A127E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50E2F1E4-DD97-414B-8BD9-FDBF135A127E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{476471FD-C5BA-4672-A8CB-FD0A1D7BD18A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{476471FD-C5BA-4672-A8CB-FD0A1D7BD18A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{476471FD-C5BA-4672-A8CB-FD0A1D7BD18A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{476471FD-C5BA-4672-A8CB-FD0A1D7BD18A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -109,6 +115,7 @@ Global
 		{84564158-C1E8-4985-B9CE-E3300F8BAD8C} = {D55C59AE-D5C9-42C4-A626-5F1FD54F3C80}
 		{976517EA-3A5C-477D-9DF7-C82CED59AF1C} = {A16EF417-050E-42B6-AACB-1D34EFFDEBBE}
 		{50E2F1E4-DD97-414B-8BD9-FDBF135A127E} = {D02E0618-3B90-4CA1-AFB2-B54BAF19FE68}
+		{476471FD-C5BA-4672-A8CB-FD0A1D7BD18A} = {D55C59AE-D5C9-42C4-A626-5F1FD54F3C80}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {80C2E5C5-DABC-434D-8809-E8E15A0F452C}
