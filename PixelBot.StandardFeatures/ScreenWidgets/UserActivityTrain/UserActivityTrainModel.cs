@@ -132,6 +132,10 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 			}
 		}
 
+		public decimal TrainWidth {
+			get { return ((100M/320M*261M) + (100M/320M*135M)*(Counter - 1));  }
+		}
+
 		/// <summary>
 		/// Duration since the first entry on the train
 		/// </summary>
@@ -161,6 +165,10 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 			// cheer 1050 tbdgamer 15/10/19
 
 			TrainTimer.Stop();
+			InitialPositionPct = 100;
+			await StartAnimation();
+			await Task.Delay(500);
+
 			TrainTimer.Interval = TimeSpan.FromSeconds(Configuration.MaxTimeBetweenActionsInSeconds).TotalMilliseconds;
 			if (this.Counter == 0)
 			{
@@ -168,7 +176,6 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 			}
 			LastEventTime = DateTime.Now;
 			this.Counter++;
-			InitialPositionPct = 100;
 			LatestFollower = newFollowerName;
 
 			await WidgetStateRepository.Save(ChannelName, WidgetName, CurrentState);
