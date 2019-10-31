@@ -128,6 +128,10 @@ namespace PixelBot.Orchestrator.Actors
 			}
 
 			var config = _ChannelConfigurationActor.Ask<ChannelConfiguration>(new GetConfigurationForChannel(msg.ChannelName)).GetAwaiter().GetResult();
+			if (!config.ConnectedToChannel) {
+				config.ConnectedToChannel = true;
+				_ChannelConfigurationActor.Tell(new SaveConfigurationForChannel(msg.ChannelName, config));
+			}
 
 			var child = Context.ActorOf(ChannelActor.Props(config), $"channel_{msg.ChannelName}");
 			_ChannelActors.Add(msg.ChannelName, child);

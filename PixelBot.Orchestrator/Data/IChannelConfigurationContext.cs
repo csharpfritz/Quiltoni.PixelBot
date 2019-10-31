@@ -1,4 +1,5 @@
-﻿using Quiltoni.PixelBot.Core.Domain;
+﻿using System.Collections.Generic;
+using Quiltoni.PixelBot.Core.Domain;
 
 namespace PixelBot.Orchestrator.Data
 {
@@ -6,6 +7,8 @@ namespace PixelBot.Orchestrator.Data
 	{
 
 		ChannelConfiguration GetConfigurationForChannel(string channelName);
+
+		IEnumerable<string> GetConnectedChannels();
 
 		void SaveConfigurationForChannel(string channelName, ChannelConfiguration config);
 
