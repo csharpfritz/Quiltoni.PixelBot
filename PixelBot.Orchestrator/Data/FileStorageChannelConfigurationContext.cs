@@ -43,7 +43,15 @@ namespace PixelBot.Orchestrator.Data
 
 		}
 
-		public void SaveConfigurationForChannel(string channelName, ChannelConfiguration config)
+        public IEnumerable<string> GetConnectedChannels()
+        {
+            
+			// TODO: Search through the files on disk and return those that are channel configuration and Connected = true
+
+
+        }
+
+        public void SaveConfigurationForChannel(string channelName, ChannelConfiguration config)
 		{
 
 			if (string.IsNullOrWhiteSpace(channelName)) throw new ArgumentNullException(nameof(channelName));
