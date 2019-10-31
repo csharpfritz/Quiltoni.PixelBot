@@ -28,7 +28,7 @@
         
             #train {
                 height: 100px;
-                width: 100px;
+                width: 400px;
                 z-index: -1;
                 position: absolute;
                 background-color: lime;
@@ -36,13 +36,17 @@
                 top: 0px;
                 animation-name: moveTrain;
                 animation-duration: 5s;
-                animation-timing-function: cubic-bezier(0.785, 0.135, 0.15, 0.86);
+                animation-timing-function: linear;
                 animation-fill-mode: forwards;
             }
         
             @keyframes moveTrain {
+                from { left: calc(100% - 400px); }
+		        to { left: -300px; }
+                /**
                 from { right: 0px }
                 to   { right: calc(100% - 102px);}
+                **/
             }
         
         </style>

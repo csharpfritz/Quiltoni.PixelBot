@@ -1,7 +1,8 @@
-﻿//(function () {
+﻿(function () {
 
 const reconnectNode = document.getElementById("components-reconnect-modal");
 const reconnectClasses = ["components-reconnect-failed", "components-reconnect-rejected", "components-reconnect-show"];
+var reconnectEnabled = true;
 
 function WatchBlazorDisconnect() {
 new MutationObserver((mutations, observer) => {
@@ -9,7 +10,7 @@ new MutationObserver((mutations, observer) => {
 	for (let m of mutations) {
 
 		if (m.type === 'attributes' && m.attributeName === 'class' && reconnectClasses.includes(m.target.attributes[m.attributeName].textContent)) {
-			console.log(`The ${m.attributeName} was modified`);
+			console.log(`The ${m.attributeName} was modified.  New value: ${m.target.attributes[m.attributeName].textContent}`);
 
 			console.log("Detected disconnect... attempting to reconnect");
 			observer.disconnect();
@@ -30,13 +31,15 @@ async function attemptReload() {
 	console.log(result);
 
 	if (result == "Healthy") { // Check if the server is back
-		// window.Blazor.reconnect();
-		// WatchBlazorDisconnect();
-		// return;
-		location.reload();
+		if (reconnectEnabled) location.reload();
+		console.error("Attempting to reload the browser");
 	}
 }
 
+window.onbeforeunload = function() {
+	reconnectEnabled = false;
+};
+
 WatchBlazorDisconnect();
 
-// })();
+})();

@@ -10,9 +10,15 @@
 -->
 <style>
 
+	body {
+		overflow-x: none;
+		padding: 0;
+	}
+
 	#traintrack_horizontal {
 		width: 100%;
-		margin: 2px;
+		margin: 2 2 0 0;
+		white-space: nowrap;
 		position: relative;
 	}
 
@@ -32,19 +38,22 @@
 
 	#traintrack_horizontal img {
 		height: 100px;
+		padding: 0px;
 	}
 
 	#train {
+		width: 100%;
 		height: 100px;
 		z-index: -1;
 		position: absolute;
 		top: 0px;
+		font-size: 0;
 	}
 
 	.moveTrain {
 		animation-name: moveTrain;
-		animation-duration: @(Configuration.MaxTimeBetweenActionsInSeconds)s;
-		animation-timing-function: cubic-bezier(0.785, 0.135, 0.15, 0.86);
+		animation-duration: 30s; /* @(TimeRemaining.TotalSeconds)s; */
+		animation-timing-function: linear; 
 		animation-fill-mode: forwards;
 	}
 
@@ -53,8 +62,8 @@
 	}
 
 	@@keyframes moveTrain {
-		from { right: 0px }
-		to   { right: calc(100% - @(80 + 43 * (Counter-1))px);}
+		from { left: @($"calc({InitialPositionPct}% - {TrainWidth.ToString("0.000")}px);") }
+		to { left: @($"{(100.0M - TrainWidth).ToString("0.000")}px;") }
 	}
 
 </style>

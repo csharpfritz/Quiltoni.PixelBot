@@ -56,6 +56,12 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 
 		public UserActivityConfiguration Configuration { get; set; }
 
+		/// <summary>
+		/// The position of the train when first presented on screen
+		/// </summary>
+		/// <value></value>
+		public decimal InitialPositionPct { get; set; } = 100.0M;
+
 		protected override async Task OnInitializedAsync()
 		{
 
@@ -78,9 +84,21 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 			LastEventTime = DateTime.Parse(payload[nameof(LastEventTime)]);
 			Counter = (TimeRemaining.TotalSeconds > 0) ? int.Parse(payload[nameof(Counter)]) : 0;
 
+			if (TimeRemaining.TotalSeconds > 0) {
+				RestorePositionOfTrain();
+				TrainTimer.Interval = TimeRemaining.TotalMilliseconds;
+				TrainTimer.Start();
+				await StartAnimation();
+			}
+
 		}
-		 
-		public void GetWidgetConfiguration()
+
+        private void RestorePositionOfTrain()
+        {
+            InitialPositionPct = 100 * (decimal)TimeRemaining.TotalSeconds / (decimal)Configuration.MaxTimeBetweenActionsInSeconds;
+        }
+
+public void GetWidgetConfiguration()
 		{
 		  
 			var configActorRef = ActorSystem.ActorSelection(BotConfiguration.ChannelConfigurationInstancePath).ResolveOne(TimeSpan.FromSeconds(5)).GetAwaiter().GetResult();
@@ -114,6 +132,10 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 			}
 		}
 
+		public decimal TrainWidth {
+			get { return ((100M/320M*261M) + (100M/320M*135M)*(Counter - 1));  }
+		}
+
 		/// <summary>
 		/// Duration since the first entry on the train
 		/// </summary>
@@ -143,6 +165,10 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 			// cheer 1050 tbdgamer 15/10/19
 
 			TrainTimer.Stop();
+			InitialPositionPct = 100;
+			await StartAnimation();
+			await Task.Delay(500);
+
 			TrainTimer.Interval = TimeSpan.FromSeconds(Configuration.MaxTimeBetweenActionsInSeconds).TotalMilliseconds;
 			if (this.Counter == 0)
 			{
