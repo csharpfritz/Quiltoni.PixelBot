@@ -84,7 +84,8 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 			LastEventTime = DateTime.Parse(payload[nameof(LastEventTime)]);
 			Counter = (TimeRemaining.TotalSeconds > 0) ? int.Parse(payload[nameof(Counter)]) : 0;
 
-			if (TimeRemaining.TotalSeconds > 0) {
+			if (TimeRemaining.TotalSeconds > 0)
+			{
 				RestorePositionOfTrain();
 				TrainTimer.Interval = TimeRemaining.TotalMilliseconds;
 				TrainTimer.Start();
@@ -93,16 +94,16 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 
 		}
 
-        private void RestorePositionOfTrain()
-        {
-            InitialPositionPct = 100 * (decimal)TimeRemaining.TotalSeconds / (decimal)Configuration.MaxTimeBetweenActionsInSeconds;
-        }
-
-public void GetWidgetConfiguration()
+		private void RestorePositionOfTrain()
 		{
-		  
+			InitialPositionPct = 100 * (decimal)TimeRemaining.TotalSeconds / (decimal)Configuration.MaxTimeBetweenActionsInSeconds;
+		}
+
+		public void GetWidgetConfiguration()
+		{
+
 			var configActorRef = ActorSystem.ActorSelection(BotConfiguration.ChannelConfigurationInstancePath).ResolveOne(TimeSpan.FromSeconds(5)).GetAwaiter().GetResult();
-			 
+
 			var channelConfiguration = configActorRef.Ask<ChannelConfiguration>(new MSG.GetConfigurationForChannel(ChannelName)).GetAwaiter().GetResult();
 			Configuration = channelConfiguration.FeatureConfigurations[nameof(UserActivityConfiguration)] as UserActivityConfiguration;
 
@@ -132,8 +133,9 @@ public void GetWidgetConfiguration()
 			}
 		}
 
-		public decimal TrainWidth {
-			get { return ((100M/320M*261M) + (100M/320M*135M)*(Counter - 1));  }
+		public decimal TrainWidth
+		{
+			get { return ((100M / 320M * 261M) + (100M / 320M * 135M) * (Counter - 1)); }
 		}
 
 		/// <summary>
@@ -158,9 +160,9 @@ public void GetWidgetConfiguration()
 			{
 
 				return;
-				 
+
 			}
- 
+
 			// cheer 1000 jamesmontemagno 15/10/19
 			// cheer 1050 tbdgamer 15/10/19
 
