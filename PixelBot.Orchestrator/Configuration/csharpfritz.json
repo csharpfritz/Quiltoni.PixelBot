@@ -2,6 +2,7 @@
   "$type": "Quiltoni.PixelBot.Core.Domain.ChannelConfiguration, Quiltoni.PixelBot.Core",
   "ChannelName": "csharpfritz",
   "ChannelId": "96909659",
+  "ConnectedToChannel": true,
   "GuessGameEnabled": false,
   "Currency": {
     "$type": "Quiltoni.PixelBot.Core.Domain.CurrencyConfiguration, Quiltoni.PixelBot.Core",
