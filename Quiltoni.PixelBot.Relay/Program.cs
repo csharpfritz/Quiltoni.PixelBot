@@ -10,18 +10,18 @@ using Microsoft.Extensions.Logging;
 
 namespace Quiltoni.PixelBot.Relay
 {
-    public class Program
-    {
-        public static async Task Main(string[] args)
-        {
-            var host = CreateWebHostBuilder(args).Build();
+	public class Program
+	{
+		public static async Task Main(string[] args)
+		{
+			var host = CreateWebHostBuilder(args).Build();
 
-            host.Run();
-        }
+			host.Run();
+		}
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseApplicationInsights()
-                .UseStartup<Startup>();
-    }
+		public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+				WebHost.CreateDefaultBuilder(args)
+						.UseApplicationInsights()
+						.UseStartup<Startup>();
+	}
 }
