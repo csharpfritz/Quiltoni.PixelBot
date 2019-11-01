@@ -6,8 +6,9 @@
 
 	<Target Name="dotnet-format" BeforeTargets="PreBuildEvent">
 		<Message Importance="high" Text="formating => $(ProjectName) ..."/>
+
+		<!-- silently restore the dotnet tools of this project -->
 		<Exec Command="set test = dotnet tool restore -v q"/>
 		<Exec Command="dotnet format"/>
-		<!--<Exec Command="echo doing formatings on $(ProjectName) ..." />-->
 	</Target>
 </Project>
