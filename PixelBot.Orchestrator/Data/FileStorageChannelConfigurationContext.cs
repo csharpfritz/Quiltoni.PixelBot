@@ -44,6 +44,30 @@ namespace PixelBot.Orchestrator.Data
 
 		}
 
+		public IEnumerable<string> GetConnectedChannels()
+		{
+
+			var configFileInfos = _StorageFolder.GetFiles($"*.json");
+			if (configFileInfos == null || configFileInfos.Length == 0) return Array.Empty<string>();
+
+			var outList = new List<string>();
+			foreach (var configFile in configFileInfos)
+			{
+				try {
+					var theConfig = JsonConvert.DeserializeObject<ChannelConfiguration>(File.ReadAllText(configFile.FullName), new JsonSerializerSettings
+					{
+						TypeNameHandling = TypeNameHandling.All
+					});
+					if (theConfig.ConnectedToChannel) outList.Add(theConfig.ChannelName);
+				} catch {
+					// do nothing... ignore the deserialization issue
+				}
+			}
+
+			return outList;
+
+		}
+
 		public void SaveConfigurationForChannel(string channelName, ChannelConfiguration config)
 		{
 

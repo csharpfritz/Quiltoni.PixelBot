@@ -65,6 +65,25 @@ namespace PixelBot.Orchestrator.Actors
 					_HttpClientFactory),
 					nameof(ChannelConfigurationActor));
 
+			ConfigureMessageReceiveStatements();
+
+			//Receive<GetFeatureForChannel>(async f => {
+			//	var theChannelActor = _ChannelActors[f.Channel];
+			//	Sender.Tell(await theChannelActor.Ask(new GetFeatureFromChannel(f.FeatureType)));
+			//});
+
+		}
+
+		private async Task RejoinChannels(RejoinChannels msg)
+		{
+
+			var rejoinList = await _ChannelConfigurationActor.Ask<ChannelsToReconnect>(new GetChannelsToReconnect());
+			Parallel.ForEach(rejoinList.Channels, channel => GetChannelActor(new JoinChannel(channel)));
+
+		}
+
+		private void ConfigureMessageReceiveStatements()
+		{
 			Receive<JoinChannel>(this.GetChannelActor);
 			ReceiveAsync<LeaveChannel>(this.LeaveChannel);
 
@@ -90,10 +109,7 @@ namespace PixelBot.Orchestrator.Actors
 
 			});
 
-			//Receive<GetFeatureForChannel>(async f => {
-			//	var theChannelActor = _ChannelActors[f.Channel];
-			//	Sender.Tell(await theChannelActor.Ask(new GetFeatureFromChannel(f.FeatureType)));
-			//});
+			ReceiveAsync<RejoinChannels>(RejoinChannels);
 
 		}
 
@@ -135,6 +151,11 @@ namespace PixelBot.Orchestrator.Actors
 			}
 
 			var config = _ChannelConfigurationActor.Ask<ChannelConfiguration>(new GetConfigurationForChannel(msg.ChannelName)).GetAwaiter().GetResult();
+			if (!config.ConnectedToChannel)
+			{
+				config.ConnectedToChannel = true;
+				_ChannelConfigurationActor.Tell(new SaveConfigurationForChannel(msg.ChannelName, config));
+			}
 
 			var child = Context.ActorOf(ChannelActor.Props(config), $"channel_{msg.ChannelName}");
 			_ChannelActors.Add(msg.ChannelName, child);
@@ -153,6 +174,14 @@ namespace PixelBot.Orchestrator.Actors
 
 			var actor = _ChannelActors[msg.ChannelName];
 			await actor.GracefulStop(TimeSpan.FromSeconds(10));
+
+			var config = _ChannelConfigurationActor.Ask<ChannelConfiguration>(new GetConfigurationForChannel(msg.ChannelName)).GetAwaiter().GetResult();
+			if (config.ConnectedToChannel)
+			{
+				config.ConnectedToChannel = false;
+				_ChannelConfigurationActor.Tell(new SaveConfigurationForChannel(msg.ChannelName, config));
+			}
+
 
 			Logger.Log(Akka.Event.LogLevel.InfoLevel, $"Actor for channel '{msg.ChannelName}' has been stopped.");
 			_ChannelActors.Remove(msg.ChannelName);

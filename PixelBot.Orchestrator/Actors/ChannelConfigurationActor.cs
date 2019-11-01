@@ -32,8 +32,15 @@ namespace PixelBot.Orchestrator.Actors
 			InstancePath = Context.Self.Path.ToStringWithAddress();
 
 			Receive<GetConfigurationForChannel>(this.GetConfigurationForChannel);
+			Receive<GetChannelsToReconnect>(this.GetChannelsToReconnect);
 			Receive<SaveConfigurationForChannel>(this.SaveConfigurationForChannel);
 
+		}
+
+		private void GetChannelsToReconnect(GetChannelsToReconnect msg)
+		{
+			var channels = _Context.GetConnectedChannels();
+			Context.Sender.Tell(new ChannelsToReconnect(channels.ToArray()));
 		}
 
 		private void SaveConfigurationForChannel(SaveConfigurationForChannel msg)

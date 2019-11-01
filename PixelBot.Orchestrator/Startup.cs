@@ -26,6 +26,7 @@ using PixelBot.StandardFeatures.ScreenWidgets.ChatRoom;
 using Quiltoni.PixelBot.Core.Client;
 using Quiltoni.PixelBot.Core.Data;
 using Quiltoni.PixelBot.Core.Domain;
+using Quiltoni.PixelBot.Core.Messages;
 
 namespace PixelBot.Orchestrator
 {
@@ -68,8 +69,8 @@ namespace PixelBot.Orchestrator
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IOptions<BotConfiguration> botConfig, ILoggerFactory loggerFactory)
-		{
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IOptions<BotConfiguration> botConfig, IActorRef channelManagerActor, ILoggerFactory loggerFactory)
+    {
 
 			// cheer 142 cpayette 4/10/2019
 			// cheer 300 tbdgamer 4/10/2019
@@ -78,6 +79,7 @@ namespace PixelBot.Orchestrator
 			logger.LogDebug($"Our Auth0 Domain is:  {Configuration["Auth0:Domain"]}");
 
 			BotConfiguration = botConfig.Value;
+			channelManagerActor.Tell(new RejoinChannels());
 
 			if (env.IsDevelopment())
 			{
