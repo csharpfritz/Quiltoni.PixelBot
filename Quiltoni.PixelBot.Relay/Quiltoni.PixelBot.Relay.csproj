@@ -7,6 +7,7 @@
     <ApplicationInsightsResourceId>/subscriptions/5375802b-f892-427b-8ab0-d5f1b29a4ada/resourcegroups/quiltoni_resources/providers/microsoft.insights/components/quiltonirelay</ApplicationInsightsResourceId>
     <ApplicationInsightsAnnotationResourceId>/subscriptions/5375802b-f892-427b-8ab0-d5f1b29a4ada/resourcegroups/quiltoni_resources/providers/microsoft.insights/components/quiltonirelay</ApplicationInsightsAnnotationResourceId>
     <UserSecretsId>023140a5-1e16-4e3a-ad84-644175e876ab</UserSecretsId>
+    <Configurations>Debug;Release;CIChecks</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
