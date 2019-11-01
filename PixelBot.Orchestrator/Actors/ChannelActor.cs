@@ -30,7 +30,7 @@ namespace PixelBot.Orchestrator.Actors
 
 		private TwitchClient _Client;
 		private PluginBootstrapper _Bootstrapper;
-		
+
 		private IActorRef _ChatCommand;
 		private IActorRef _GiftSub;
 		private IActorRef _NewMessage;
@@ -43,7 +43,8 @@ namespace PixelBot.Orchestrator.Actors
 
 		private IActorRef[] EventActors { get { return new[] { _ChatCommand, _GiftSub, _NewMessage, _NewSub, _Raid, _ReSub }; } }
 
-		public ChannelActor(ChannelConfiguration config) {
+		public ChannelActor(ChannelConfiguration config)
+		{
 
 			this.Config = config;
 			this._Bootstrapper = new PluginBootstrapper(config);
@@ -60,28 +61,35 @@ namespace PixelBot.Orchestrator.Actors
 
 		}
 
-		private void AddCurrency(AddCurrencyMessage msg) {
-			if (msg.UserName.StartsWith("#")) {
+		private void AddCurrency(AddCurrencyMessage msg)
+		{
+			if (msg.UserName.StartsWith("#"))
+			{
 				CurrencyRepository.AddForChatters(msg.UserName.Substring(1), msg.Amount, msg.ActingUser);
-			} else {
+			}
+			else
+			{
 				CurrencyRepository.AddForUser(msg.UserName, msg.Amount, msg.ActingUser);
 			}
 		}
 
-		private void ReportCurrency(MyCurrencyMessage msg) {
+		private void ReportCurrency(MyCurrencyMessage msg)
+		{
 
 			var count = CurrencyRepository.FindForUser(msg.UserName);
 			BroadcastMessage(new MSG.BroadcastMessage($"{msg.UserName} has {count} {Config.Currency.Name}"));
 
 		}
 
-		private void BroadcastMessage(MSG.BroadcastMessage msg) {
+		private void BroadcastMessage(MSG.BroadcastMessage msg)
+		{
 
 			_Client.SendMessage(Config.ChannelName, msg.Message);
 
 		}
 
-		private void WhisperMessage(MSG.WhisperMessage msg) {
+		private void WhisperMessage(MSG.WhisperMessage msg)
+		{
 
 			_Client.SendWhisper(msg.UserToWhisper, msg.Message);
 
@@ -93,7 +101,8 @@ namespace PixelBot.Orchestrator.Actors
 
 		public ICurrencyRepository CurrencyRepository { get; set; }
 
-		public override void AroundPreStart() {
+		public override void AroundPreStart()
+		{
 
 			StartTwitchConnection();
 			base.AroundPreStart();
@@ -102,10 +111,11 @@ namespace PixelBot.Orchestrator.Actors
 
 		public IActorRef Self { get; private set; }
 
-		private void StartTwitchConnection() {
+		private void StartTwitchConnection()
+		{
 
 			var logger = Context.GetLogger();
-			logger.Log(LogLevel.DebugLevel, $"Connecting to channel {Config.ChannelName} with bot username {BotConfig.LoginName}");	
+			logger.Log(LogLevel.DebugLevel, $"Connecting to channel {Config.ChannelName} with bot username {BotConfig.LoginName}");
 
 			var creds = new ConnectionCredentials(BotConfig.LoginName, BotConfig.Password);
 			_Client = new TwitchClient();
@@ -131,7 +141,8 @@ namespace PixelBot.Orchestrator.Actors
 
 		}
 
-		private void StartEventHandlerActors() {
+		private void StartEventHandlerActors()
+		{
 
 			// TODO: Inject features appropriate for each StreamEvent
 
@@ -143,7 +154,8 @@ namespace PixelBot.Orchestrator.Actors
 			this._ReSub = CreateActor<ReSubscriberActor>(StreamEvent.OnResubscribe, CurrencyRepository);
 			this._NewFollower = CreateActor<NewFollowerActor>(StreamEvent.OnFollow);
 
-			IActorRef CreateActor<T>(StreamEvent evt, params object[] args) where T : ReceiveActor {
+			IActorRef CreateActor<T>(StreamEvent evt, params object[] args) where T : ReceiveActor
+			{
 
 				var features = _Bootstrapper.GetFeaturesForStreamEvent(evt);
 				var realArgs = new object[] { Config, features };
@@ -156,20 +168,24 @@ namespace PixelBot.Orchestrator.Actors
 
 		}
 
-		public override void AroundPostStop() {
+		public override void AroundPostStop()
+		{
 			_Client.Disconnect();
 			base.AroundPostStop();
 		}
 
-		public static Props Props(ChannelConfiguration config) {
-				return Akka.Actor.Props.Create<ChannelActor>(config);
+		public static Props Props(ChannelConfiguration config)
+		{
+			return Akka.Actor.Props.Create<ChannelActor>(config);
 		}
 
-		private void ConfigureCurrencyRepository() {
+		private void ConfigureCurrencyRepository()
+		{
 
 			if (!Config.Currency.Enabled) return;
 
-			if (Config.Currency.Google != null) {
+			if (Config.Currency.Google != null)
+			{
 
 				var sheetType = "PixelBot.Google, " + Config.Currency.Google.RepositoryType.ToString();
 
@@ -180,11 +196,14 @@ namespace PixelBot.Orchestrator.Actors
 
 		}
 
-		public IFeature GetFeature(Type featureType) {
+		public IFeature GetFeature(Type featureType)
+		{
 
-			foreach (var a in EventActors) {
+			foreach (var a in EventActors)
+			{
 
-				if (a.GetType().GetProperty("Features") != null) {
+				if (a.GetType().GetProperty("Features") != null)
+				{
 
 					var featureProperty = a.GetType().GetProperty("Features");
 					var features = featureProperty.GetValue(a) as IFeature[];

@@ -15,9 +15,10 @@ namespace PixelBot.Orchestrator.Actors
 	{
 		private readonly IChannelConfigurationContext _Context;
 
-        public IHttpClientFactory _ClientFactory { get; }
+		public IHttpClientFactory _ClientFactory { get; }
 
-        public static string InstancePath { 
+		public static string InstancePath
+		{
 			get { return BotConfiguration.ChannelConfigurationInstancePath; }
 			private set { BotConfiguration.ChannelConfigurationInstancePath = value; }
 		}
@@ -39,7 +40,7 @@ namespace PixelBot.Orchestrator.Actors
 		{
 
 			_Context.SaveConfigurationForChannel(msg.ChannelName, msg.Config);
-			ChannelManagerActor.Instance.Tell(new NotifyChannelOfConfigurationUpdate (msg.ChannelName, msg.Config));
+			ChannelManagerActor.Instance.Tell(new NotifyChannelOfConfigurationUpdate(msg.ChannelName, msg.Config));
 
 		}
 
@@ -48,7 +49,8 @@ namespace PixelBot.Orchestrator.Actors
 
 			var config = _Context.GetConfigurationForChannel(msg.ChannelName);
 
-			if (String.IsNullOrEmpty(config.ChannelId)) {
+			if (String.IsNullOrEmpty(config.ChannelId))
+			{
 
 				config.ChannelId = GetChannelIdForChannel(msg.ChannelName);
 				_Context.SaveConfigurationForChannel(msg.ChannelName, config);
@@ -59,10 +61,11 @@ namespace PixelBot.Orchestrator.Actors
 
 		}
 
-        private string GetChannelIdForChannel(string channelName)
-        {
-            
-			using (var client = _ClientFactory.CreateClient("TwitchHelixApi")) {
+		private string GetChannelIdForChannel(string channelName)
+		{
+
+			using (var client = _ClientFactory.CreateClient("TwitchHelixApi"))
+			{
 
 				var msg = client.GetAsync($"users?login={channelName}");
 				var body = msg.Result.Content.ReadAsStringAsync().GetAwaiter().GetResult();
@@ -73,6 +76,6 @@ namespace PixelBot.Orchestrator.Actors
 			}
 
 
-        }
-    }
+		}
+	}
 }

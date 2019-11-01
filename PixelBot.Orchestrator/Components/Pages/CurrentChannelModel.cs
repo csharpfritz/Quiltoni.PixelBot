@@ -33,9 +33,11 @@ namespace PixelBot.Orchestrator.Components.Pages
 
 		public string[] TheCurrentChannels = new string[] { };
 
-		protected override async Task OnAfterRenderAsync(bool firstRender) {
+		protected override async Task OnAfterRenderAsync(bool firstRender)
+		{
 
-			if (firstRender && !(await AuthorizationService.AuthorizeAsync(CurrentUser, "GlobalAdmin")).Succeeded) {
+			if (firstRender && !(await AuthorizationService.AuthorizeAsync(CurrentUser, "GlobalAdmin")).Succeeded)
+			{
 				NavigationManager.NavigateTo("/");
 				return;
 			}
@@ -45,7 +47,8 @@ namespace PixelBot.Orchestrator.Components.Pages
 
 		}
 
-		protected override async Task OnParametersSetAsync() {
+		protected override async Task OnParametersSetAsync()
+		{
 
 			TheCurrentChannels = (await ChannelManager.Ask(new MSG.ReportCurrentChannels())) as string[];
 
@@ -53,7 +56,8 @@ namespace PixelBot.Orchestrator.Components.Pages
 
 		}
 
-		protected async Task JoinChannel() {
+		protected async Task JoinChannel()
+		{
 
 			ChannelManager.Tell(new MSG.JoinChannel(channelName));
 			channelName = null;

@@ -23,23 +23,27 @@ namespace PixelBot.Orchestrator.Services
 		private static IEnumerable<Type> _Features;
 		private readonly ChannelConfiguration _Configuration;
 
-		static PluginBootstrapper() {
+		static PluginBootstrapper()
+		{
 			LoadFeatures();
 		}
 
-		public PluginBootstrapper(ChannelConfiguration configuration) {
+		public PluginBootstrapper(ChannelConfiguration configuration)
+		{
 			_Configuration = configuration;
 		}
 
 		public static IServiceProvider ServiceProvider { get; internal set; }
 
-		private static void LoadFeatures() {
+		private static void LoadFeatures()
+		{
 
 			var outTypeCollection = new List<Type>();
 
 			// Extract the plugin types
 			var rootAssembly = typeof(PluginBootstrapper).Assembly;
-			foreach (var assembly in rootAssembly.GetReferencedAssemblies()) {
+			foreach (var assembly in rootAssembly.GetReferencedAssemblies())
+			{
 
 				var loadedAssembly = Assembly.Load(assembly);
 
@@ -54,7 +58,8 @@ namespace PixelBot.Orchestrator.Services
 		/// <summary>
 		/// Initialize the features of the application.  This method should be called in Startup
 		/// </summary>
-		public static void InitializeFeatures(IApplicationBuilder app) {
+		public static void InitializeFeatures(IApplicationBuilder app)
+		{
 
 			app.UseEndpoints(routes =>
 			{
@@ -72,20 +77,23 @@ namespace PixelBot.Orchestrator.Services
 
 		}
 
-		internal IEnumerable<IFeature> GetFeaturesForStreamEvent(StreamEvent evt) {
+		internal IEnumerable<IFeature> GetFeaturesForStreamEvent(StreamEvent evt)
+		{
 
 			var outFeatures = new List<IFeature>();
 
 			// Identify the features that interact with the StreamEvent requested
-			var featuresToMake = _Features.Where(t => {
+			var featuresToMake = _Features.Where(t =>
+			{
 				var attr = t.GetCustomAttributes(true)
 					.Where(a => a is ActivatingEventsAttribute).FirstOrDefault() as ActivatingEventsAttribute;
 				if (attr == null) return false;
 				return (attr.EventsListeningTo | evt) != StreamEvent.None;
-				});
+			});
 
 			// Instantiate the features that interact with the StreamEvent requested
-			foreach (var f in featuresToMake) {
+			foreach (var f in featuresToMake)
+			{
 
 				var newFeature = ActivatorUtilities.CreateInstance(ServiceProvider, f) as IFeature;
 				if (!(_Configuration?.FeatureConfigurations.ContainsKey(newFeature.Name) ?? false)) continue;

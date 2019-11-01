@@ -35,13 +35,15 @@ namespace PixelBot.Orchestrator
 
 		public static BotConfiguration BotConfiguration { get; private set; }
 
-		public Startup(IConfiguration config) {
+		public Startup(IConfiguration config)
+		{
 
 			Configuration = config;
 		}
 
 		// This method gets called by the runtime. Use this method to add services to the container.
-		public void ConfigureServices(IServiceCollection services) {
+		public void ConfigureServices(IServiceCollection services)
+		{
 
 			services.ConfigureAspNet();
 
@@ -50,7 +52,8 @@ namespace PixelBot.Orchestrator
 
 			services.ConfigureApplicationServices();
 
-			services.AddHttpClient("TwitchHelixApi", config => {
+			services.AddHttpClient("TwitchHelixApi", config =>
+			{
 
 				config.BaseAddress = new Uri(Configuration["TwitchAPI:EndpointURL"]);
 				config.DefaultRequestHeaders.Add("Accept", @"application/json");
@@ -59,13 +62,14 @@ namespace PixelBot.Orchestrator
 			});
 
 			// Cheer 100 ramblinggeek 19/4/19 
- 
-			services.ConfigureActorModel(); 
+
+			services.ConfigureActorModel();
 
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IOptions<BotConfiguration> botConfig, ILoggerFactory loggerFactory) {
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IOptions<BotConfiguration> botConfig, ILoggerFactory loggerFactory)
+		{
 
 			// cheer 142 cpayette 4/10/2019
 			// cheer 300 tbdgamer 4/10/2019
@@ -75,10 +79,12 @@ namespace PixelBot.Orchestrator
 
 			BotConfiguration = botConfig.Value;
 
-			if (env.IsDevelopment()) {
+			if (env.IsDevelopment())
+			{
 				app.UseDeveloperExceptionPage();
 			}
-			else {
+			else
+			{
 				// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
 				app.UseHsts();
 			}
@@ -96,7 +102,8 @@ namespace PixelBot.Orchestrator
 			PluginBootstrapper.ServiceProvider = app.ApplicationServices;
 			PluginBootstrapper.InitializeFeatures(app);
 
-			app.UseEndpoints(routes => {
+			app.UseEndpoints(routes =>
+			{
 
 				routes.MapHub<LoggerHub>("/loggerhub");
 				routes.MapHub<UserActivityHub>("/useractivityhub");
@@ -109,8 +116,9 @@ namespace PixelBot.Orchestrator
 			});
 		}
 
-		private static void MapExternalHubs(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder routes) {
-			
+		private static void MapExternalHubs(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder routes)
+		{
+
 			// TODO: use reflection to identify Hubs in the StandardFeatures assembly and add them
 			routes.MapHub<ChatRoomHub>("/hubs/chatroom");
 

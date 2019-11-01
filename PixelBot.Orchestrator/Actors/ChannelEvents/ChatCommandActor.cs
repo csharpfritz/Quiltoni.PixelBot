@@ -16,31 +16,37 @@ namespace PixelBot.Orchestrator.Actors.ChannelEvents
 
 		public ChannelConfiguration Config { get; }
 
-		public ChatCommandActor(ChannelConfiguration config, IEnumerable<IFeature> features) {
+		public ChatCommandActor(ChannelConfiguration config, IEnumerable<IFeature> features)
+		{
 
 			this.Config = config;
 			Receive<OnChatCommandReceivedArgs>(cmd => OnChatCommandReceived(cmd));
 
 		}
 
-		private void OnChatCommandReceived(OnChatCommandReceivedArgs args) {
+		private void OnChatCommandReceived(OnChatCommandReceivedArgs args)
+		{
 
 			IActorRef thisCommand = null;
-			if (!_Commands.ContainsKey(args.Command.CommandText)) {    // !tealoldman
+			if (!_Commands.ContainsKey(args.Command.CommandText))
+			{    // !tealoldman
 				thisCommand = CreateActorForCommand(args.Command.CommandText);
 
-				if (thisCommand is null) {
+				if (thisCommand is null)
+				{
 
 					Context.Sender.Tell(new WhisperMessage(args.Command.ChatMessage.Username, $"Unknown command '{args.Command.CommandText}' - use !help to get a list of valid commands"));
 					return;
 
 				}
-				else {
+				else
+				{
 					_Commands.Add(args.Command.CommandText, thisCommand);
 				}
 
 			}
-			else {
+			else
+			{
 				thisCommand = _Commands[args.Command.CommandText];
 			}
 
@@ -48,11 +54,13 @@ namespace PixelBot.Orchestrator.Actors.ChannelEvents
 
 		}
 
-		private IActorRef CreateActorForCommand(string commandText) {
-			
+		private IActorRef CreateActorForCommand(string commandText)
+		{
+
 			// TODO: Determine best way to identify, create, and load various command actors
 
-			switch (commandText) {
+			switch (commandText)
+			{
 				case "tealoldman":
 					return Context.ActorOf<TealOldManCommandActor>();
 				case "guess":
@@ -70,7 +78,8 @@ namespace PixelBot.Orchestrator.Actors.ChannelEvents
 
 		}
 
-		public static Props Props(ChannelConfiguration config, IEnumerable<IFeature> features = null) {
+		public static Props Props(ChannelConfiguration config, IEnumerable<IFeature> features = null)
+		{
 			return Akka.Actor.Props.Create<ChatCommandActor>(config, features);
 		}
 

@@ -57,7 +57,7 @@ namespace PixelBot.Orchestrator.Data
 		public class WidgetStateEntity : TableEntity
 		{
 
-			public WidgetStateEntity() { } 
+			public WidgetStateEntity() { }
 
 			public WidgetStateEntity(string channelName, string widgetName)
 			{
