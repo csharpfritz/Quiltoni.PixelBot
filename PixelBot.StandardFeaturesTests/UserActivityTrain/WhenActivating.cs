@@ -15,7 +15,8 @@ namespace PixelBot.StandardFeaturesTests.UserActivityTrain
 	{
 
 		[Fact]
-		public void ShouldGetFeatureConfiguration() {
+		public void ShouldGetFeatureConfiguration()
+		{
 
 			// arrange
 			const string CHANNELNAME = "TestChannel";

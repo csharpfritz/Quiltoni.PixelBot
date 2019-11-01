@@ -15,13 +15,15 @@ namespace PixelBot.OrchestratorTests.ChatCommandActor
 	{
 
 		protected OnChatCommandReceivedArgs _Args;
-		protected ChannelConfiguration Config = new ChannelConfiguration {
+		protected ChannelConfiguration Config = new ChannelConfiguration
+		{
 			ChannelName = "thisChannel"
 		};
 
 
 
-		public static ChatMessage ChatMessageFromText(string message) {
+		public static ChatMessage ChatMessageFromText(string message)
+		{
 
 			return new TestChatMessage(message);
 
@@ -33,7 +35,8 @@ namespace PixelBot.OrchestratorTests.ChatCommandActor
 			public TestChatMessage(string message) : base("testbot", "123456", "testuser", "Testus Userus", "#0000FF"
 				, Color.Blue, null, message, UserType.Viewer, "testchannel", "theId", false, 0,
 				"theRoomId", false, false, false, false, Noisy.NotSet, "", "", new List<KeyValuePair<string, string>>(),
-				null, 0, 0.0D) {
+				null, 0, 0.0D)
+			{
 
 				base.Username = "testuser";
 

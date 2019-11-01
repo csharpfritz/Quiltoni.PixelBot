@@ -14,7 +14,8 @@ namespace Quiltoni.PixelBot.Commands
 
 		private string _CurrencyName;
 
-		public AddPixelsCommand(IOptions<PixelBotConfig> config) {
+		public AddPixelsCommand(IOptions<PixelBotConfig> config)
+		{
 			_CurrencyName = config.Value.Currency.Name;
 		}
 
@@ -22,34 +23,41 @@ namespace Quiltoni.PixelBot.Commands
 
 		public bool Enabled => true;
 
-		public void Execute(ChatCommand command, IChatService twitch) {
+		public void Execute(ChatCommand command, IChatService twitch)
+		{
 
 			if (!Validate(command, twitch)) return;
 
 			var userName = command.ArgumentsAsList[0].Trim();
 
-			if (userName == "all") {
+			if (userName == "all")
+			{
 				GoogleSheet.AddPixelsForChatters(command.ChatMessage.Channel, int.Parse(command.ArgumentsAsList[1]), command.ChatMessage.DisplayName);
-			} else {
+			}
+			else
+			{
 				GoogleSheet.AddPixelsForUser(command.ArgumentsAsList[0].Trim(), int.Parse(command.ArgumentsAsList[1]), command.ChatMessage.DisplayName);
 			}
 
 		}
 
-		private bool Validate(ChatCommand command, IChatService twitch) {
+		private bool Validate(ChatCommand command, IChatService twitch)
+		{
 
 			// Only broadcasters and moderators are allowed to add pixels
-			if (!(command.ChatMessage.IsBroadcaster || command.ChatMessage.IsModerator)) 
+			if (!(command.ChatMessage.IsBroadcaster || command.ChatMessage.IsModerator))
 			{
 				twitch.BroadcastMessageOnChannel("Only moderators can execute the !add command");
 				return false;
 			}
 
-			if (command.ArgumentsAsList.Count != 2) {
+			if (command.ArgumentsAsList.Count != 2)
+			{
 				twitch.WhisperMessage(command.ChatMessage.DisplayName, $"Invalid format to add {_CurrencyName}.  \"!add username {_CurrencyName}ToAdd\"");
 				return false;
 			}
-			else if (!int.TryParse(command.ArgumentsAsList[1], out int pixels)) {
+			else if (!int.TryParse(command.ArgumentsAsList[1], out int pixels))
+			{
 				twitch.WhisperMessage(command.ChatMessage.DisplayName, $"Invalid format to add {_CurrencyName}.  \"!add username {_CurrencyName}ToAdd\"");
 				return false;
 			}
