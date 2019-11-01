@@ -26,7 +26,8 @@ namespace PixelBot.Google
 		private UserCredential _GoogleCredential;
 		static string[] Scopes = { SheetsService.Scope.Spreadsheets };
 		private bool _First = true;
-		public GoogleSheetProxy(ChannelConfiguration configuration, ILoggerFactory loggerFactory) {
+		public GoogleSheetProxy(ChannelConfiguration configuration, ILoggerFactory loggerFactory)
+		{
 
 			Config = configuration;
 			this.Logger = loggerFactory.CreateLogger("GoogleSheetProxy");
@@ -46,7 +47,7 @@ namespace PixelBot.Google
 
 		public ChannelConfiguration Config { get; set; }
 
-		public string CurrencyName { get { return Config.Currency.Name; } } 
+		public string CurrencyName { get { return Config.Currency.Name; } }
 
 		public ILogger Logger { get; }
 
@@ -54,9 +55,11 @@ namespace PixelBot.Google
 
 		public IChatService ChatService { get; set; }
 
-		private void ConfigureGoogleSheetsAccess() {
+		private void ConfigureGoogleSheetsAccess()
+		{
 
-			var googleSecrets = new ClientSecrets {
+			var googleSecrets = new ClientSecrets
+			{
 				ClientId = Config.Currency.Google.ClientId,
 				ClientSecret = Config.Currency.Google.ClientSecret
 			};
@@ -65,13 +68,14 @@ namespace PixelBot.Google
 
 		}
 
-		public void AddForChatters(string channel, int numPixelsToAdd, string actingUser) {
+		public void AddForChatters(string channel, int numPixelsToAdd, string actingUser)
+		{
 			SheetsService service;
 			IList<IList<object>> values;
 			GetSheetService(out service, out values);
 			var appends = new ValueRange() { Values = new List<IList<object>>() };
 			var updates = new List<ValueRange>();
-			var logrows =  new List<IList<object>>();
+			var logrows = new List<IList<object>>();
 
 			ChatService.BroadcastMessageOnChannel($"I've begun adding {numPixelsToAdd} {CurrencyName} to all people in chat");
 
@@ -81,16 +85,20 @@ namespace PixelBot.Google
 			// var api = new TwitchAPI();
 			// api.Settings.AccessToken = Config.Twitch.AccessToken;
 
-			var viewers = new string[] {}; //api.Undocumented.GetChattersAsync(channel).GetAwaiter().GetResult();
+			var viewers = new string[] { }; //api.Undocumented.GetChattersAsync(channel).GetAwaiter().GetResult();
 
-			foreach (var viewer in viewers) {
+			foreach (var viewer in viewers)
+			{
 				var userName = viewer; // viewer.Username.ToLowerInvariant().Trim();
 
 				var thisRow = values.FirstOrDefault(r => r[0].ToString().Equals(userName, StringComparison.InvariantCultureIgnoreCase));
-				if (thisRow == null) {
+				if (thisRow == null)
+				{
 					Logger.LogDebug($"Adding row for {userName}");
-					appends.Values.Add(new List<object>() {userName, numPixelsToAdd });
-				} else {
+					appends.Values.Add(new List<object>() { userName, numPixelsToAdd });
+				}
+				else
+				{
 					Logger.LogDebug($"Updating row for {userName}");
 
 					var pos = values.IndexOf(thisRow);
@@ -123,7 +131,8 @@ namespace PixelBot.Google
 			ChatService.BroadcastMessageOnChannel($"Successfully granted {numPixelsToAdd} {CurrencyName} to all people in chat");
 		}
 
-		public virtual void AddForUser(string userName, int numPixelsToAdd, string actingUser) {
+		public virtual void AddForUser(string userName, int numPixelsToAdd, string actingUser)
+		{
 			SheetsService service;
 			IList<IList<object>> values;
 			GetSheetService(out service, out values);
@@ -131,7 +140,8 @@ namespace PixelBot.Google
 			userName = userName.ToLowerInvariant().Trim();
 
 			var thisRow = values.FirstOrDefault(r => r[0].ToString().Equals(userName, StringComparison.InvariantCultureIgnoreCase));
-			if (thisRow == null) {
+			if (thisRow == null)
+			{
 				Logger.LogDebug($"Adding row for {userName}");
 
 				var rangeToSet = new List<IList<object>> {
@@ -156,7 +166,8 @@ namespace PixelBot.Google
 				ChatService.BroadcastMessageOnChannel($"Successfully granted {userName} their first {numPixelsToAdd} {CurrencyName}!");
 
 			}
-			else {
+			else
+			{
 
 				Logger.LogDebug($"Updating row for {userName}");
 
@@ -183,8 +194,10 @@ namespace PixelBot.Google
 
 		}
 
-		private void GetSheetService(out SheetsService service, out IList<IList<object>> values) {
-			service = new SheetsService(new APIS.Services.BaseClientService.Initializer {
+		private void GetSheetService(out SheetsService service, out IList<IList<object>> values)
+		{
+			service = new SheetsService(new APIS.Services.BaseClientService.Initializer
+			{
 				HttpClientInitializer = _GoogleCredential,
 				ApplicationName = ApplicationName
 			});
@@ -194,12 +207,15 @@ namespace PixelBot.Google
 			values = response.Values;
 		}
 
-		private int GetSheetIdForTitle(SheetsService service, string sheetTitle) {
+		private int GetSheetIdForTitle(SheetsService service, string sheetTitle)
+		{
 
 			var sheets = service.Spreadsheets.Get(Spreadsheet).Execute().Sheets;
 
-			for (var pos = 0; pos < sheets.Count; pos++) {
-				if (sheets[pos].Properties.Title.Equals(sheetTitle, StringComparison.InvariantCultureIgnoreCase)) {
+			for (var pos = 0; pos < sheets.Count; pos++)
+			{
+				if (sheets[pos].Properties.Title.Equals(sheetTitle, StringComparison.InvariantCultureIgnoreCase))
+				{
 					return pos;
 				}
 			}
@@ -208,14 +224,18 @@ namespace PixelBot.Google
 
 		}
 
-		private void ResortSpreadsheet(SheetsService service) {
+		private void ResortSpreadsheet(SheetsService service)
+		{
 			var sheetId = GetSheetIdForTitle(service, "Pixels");
 
 			BatchUpdateSpreadsheetRequest reqbody = new BatchUpdateSpreadsheetRequest();
 
-			var sortReq = new Request() {
-				SortRange = new SortRangeRequest() {
-					Range = new GridRange() {
+			var sortReq = new Request()
+			{
+				SortRange = new SortRangeRequest()
+				{
+					Range = new GridRange()
+					{
 						StartColumnIndex = 0,
 						EndColumnIndex = 12,
 						StartRowIndex = 3,
@@ -230,14 +250,19 @@ namespace PixelBot.Google
 				}
 			};
 
-			var formatReq = new Request() {
-				RepeatCell = new RepeatCellRequest() {
-					Cell = new CellData() {
-						UserEnteredFormat = new CellFormat() {
+			var formatReq = new Request()
+			{
+				RepeatCell = new RepeatCellRequest()
+				{
+					Cell = new CellData()
+					{
+						UserEnteredFormat = new CellFormat()
+						{
 							HorizontalAlignment = "CENTER"
 						}
 					},
-					Range = new GridRange() {
+					Range = new GridRange()
+					{
 						StartColumnIndex = 1,
 						EndColumnIndex = 2,
 						StartRowIndex = 3,
@@ -260,7 +285,8 @@ namespace PixelBot.Google
 
 		}
 
-		private List<object> ActivityLogRow(string actingUser, string userModified, string command, int change = 0) {
+		private List<object> ActivityLogRow(string actingUser, string userModified, string command, int change = 0)
+		{
 			var newRow = new List<object>();
 			newRow.Add(DateTime.Now.ToString("MMM dd, yyyy - h:mm:ss tt"));
 			newRow.Add(actingUser);
@@ -271,7 +297,8 @@ namespace PixelBot.Google
 			return newRow;
 		}
 
-		private void WriteActivityLogRowsToSheet(SheetsService service, List<IList<object>> rows) {
+		private void WriteActivityLogRowsToSheet(SheetsService service, List<IList<object>> rows)
+		{
 			CreateLogSheet(service);
 
 			AppendRequest appendRequest = service.Spreadsheets.Values.Append(new ValueRange { Values = rows }, Spreadsheet, "PixelBotLog!A2:E");
@@ -280,7 +307,8 @@ namespace PixelBot.Google
 			_ = appendRequest.Execute();
 		}
 
-		private void LogActivityOnSheet(SheetsService service, string actingUser, string userModified, string command, int change = 0) {
+		private void LogActivityOnSheet(SheetsService service, string actingUser, string userModified, string command, int change = 0)
+		{
 			var rows = new List<IList<object>>();
 			List<object> newRow = ActivityLogRow(actingUser, userModified, command, change);
 
@@ -289,21 +317,26 @@ namespace PixelBot.Google
 			WriteActivityLogRowsToSheet(service, rows);
 		}
 
-		private void CreateLogSheet(SheetsService service) {
+		private void CreateLogSheet(SheetsService service)
+		{
 
 			// Only run this the first time
 			if (!_First) return;
 			_First = false;
 
 			var thisSpreadsheet = service.Spreadsheets.Get(Spreadsheet).Execute();
-			if (!thisSpreadsheet.Sheets.Any(s => s.Properties.Title == "PixelBotLog")) {
-				var newSheetRequest = new AddSheetRequest() {
-					Properties = new SheetProperties {
+			if (!thisSpreadsheet.Sheets.Any(s => s.Properties.Title == "PixelBotLog"))
+			{
+				var newSheetRequest = new AddSheetRequest()
+				{
+					Properties = new SheetProperties
+					{
 						Title = "PixelBotLog"
 					}
 				};
 				service.Spreadsheets.BatchUpdate(
-				new BatchUpdateSpreadsheetRequest {
+				new BatchUpdateSpreadsheetRequest
+				{
 					Requests = new[] {
 					new Request { AddSheet = newSheetRequest } }
 				}, Spreadsheet).Execute();
@@ -326,7 +359,8 @@ namespace PixelBot.Google
 
 		}
 
-		public int FindForUser(string userName) {
+		public int FindForUser(string userName)
+		{
 
 			SheetsService service;
 			IList<IList<object>> values;
@@ -335,18 +369,20 @@ namespace PixelBot.Google
 			userName = userName.ToLowerInvariant().Trim();
 
 			var thisRow = values.FirstOrDefault(r => r[0].ToString().Trim().ToLowerInvariant() == userName);
-			if (thisRow == null || thisRow.Count < 2) 
+			if (thisRow == null || thisRow.Count < 2)
 			{
 				return 0;
-			} 
+			}
 
 			return int.Parse(thisRow[1].ToString());
 
 		}
 
-		public IList<IList<object>> GetValuesFromSheet(string sheetName) {
+		public IList<IList<object>> GetValuesFromSheet(string sheetName)
+		{
 
-			var service = new SheetsService(new APIS.Services.BaseClientService.Initializer {
+			var service = new SheetsService(new APIS.Services.BaseClientService.Initializer
+			{
 				HttpClientInitializer = _GoogleCredential,
 				ApplicationName = ApplicationName
 			});
