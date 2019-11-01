@@ -34,6 +34,11 @@ namespace PixelBot.Orchestrator.Data
 
 		}
 
+		public IEnumerable<string> GetConnectedChannels()
+		{
+			throw new NotImplementedException();
+		}
+
 		public void SaveConfigurationForChannel(string channelName, ChannelConfiguration config)
 		{
 			throw new NotImplementedException();

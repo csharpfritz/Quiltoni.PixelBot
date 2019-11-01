@@ -15,6 +15,8 @@ namespace Quiltoni.PixelBot.Core.Domain
 
 		public string ChannelId { get; set; }
 
+		public bool ConnectedToChannel { get; set; } = false;
+
 		public bool GuessGameEnabled { get; set; } = false;
 
 		public CurrencyConfiguration Currency { get; set; } = new CurrencyConfiguration();
