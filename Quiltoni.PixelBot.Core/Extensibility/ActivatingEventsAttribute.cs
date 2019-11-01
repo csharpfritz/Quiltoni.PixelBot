@@ -7,7 +7,8 @@ namespace Quiltoni.PixelBot.Core.Extensibility
 
 	public class ActivatingEventsAttribute : Attribute
 	{
-		public ActivatingEventsAttribute(StreamEvent events) {
+		public ActivatingEventsAttribute(StreamEvent events)
+		{
 
 			this.EventsListeningTo = events;
 

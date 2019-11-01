@@ -7,7 +7,8 @@ namespace Quiltoni.PixelBot.Core.Messages
 	public class SendFeatures
 	{
 
-		public SendFeatures(IFeature[] features) {
+		public SendFeatures(IFeature[] features)
+		{
 			this.Features = features;
 		}
 

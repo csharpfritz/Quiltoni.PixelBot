@@ -9,7 +9,8 @@ namespace Quiltoni.PixelBot.Core.Messages
 	public sealed class ChatLogMessage
 	{
 
-		public ChatLogMessage(LogLevel level, string channel, string message) {
+		public ChatLogMessage(LogLevel level, string channel, string message)
+		{
 
 			this.LogLevel = level;
 			this.Channel = channel;

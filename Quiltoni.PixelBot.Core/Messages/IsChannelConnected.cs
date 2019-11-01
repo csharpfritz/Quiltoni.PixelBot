@@ -1,24 +1,27 @@
-namespace Quiltoni.PixelBot.Core.Messages {
+namespace Quiltoni.PixelBot.Core.Messages
+{
 
-    public class IsChannelConnected {
+	public class IsChannelConnected
+	{
 
-        public IsChannelConnected(string channelName)
-        {
-            this.ChannelName = channelName;            
-        }
+		public IsChannelConnected(string channelName)
+		{
+			this.ChannelName = channelName;
+		}
 
-        public string ChannelName { get; }
+		public string ChannelName { get; }
 
-    }
+	}
 
-    public class IsChannelConnectedResponse {
+	public class IsChannelConnectedResponse
+	{
 
-        public IsChannelConnectedResponse(bool isConnected)
-        {
-            IsConnected = isConnected;
-        }
+		public IsChannelConnectedResponse(bool isConnected)
+		{
+			IsConnected = isConnected;
+		}
 
-        public bool IsConnected { get; }
-    }
+		public bool IsConnected { get; }
+	}
 
 }
