@@ -12,13 +12,15 @@ namespace PixelBot.StandardFeaturesTests.UserActivityTrain
 		private readonly Mock<IChannelConfigurationContext> _ConfigurationContext;
 		public MockRepository _Mockery = new MockRepository(MockBehavior.Default);
 
-		protected BaseTestKit() {
+		protected BaseTestKit()
+		{
 
 			_ConfigurationContext = _Mockery.Create<IChannelConfigurationContext>();
 
 		}
 
-		protected void AddChannelConfiguration(string channelName, ChannelConfiguration config) {
+		protected void AddChannelConfiguration(string channelName, ChannelConfiguration config)
+		{
 
 			_ConfigurationContext.Setup(c => c.GetConfigurationForChannel(channelName)).Returns(config);
 

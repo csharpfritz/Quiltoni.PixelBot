@@ -12,7 +12,7 @@ namespace PixelBot.UI
 	{
 
 		private static readonly Dictionary<StreamEvent, string> _StreamEvents = new Dictionary<StreamEvent, string> {
-			{ StreamEvent.OnMessage, "NewMessageActor" } 
+			{ StreamEvent.OnMessage, "NewMessageActor" }
 		};
 
 		[Inject()]
@@ -25,7 +25,8 @@ namespace PixelBot.UI
 
 		public abstract StreamEvent TriggerEvent { get; }
 
-		protected override async Task OnInitializedAsync() {
+		protected override async Task OnInitializedAsync()
+		{
 
 			var eventMsg = _StreamEvents[TriggerEvent];
 
@@ -35,7 +36,8 @@ namespace PixelBot.UI
 
 		}
 
-		public async Task InitializeFeatureForChannel(string eventMsg) {
+		public async Task InitializeFeatureForChannel(string eventMsg)
+		{
 
 			// TODO: Remove the magic string -- refactor into a method call on another object
 

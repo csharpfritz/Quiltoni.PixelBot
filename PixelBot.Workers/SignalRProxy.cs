@@ -10,7 +10,8 @@ namespace PixelBot.Workers
 	public class SignalRProxy : IOrchestratorProxy
 	{
 
-		public SignalRProxy(IConfiguration config) {
+		public SignalRProxy(IConfiguration config)
+		{
 
 			this.OrchestratorUrl = new Uri(config["OrchestratorUrl"]);
 
@@ -25,7 +26,8 @@ namespace PixelBot.Workers
 
 		private HubConnection Connection;
 
-		public async Task ConnectAsync() {
+		public async Task ConnectAsync()
+		{
 
 			// Cheer 200 roberttables 16/4/19 
 			// Cheer 200 cpayette 16/4/19 
@@ -38,7 +40,8 @@ namespace PixelBot.Workers
 			Connection.On<string>("ConnectToRoom", ConnectToRoom);
 
 
-			Connection.Closed += async (error) => {
+			Connection.Closed += async (error) =>
+			{
 
 				// No error means the connection was closed on purpose
 				if (error == null) return;
@@ -54,14 +57,16 @@ namespace PixelBot.Workers
 
 		}
 
-		private bool TooManyErrors(Exception error) {
+		private bool TooManyErrors(Exception error)
+		{
 
 			// TODO: Add logging and diagnostics
 
 			return false;
 		}
 
-		public async Task DisconnectAsync() {
+		public async Task DisconnectAsync()
+		{
 			await Connection?.DisposeAsync();
 		}
 

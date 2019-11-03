@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 
 namespace Quiltoni.PixelBot.Relay.Models
 {
-	public class StoreConfig {
+	public class StoreConfig
+	{
 
 		public List<ShopifyStore> Shopify { get; set; }
 

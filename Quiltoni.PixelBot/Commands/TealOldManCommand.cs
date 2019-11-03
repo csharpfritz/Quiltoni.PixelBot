@@ -11,7 +11,8 @@ namespace Quiltoni.PixelBot.Commands
 		public bool Enabled { get; } = true;
 		public string CommandText => "tealoldman";
 
-		public void Execute(ChatCommand command, IChatService twitch) {
+		public void Execute(ChatCommand command, IChatService twitch)
+		{
 
 			twitch.BroadcastMessageOnChannel("TealOldMan is blowing up chat!  EVERYTHING is now blue!");
 

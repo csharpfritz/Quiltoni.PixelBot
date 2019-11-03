@@ -12,7 +12,8 @@ namespace PixelBot.Orchestrator.Actors.ChannelEvents
 	public class RaidActor : ReceiveActor
 	{
 
-		public RaidActor(ChannelConfiguration config, IEnumerable<IFeature> features, ICurrencyRepository currencyRepository) {
+		public RaidActor(ChannelConfiguration config, IEnumerable<IFeature> features, ICurrencyRepository currencyRepository)
+		{
 
 			this.Config = config;
 			this.CurrencyRepository = currencyRepository;
@@ -20,18 +21,20 @@ namespace PixelBot.Orchestrator.Actors.ChannelEvents
 			this.Receive<OnRaidNotificationArgs>(Raid);
 
 		}
-		
+
 		public ChannelConfiguration Config { get; }
 
 		public ICurrencyRepository CurrencyRepository { get; }
 
-		private void Raid(OnRaidNotificationArgs args) {
+		private void Raid(OnRaidNotificationArgs args)
+		{
 
 			if (Config.Currency.Enabled) HandleCurrency(args);
 
 		}
 
-		private void HandleCurrency(OnRaidNotificationArgs args) {
+		private void HandleCurrency(OnRaidNotificationArgs args)
+		{
 
 			// Exit if we do not meet the minimum of 3 viewers
 			if (int.Parse(args.RaidNotificaiton.MsgParamViewerCount) < Config.Currency.AwardForRaid_Min) return;

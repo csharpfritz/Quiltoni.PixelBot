@@ -25,22 +25,27 @@ namespace Quiltoni.PixelBot.Commands
 
 		public GuessGameCommand() { }
 
-		public GuessGameCommand(GuessGame game, IConfiguration config) {
+		public GuessGameCommand(GuessGame game, IConfiguration config)
+		{
 
 			_TheGame = game;
 			_Configuration = config;
 
 		}
 
-		public void Execute(ChatCommand command, IChatService twitch) {
+		public void Execute(ChatCommand command, IChatService twitch)
+		{
 
-			if (!command.ArgumentsAsList.Any()) {
+			if (!command.ArgumentsAsList.Any())
+			{
 				_TheGame.Help(twitch, command.AsGuessGameCommand());
 				return;
 			}
 
-			try {
-				switch (command.ArgumentsAsList[0].ToLowerInvariant()) {
+			try
+			{
+				switch (command.ArgumentsAsList[0].ToLowerInvariant())
+				{
 					case "open":
 						_TheGame.Open(twitch, command.AsGuessGameCommand());
 						break;
@@ -63,7 +68,9 @@ namespace Quiltoni.PixelBot.Commands
 						_TheGame.Guess(twitch, command.AsGuessGameCommand());
 						break;
 				}
-			} catch (InvalidOperationException) {
+			}
+			catch (InvalidOperationException)
+			{
 				twitch.WhisperMessage(command.ChatMessage.Username, "Invalid command...");
 				_TheGame.Help(twitch, command.AsGuessGameCommand());
 			}

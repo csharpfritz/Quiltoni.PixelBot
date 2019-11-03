@@ -20,23 +20,27 @@ namespace PixelBot.OrchestratorTests.ChatCommandActor
 	{
 		private string CommandThatDoesntExist = "!TestCommandThatDoesntExist";
 
-		public GivenCommandThatDoesntExist() {
+		public GivenCommandThatDoesntExist()
+		{
 
-			_Args = new OnChatCommandReceivedArgs {
+			_Args = new OnChatCommandReceivedArgs
+			{
 				Command = new TWITCH.ChatCommand(ChatMessageFromText(CommandThatDoesntExist))
 			};
 
 		}
 
 		[Fact]
-		public void WhenSubmittedShouldWhisperCommandNotFound() {
+		public void WhenSubmittedShouldWhisperCommandNotFound()
+		{
 
 			// Act
 			var sut = this.Sys.ActorOf(CORE.ChannelEvents.ChatCommandActor.Props(Config));
 			sut.Tell(_Args, this.TestActor);
 
 			// Assert
-			ExpectMsg<MSG.WhisperMessage>(msg => {
+			ExpectMsg<MSG.WhisperMessage>(msg =>
+			{
 				Assert.NotNull(msg.Message);
 				Assert.Equal("testuser", msg.UserToWhisper);
 				Assert.StartsWith("Unknown command ", msg.Message);
@@ -44,7 +48,7 @@ namespace PixelBot.OrchestratorTests.ChatCommandActor
 
 		}
 
-		
+
 	}
 
 }

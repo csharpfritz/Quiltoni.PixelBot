@@ -14,7 +14,8 @@ namespace PixelBot.Orchestrator.Actors.ChannelEvents
 		public ChannelConfiguration Config { get; }
 		public ICurrencyRepository CurrencyRepository { get; }
 
-		public ReSubscriberActor(ChannelConfiguration config, IEnumerable<IFeature> features, ICurrencyRepository currencyRepository) {
+		public ReSubscriberActor(ChannelConfiguration config, IEnumerable<IFeature> features, ICurrencyRepository currencyRepository)
+		{
 
 			this.Config = config;
 			this.CurrencyRepository = currencyRepository;
@@ -23,16 +24,19 @@ namespace PixelBot.Orchestrator.Actors.ChannelEvents
 
 		}
 
-		private void ReSubscriber(OnReSubscriberArgs args) {
-			
+		private void ReSubscriber(OnReSubscriberArgs args)
+		{
+
 			if (Config.Currency.Enabled) HandleCurrency(args);
-			
+
 		}
-		
-		private void HandleCurrency(OnReSubscriberArgs args) {
+
+		private void HandleCurrency(OnReSubscriberArgs args)
+		{
 
 			var currencyToAward = 0;
-			switch (args.ReSubscriber.SubscriptionPlan) {
+			switch (args.ReSubscriber.SubscriptionPlan)
+			{
 				case TwitchLib.Client.Enums.SubscriptionPlan.Prime:
 					currencyToAward = Config.Currency.AwardForSub_Prime;
 					break;
@@ -48,7 +52,7 @@ namespace PixelBot.Orchestrator.Actors.ChannelEvents
 			}
 
 			CurrencyRepository.AddForUser(args.ReSubscriber.Login, currencyToAward, "The Bot");
-		
+
 		}
 	}
 

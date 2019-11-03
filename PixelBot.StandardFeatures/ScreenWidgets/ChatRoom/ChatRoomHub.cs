@@ -9,7 +9,8 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.ChatRoom
 	public class ChatRoomHub : Hub
 	{
 
-		public override async Task OnConnectedAsync() {
+		public override async Task OnConnectedAsync()
+		{
 
 			// Need to capture the Group / channel to listen for
 			var channel = Context.GetHttpContext().Request.Query["channel"];

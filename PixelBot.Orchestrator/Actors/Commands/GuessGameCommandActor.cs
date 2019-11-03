@@ -34,15 +34,18 @@ namespace PixelBot.Orchestrator.Actors.Commands
 			{"end", (game, svc, cmd) => game.Reset(svc, cmd)}
 		};
 
-		public GuessGameCommandActor() {
+		public GuessGameCommandActor()
+		{
 
 			Receive<OnChatCommandReceivedArgs>(Execute);
 
 		}
 
-		public bool Execute(OnChatCommandReceivedArgs args) {
+		public bool Execute(OnChatCommandReceivedArgs args)
+		{
 
-			var theCmd = new ChatCommand() {
+			var theCmd = new ChatCommand()
+			{
 				ArgumentsAsList = args.Command.ArgumentsAsList,
 				DisplayName = args.Command.ChatMessage.DisplayName,
 				IsBroadcaster = args.Command.ChatMessage.IsBroadcaster,
@@ -50,25 +53,31 @@ namespace PixelBot.Orchestrator.Actors.Commands
 				Username = args.Command.ChatMessage.Username
 			};
 
-			if (!args.Command.ArgumentsAsList.Any()) {
+			if (!args.Command.ArgumentsAsList.Any())
+			{
 				_TheGame.Help(this, theCmd);
 				return true;
 			}
 
-			try {
+			try
+			{
 
-				if (_Actions.ContainsKey(theCmd.ArgumentsAsList[0].ToLowerInvariant())) {
+				if (_Actions.ContainsKey(theCmd.ArgumentsAsList[0].ToLowerInvariant()))
+				{
 
 					_Actions[theCmd.ArgumentsAsList[0].ToLowerInvariant()](_TheGame, this, theCmd);
 
-				} else {
+				}
+				else
+				{
 
 					_TheGame.Guess(this, theCmd);
 
 				}
 
 			}
-			catch (InvalidOperationException) {
+			catch (InvalidOperationException)
+			{
 				this.WhisperMessage(args.Command.ChatMessage.Username, "Invalid command...");
 				_TheGame.Help(this, theCmd);
 			}
@@ -77,13 +86,15 @@ namespace PixelBot.Orchestrator.Actors.Commands
 
 		}
 
-		public void WhisperMessage(string username, string message) {
+		public void WhisperMessage(string username, string message)
+		{
 
 			Sender.Tell(new WhisperMessage(username, message));
 
 		}
 
-		public void BroadcastMessageOnChannel(string message) {
+		public void BroadcastMessageOnChannel(string message)
+		{
 
 			Sender.Tell(new BroadcastMessage(message));
 

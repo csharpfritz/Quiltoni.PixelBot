@@ -10,7 +10,8 @@ namespace PixelBot.Workers
 	public class BotWorker : BackgroundService
 	{
 
-		protected override Task ExecuteAsync(CancellationToken stoppingToken) {
+		protected override Task ExecuteAsync(CancellationToken stoppingToken)
+		{
 			throw new NotImplementedException();
 		}
 

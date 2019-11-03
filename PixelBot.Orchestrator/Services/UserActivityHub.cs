@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 
 namespace PixelBot.Orchestrator.Services
 {
-	public class UserActivityHub : Hub<IUserActivityClient> {
+	public class UserActivityHub : Hub<IUserActivityClient>
+	{
 
 		public override Task OnConnectedAsync()
 		{

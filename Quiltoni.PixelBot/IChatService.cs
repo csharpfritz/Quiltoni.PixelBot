@@ -1,6 +1,7 @@
 ﻿namespace Quiltoni.PixelBot
 {
-	public interface IChatService {
+	public interface IChatService
+	{
 
 		void BroadcastMessageOnChannel(string message);
 

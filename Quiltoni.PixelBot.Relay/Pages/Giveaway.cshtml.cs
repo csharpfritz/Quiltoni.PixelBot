@@ -9,7 +9,8 @@ namespace Quiltoni.PixelBot.Relay.Pages
 {
 	public class GiveawayModel : PageModel
 	{
-		public void OnGet() {
+		public void OnGet()
+		{
 			this.Config = new Models.GiveawayGameConfig();
 		}
 

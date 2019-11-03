@@ -13,7 +13,8 @@ namespace Quiltoni.PixelBot.Commands
 		static bool _First = true;
 		private static IList<IList<object>> _Teas;
 
-		public DrinkMeCommand(IConfiguration config) {
+		public DrinkMeCommand(IConfiguration config)
+		{
 
 			_Configuration = config;
 
@@ -27,9 +28,11 @@ namespace Quiltoni.PixelBot.Commands
 
 		public ISheetProxy GoogleSheet { get; set; }
 
-		public void Execute(ChatCommand command, IChatService twitch) {
+		public void Execute(ChatCommand command, IChatService twitch)
+		{
 
-			if (_First) {
+			if (_First)
+			{
 				_First = false;
 				_Teas = GoogleSheet.GetValuesFromSheet("DrinkMeTeas");
 			}
@@ -44,11 +47,13 @@ namespace Quiltoni.PixelBot.Commands
 
 		}
 
-		private IList<IList<object>> ShuffleTeas(IList<IList<object>> teas, int shuffleCount) {
+		private IList<IList<object>> ShuffleTeas(IList<IList<object>> teas, int shuffleCount)
+		{
 
 			var rdm = new Random();
 			var outTeas = new List<IList<object>>();
-			while (teas.Count > 0) {
+			while (teas.Count > 0)
+			{
 				var thisTea = teas.Skip(rdm.Next(teas.Count)).First();
 				outTeas.Add(thisTea);
 				teas.Remove(thisTea);
@@ -65,7 +70,7 @@ namespace Quiltoni.PixelBot.Commands
 
 	public class Tea
 	{
-		
+
 		public string Name { get; set; }
 
 		public string Link { get; set; }
