@@ -94,6 +94,17 @@ namespace PixelBot.Orchestrator
 					throw new ConfigurationException("Missing a WidgetPersistence Provider");
 			}
 
+			switch (Startup.Configuration["ChannelConfiguration:Provider"].ToLowerInvariant())
+			{
+				case "azuretable":
+					services.AddTransient<IChannelConfigurationContext, AzureChannelConfigurationContext>();
+					break;
+				case "json":
+					services.AddTransient<IChannelConfigurationContext, FileStorageChannelConfigurationContext>();
+					break;
+			}
+
+
 			services.AddTransient<IChannelConfigurationContext, FileStorageChannelConfigurationContext>();
 
 			services.AddTransient<IFollowerDedupeService, InMemoryFollowerDedupeService>();

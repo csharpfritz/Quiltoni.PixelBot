@@ -4,7 +4,7 @@
 		<AspNetCoreCloseEnough>3.0.0</AspNetCoreCloseEnough>
 	</PropertyGroup>
 
-	<Target Name="dotnet-format" Condition="'$(Configuration)'=='Debug'" BeforeTargets="PreBuildEvent">
+	<Target Name="dotnet-format" Condition="'$(Configuration)'=='Debug'">
 		<Message Importance="high" Text="formating => $(ProjectName) ..."/>
 
 		<!-- silently restore the dotnet tools of this project -->

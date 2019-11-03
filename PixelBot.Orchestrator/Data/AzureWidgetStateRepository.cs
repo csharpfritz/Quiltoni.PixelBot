@@ -8,7 +8,7 @@ using Quiltoni.PixelBot.Core.Data;
 namespace PixelBot.Orchestrator.Data
 {
 
-	public class AzureWidgetStateRepository : IWidgetStateRepository
+	public class AzureWidgetStateRepository : BaseAzureTableRepository, IWidgetStateRepository
 	{
 
 		// cheer cpayette 775 24/10/2019
@@ -19,17 +19,13 @@ namespace PixelBot.Orchestrator.Data
 			this.Connectionstring = configuration["WidgetPersistence:Connectionstring"];
 		}
 
-		public string Connectionstring { get; }
+		public override string TableName => "WidgetState";
 
 		public async Task<Dictionary<string, string>> Get(string channelName, string widgetName)
 		{
 
-			var table = await GetAzureTable();
-
-			var retrieveOperation = TableOperation.Retrieve<WidgetStateEntity>(channelName, widgetName);
-			var result = await table.ExecuteAsync(retrieveOperation);
-			if (result.Result == null) return new Dictionary<string, string>();
-			return (result.Result as WidgetStateEntity).GetPayloadAsDictionary();
+			var entity = await base.GetEntityFromTable<WidgetStateEntity>(channelName, widgetName);
+			return entity.GetPayloadAsDictionary();
 
 		}
 
@@ -39,19 +35,8 @@ namespace PixelBot.Orchestrator.Data
 			var entity = new WidgetStateEntity(channelName, widgetName);
 			entity.SetPayloadFromDictionary(payload);
 
-			var table = await GetAzureTable();
-			var insertOrMergeOperation = TableOperation.InsertOrMerge(entity);
-			var result = await table.ExecuteAsync(insertOrMergeOperation);
+			await base.Save(entity);
 
-		}
-
-		private async Task<CloudTable> GetAzureTable()
-		{
-			var account = CloudStorageAccount.Parse(Connectionstring);
-			var tableClient = account.CreateCloudTableClient();
-			var table = tableClient.GetTableReference("WidgetState");
-			await table.CreateIfNotExistsAsync();
-			return table;
 		}
 
 		public class WidgetStateEntity : TableEntity
