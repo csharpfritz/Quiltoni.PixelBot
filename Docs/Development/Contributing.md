@@ -7,4 +7,4 @@
 ## Pull Requests
 
 
-<!-- #include virtual="./References.md" -->
+{{ include References.md }}

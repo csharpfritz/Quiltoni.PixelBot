@@ -11,4 +11,4 @@ If, however, you are looking for information on how to contribute to the develop
 
 
 
-<!-- #include virtual="./References.md" -->
+{{ include References.md }}

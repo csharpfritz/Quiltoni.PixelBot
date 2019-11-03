@@ -16,13 +16,13 @@
 
 <!-- External & 3rd party utilities -->
 [.editorconfig]: https://editorconfig.org "Explanation of the EditorConfig file"
-[ngrok]: https://ngrok.io ""
+[ngrok]: https://ngrok.io "ngrok exposes local servers behind NATs and firewalls to the public internet over secure tunnels."
 
 <!-- Package Managers for various platforms -->
-[Chocolatey]: https://chocolatey.org ""
-[Scoop]: https://scoop.sh ""
-[Homebrew]: https://brew.sh ""
-[MarPorts]: https://macports.org ""
+[Chocolatey]: https://chocolatey.org "The Package Manager for Windows"
+[Scoop]: https://scoop.sh "A command-line installer for Windows"
+[Homebrew]: https://brew.sh "The missing package manager for macOS (or Linux)"
+[MarPorts]: https://macports.org "The MacPorts Project Official Homepage"
 
 <!-- Documents within this repository -->
 [Contributing.md]: /Docs/Development/Contributing.md ""

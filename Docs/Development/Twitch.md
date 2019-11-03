@@ -17,4 +17,4 @@ The easiest and generally recommended method to generate a token to interact wit
 ## Twitch Development Sandbox (Testing Environment)
 
 
-<!-- #include virtual="./References.md" -->
+{{ include References.md }}

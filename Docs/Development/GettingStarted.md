@@ -42,4 +42,4 @@ Given that this bot is for chat room interactions on [Twitch.tv][], you will nat
 
 <!-- Reference style link definitions below  -->
 
-<!-- #include virtual="./References.md" -->
+{{ include References.md }}

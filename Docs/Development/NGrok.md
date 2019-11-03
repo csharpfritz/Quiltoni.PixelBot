@@ -1,4 +1,4 @@
-# What Is ngrok?
+# What Is [ngrok][]?
 
 ## What We Use It For
 
@@ -14,11 +14,11 @@ There are several different methods available to run the [ngrok] client, dependi
 
 The simplest and most straightforward method is to download the [ngrok][] client from the [downloads page](https://ngrok.com/download), selecting the appropriate option for your platform, and following the installation instructions
 
-Additionally, if you make use of package managers for your platform ([Chocolatey](), [Scoop](), [Homebrew](), [MacPorts](), etc.) there is a good chance that the [ngrok][] client can be installed from there as well.
+Additionally, if you make use of package managers for your platform ([Chocolatey][], [Scoop][], [Homebrew][], [MacPorts][], etc.) there is a good chance that the [ngrok][] client can be installed from there as well.
 
 ### Platform Agnostic
 
-Another available option that is common across all platforms is to use an [NPM]() package. To do so, you must first have [NodeJS]() installed on your development environment.
+Another available option that is common across all platforms is to use an [NPM][] package. To do so, you must first have [NodeJS][] installed on your development environment.
 
 ## Creating An Account (*OPTIONAL*)
 
@@ -26,4 +26,4 @@ While not strictly necessary to using the [ngrok][] client, there are some benef
 
 <!-- Link reference section -->
 
-<!-- #include virtual="./References.md" -->
+{{ include References.md }}

@@ -19,4 +19,4 @@ If you prefer an alternate editor or <abbr title="Integrated Development Environ
 [.editorconfig]: https://editorconfig.org "Explanation of the EditorConfig file"
 
 
-<!-- #include virtual="./References.md" -->
+{{ include References.md }}
