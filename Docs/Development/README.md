@@ -1,6 +1,6 @@
 # FritzBot Development Documentation
-a
-If you are looking for information on how to configure and use the bot for your own channel, these are not the docs you're looking for. Instead, refer to the topmost [README.md](../../README.md).
+
+If you are looking for information on how to configure and use the bot for your own channel, these are not the docs you're looking for. Instead, refer to the topmost [README.md][Main README].
 
 If, however, you are looking for information on how to contribute to the development of the bot, you've come to the right place. Here is an index of what's available...
 
@@ -8,6 +8,7 @@ If, however, you are looking for information on how to contribute to the develop
 * [ngrok.md](ngrok.md): A rudimentory explanation of the [ngrok][] client and its purpose
 * [Contributing.md](Contributing.md): Information on contributing to the bot, including the pull-request process.
 * [Environment.md](Environment.md): Information concerning the environment setup for development. *i.e.*: Environment variables, paths, etc.
+* [BuildingAndRunningLocally.md][]: How to build the code locally and then run it.
 
 
 

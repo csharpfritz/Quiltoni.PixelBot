@@ -10,13 +10,24 @@ Any development environment or editor which can work with C# and Dotnet Core wil
 
 If you prefer an alternate editor or <abbr title="Integrated Development Environment">IDE</abbr>, please make sure that it can make use of, and respect, the project file settings and preferences specified in an [.editorconfig][] file
 
+Additionally, since the project is intended to be run within a container (i.e. _[Docker][]_), you may want to do your development within a containerized environment to ensure that your changes behave as expected when executed from within a container.
+
 ## Updating The Configuration Files And Environment For Development
 
-[Visual Studio]: https://visualstudio.microsoft.com/ "All Visual Studio products page."
-[Visual Studio Code]: https://code.visualstudio.com/ "Visual Studio Code, aka VSCode, product page"
-[Visual Studio for PC]: https://visualstudio.microsoft.com/vs/ "Visual Studio for PC (classic Visual Studio) product page"
-[Visual Studio for Mac]: https://visualstudio.microsoft.com/vs/mac "Visual Studio for Max product page"
-[.editorconfig]: https://editorconfig.org "Explanation of the EditorConfig file"
+In order for the project to be able to work with your specific information (API keys, channel name, user name), you will need to edit the `appsettings.development.json` file in the `Quiltoni.PixelBot` project directory. The relevant items are:
+
+* `UserName`: The username which should be used for the bot
+* `Channel`: The name of the channel for the bot to join
+
+Additional, one value is set in a separate, private file on your local development maching due to its sensitivity. That property is `AccessToken`, described below. You can find out more on using the `secrets.json` file from the [App secrets in ASP.net Core][] page.
+
+* `AccessToken`: Your [Twitch][] chat token. See [GettingStarted.md][] for information on generating one
+
+In addition to, or in lieu of, updating the `appsettings.development.json` file, you can also set environment varibles to the appropriate values. This is particularly helpful when working with containers, rather than embedding your configurations and secrets within the container. The key names of the `.json` file map to the following environment variables:
+* `UserName` is mapped to `Twitch__UserName`
+* `Channel` is mapped to `Twitch__Channel`
+* `AccessToken` is maped to `Twitch__AccessToken`
+
 
 
 {{ include References.md }}
