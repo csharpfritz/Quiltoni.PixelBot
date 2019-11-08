@@ -2,12 +2,12 @@
 @inject System.Security.Claims.ClaimsPrincipal CurrentUser
 @inject NavigationManager NavManager
 
-<div class="sidebar">
+<aside>
 	<NavMenu />
-</div>
+</aside>
 
-<div class="main">
-	<div class="top-row px-4">
+<main>
+	<div class="top-row px-4 login">
 
 		@if (CurrentUser.Identity.IsAuthenticated)
 		{
@@ -22,7 +22,12 @@
 
 	</div>
 
-	<div class="content px-4">
+	<article>
 		@Body
-	</div>
-</div>
+	</article>
+</main>
+
+
+<footer>
+	Copyright 2019
+</footer>
