@@ -1,70 +1,109 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+@import url('reset.css');
 
 html, body {
 	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
+/** cheer 11000 pakmanjr 10/11/19 */
+
 app {
-	background: goldenrod;
 	position: relative;
 	min-height: 100vh;
 	display: grid;
-	grid-template-columns: 100px 1fr;
-	grid-template-rows: 1fr 50px;
-}
-
-main {
-	grid-column: 2 / 3;
-	grid-row: 1 / 2;
 }
 
 footer {
-	background: greenyellow;
-	grid-column: 1 / -1;
+	background-color: #333;
+	color: #000;
+	font-weight: bold;
+	font-size: xx-small;
 	text-align: center;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	grid-row: 2 / 3;
-}
-
-.top-row {
-	height: 3.5rem;
-	display: flex;
-	align-items: center;
-}
-
-.main {
-	flex: 1;
-}
-
-	.main .top-row {
-		background-color: #e6e6e6;
-		border-bottom: 1px solid #d6d5d5;
-	}
-
-aside {
-	background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
-	grid-row: 1 / -1;
-	grid-column: 1 / 2;
-	position: relative;
 	z-index: 5;
 }
 
-	aside .top-row {
-		background-color: rgba(0,0,0,0.4);
+aside {
+	background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+	position: relative;
+}
+
+
+@media only screen and (min-width : 768px) {
+
+	app {
+		grid-template-columns: minmax(3em,14em) 1fr;
+		grid-template-rows: 1fr 2em;
 	}
 
-	aside .navbar-brand {
-		font-size: 1.1rem;
+	main {
+		grid-column: 2 / 3;
+		grid-row: 1 / 2;
 	}
 
-	aside .oi {
-		width: 2rem;
-		font-size: 1.1rem;
-		vertical-align: text-top;
-		top: -2px;
+	footer {
+		grid-column: 1 / -1;
+		grid-row: 2 / 3;
 	}
+
+	.main {
+		flex: 1;
+	}
+
+	aside {
+		grid-row: 1 / -1;
+		grid-column: 1 / 2;
+	}
+
+		aside .top-row {
+			background-color: rgba(0,0,0,0.4);
+		}
+
+		aside .navbar-brand {
+			font-size: 1.1rem;
+		}
+
+		aside .oi {
+			width: 2rem;
+			font-size: 1.1rem;
+			vertical-align: text-top;
+			top: -2px;
+		}
+
+	.navbar-toggler {
+		display: none;
+	}
+}
+
+@media only screen and (min-width : 320px) and (max-width : 480px) {
+	/* @media only screen and (max-device-width : 767.98px) { */
+
+	app {
+		grid-template-rows: min(20em,0.5fr) 1fr 2em;
+	}
+
+	aside {
+		grid-row: 1 / 2;
+	}
+
+	main {
+		grid-row: 2 / 3;
+	}
+
+	footer {
+		grid-row: 3 / 4;
+	}
+
+	.main {
+		flex: 1;
+	}
+}
+
+main > article {
+	padding-left: 10px;
+}
 
 .nav-item {
 	font-size: 0.9rem;
@@ -86,6 +125,7 @@ aside {
 		display: flex;
 		align-items: center;
 		line-height: 3rem;
+		padding: 5px 5px 5px 15px;
 	}
 
 		.nav-item a.active {
@@ -132,12 +172,12 @@ aside {
 	padding: 0px;
 }
 
-#messagesList li {
-	margin: 0px; 
-	font-family: Courier New, Courier, monospace;
-	font-size: small;
-	color: lime;
-}
+	#messagesList li {
+		margin: 0px;
+		font-family: Courier New, Courier, monospace;
+		font-size: small;
+		color: lime;
+	}
 
 
 @media (max-width: 767.98px) {
@@ -168,15 +208,34 @@ aside {
 		padding-right: 1.5rem !important;
 	}
 
-	.navbar-toggler {
-		display: none;
-	}
-
 	.sidebar .collapse {
 		/* Never collapse the sidebar for wide screens */
 		display: block;
 	}
 }
+
+/** Style concerns */
+a.brand {
+	width: 100%;
+	margin: 5px auto;
+	display: inline-block;
+	text-decoration: none;
+	text-align: center;
+	font: 1.5em bold;
+	font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+	color: #FFF;
+}
+
+ul.nav {
+	list-style: none;
+	margin-left: 0;
+	padding-left: 0;
+}
+
+ul.nav a {
+	text-decoration: none;
+}
+
 
 /** Blazor reconnect block */
 .components-reconnect-hide {

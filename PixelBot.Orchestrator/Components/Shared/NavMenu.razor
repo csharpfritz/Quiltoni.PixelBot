@@ -1,10 +1,11 @@
 @using Microsoft.AspNetCore.Authorization
 @inject IAuthorizationService AuthorizationService
 @inject System.Security.Claims.ClaimsPrincipal CurrentUser
+@inject NavigationManager NavManager
 
 
-<div class="top-row pl-4 navbar navbar-dark">
-	<a class="navbar-brand" href="">FritzBot</a>
+<div class="top-row">
+	<a class="brand" href="">FritzBot</a>
 	<button class="navbar-toggler" @onclick="ToggleNavMenu">
 		<span class="navbar-toggler-icon"></span>
 	</button>
@@ -12,13 +13,13 @@
 
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
 	<ul class="nav flex-column">
-		<li class="nav-item px-3">
+		<li class="nav-item ">
 			<NavLink class="nav-link" href="" Match="NavLinkMatch.All">
 				<span class="oi oi-home" aria-hidden="true"></span> Home
 			</NavLink>
 		</li>
 
-		<li class="nav-item px-3">
+		<li class="nav-item">
 			<NavLink class="nav-link" href="About" Match="NavLinkMatch.All">
 				<span class="oi oi-info" aria-hidden="true"></span> About
 			</NavLink>
@@ -26,25 +27,46 @@
 
 		@if (CurrentUser.Identity.IsAuthenticated)
 		{
-		<li class="nav-item px-3">
-			<NavLink class="nav-link" href="Configuration" Match="NavLinkMatch.All">
-				Configuration
-			</NavLink>
-		</li>
+			<li class="nav-item">
+				<NavLink class="nav-link" href="Configuration" Match="NavLinkMatch.All">
+					<span class="oi oi-cog" aria-hidden="true"></span> Configuration
+				</NavLink>
+			</li>
 		}
 
 		@if (AuthorizationService.Authorize(CurrentUser, Services.Policy.GlobalAdmin))
 		{
 
-		<li class="nav-item px-3">
-			<NavLink class="nav-link" href="CurrentChannels">
-				<span class="oi oi-chat" aria-hidden="true"></span> Current Channels
-			</NavLink>
-		</li>
+			<li class="nav-item">
+				<NavLink class="nav-link" href="CurrentChannels">
+					<span class="oi oi-chat" aria-hidden="true"></span> Current Channels
+				</NavLink>
+			</li>
 
 		}
 
 	</ul>
+
+	<ul class="nav login">
+
+		@if (CurrentUser.Identity.IsAuthenticated)
+		{
+			<li class="nav-item ">
+				<a href="" @onclick="@(() => NavManager.NavigateTo(" /Account/Profile"))">Hello @CurrentUser.Identity.Name!</a>
+			</li>
+			<li class="nav-item ">
+				<a href="" @onclick="@(() => NavManager.NavigateTo(" /Account/Logout", true))">Logout</a>
+			</li>
+		}
+		else
+		{
+			<li class="nav-item ">
+				<a href="" @onclick="@(() => NavManager.NavigateTo(" /Account/Login", true))">Login</a>
+			</li>
+		}
+
+	</ul>
+
 </div>
 
 @code {

@@ -78,7 +78,12 @@ namespace PixelBot.Orchestrator.Actors
 		{
 
 			var rejoinList = await _ChannelConfigurationActor.Ask<ChannelsToReconnect>(new GetChannelsToReconnect());
-			Parallel.ForEach(rejoinList.Channels, channel => GetChannelActor(new JoinChannel(channel)));
+			if (rejoinList == null && !rejoinList.Channels.Any()) return;
+
+			foreach (var channel in rejoinList.Channels)
+			{
+				GetChannelActor(new JoinChannel(channel));
+			} 
 
 		}
 
