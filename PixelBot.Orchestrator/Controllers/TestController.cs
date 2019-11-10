@@ -19,21 +19,24 @@ namespace PixelBot.Orchestrator.Controllers
 	[ApiController]
 	public class TestController : ControllerBase
 	{
-        private readonly IWebHostEnvironment env;
+		private readonly IWebHostEnvironment env;
 
-        public TestController(IHubContext<UserActivityHub, IUserActivityClient> context, IWebHostEnvironment env ) {
+		public TestController(IHubContext<UserActivityHub, IUserActivityClient> context, IWebHostEnvironment env)
+		{
 
 			this.HubContext = context;
-            this.env = env;
-        }
+			this.env = env;
+		}
 
 		public IHubContext<UserActivityHub, IUserActivityClient> HubContext { get; }
 
 		public IHubContext<LoggerHub, IChatLogger> LoggerContext { get; }
 
-		public async Task<IActionResult> Get(string followerName) {
+		public async Task<IActionResult> Get(string followerName)
+		{
 
-			if (env.IsDevelopment()) {
+			if (env.IsDevelopment())
+			{
 				await HubContext.Clients.All.NewFollower(followerName);
 			}
 			return Ok();

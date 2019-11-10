@@ -1,7 +1,8 @@
 namespace Quiltoni.PixelBot.Core.Domain
 {
 
-	public class CurrencyConfiguration {
+	public class CurrencyConfiguration
+	{
 
 		public bool Enabled { get; set; } = false;
 
@@ -29,7 +30,8 @@ namespace Quiltoni.PixelBot.Core.Domain
 
 	}
 
-	public class GoogleSheetCurrencyConfiguration {
+	public class GoogleSheetCurrencyConfiguration
+	{
 
 		public string RepositoryType { get; set; } = "PixelBot.Google.GoogleSheetProxy";
 

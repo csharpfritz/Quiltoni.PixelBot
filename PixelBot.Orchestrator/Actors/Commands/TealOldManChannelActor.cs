@@ -12,7 +12,8 @@ namespace PixelBot.Orchestrator.Actors.Commands
 	public class TealOldManCommandActor : ReceiveActor, IBotCommandActor
 	{
 
-		public TealOldManCommandActor() {
+		public TealOldManCommandActor()
+		{
 
 			Receive<OnChatCommandReceivedArgs>(_ => Sender.Forward(OutMessage));
 

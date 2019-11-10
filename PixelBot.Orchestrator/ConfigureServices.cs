@@ -25,18 +25,21 @@ namespace PixelBot.Orchestrator
 	public static class ConfigureServices
 	{
 
-		public static IServiceCollection ConfigureAspNet(this IServiceCollection services) {
+		public static IServiceCollection ConfigureAspNet(this IServiceCollection services)
+		{
 
 			IdentityModelEventSource.ShowPII = true;
 
 			#region Security 
 
-			services.Configure<CookiePolicyOptions>(options => {
+			services.Configure<CookiePolicyOptions>(options =>
+			{
 				options.CheckConsentNeeded = context => true;
 				options.MinimumSameSitePolicy = SameSiteMode.None;
 			});
 
-			services.AddAuthentication(options => {
+			services.AddAuthentication(options =>
+			{
 				options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 				options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 				options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -44,9 +47,11 @@ namespace PixelBot.Orchestrator
 			.AddCookie()
 			.AddAuth0OpenIdConnect(Startup.Configuration);
 
-			services.AddAuthorization(config => {
+			services.AddAuthorization(config =>
+			{
 
-				config.AddPolicy(nameof(Policy.GlobalAdmin), p => {
+				config.AddPolicy(nameof(Policy.GlobalAdmin), p =>
+				{
 					p.RequireRole("GlobalAdmin");
 				});
 			});
@@ -65,7 +70,8 @@ namespace PixelBot.Orchestrator
 			services.AddControllers();
 
 			services.AddServerSideBlazor();
-			services.AddSignalR(config => {
+			services.AddSignalR(config =>
+			{
 				config.EnableDetailedErrors = true;
 			}).AddJsonProtocol();
 
@@ -73,9 +79,10 @@ namespace PixelBot.Orchestrator
 
 		}
 
-		public static IServiceCollection ConfigureApplicationServices(this IServiceCollection services) {
+		public static IServiceCollection ConfigureApplicationServices(this IServiceCollection services)
+		{
 
-			switch (Startup.Configuration["WidgetPersistence:Provider"].ToLowerInvariant()) 
+			switch (Startup.Configuration["WidgetPersistence:Provider"].ToLowerInvariant())
 			{
 				case "azuretable":
 					services.AddTransient<IWidgetStateRepository, AzureWidgetStateRepository>();
@@ -87,6 +94,17 @@ namespace PixelBot.Orchestrator
 					throw new ConfigurationException("Missing a WidgetPersistence Provider");
 			}
 
+			switch (Startup.Configuration["ChannelConfiguration:Provider"].ToLowerInvariant())
+			{
+				case "azuretable":
+					services.AddTransient<IChannelConfigurationContext, AzureChannelConfigurationContext>();
+					break;
+				case "json":
+					services.AddTransient<IChannelConfigurationContext, FileStorageChannelConfigurationContext>();
+					break;
+			}
+
+
 			services.AddTransient<IChannelConfigurationContext, FileStorageChannelConfigurationContext>();
 
 			services.AddTransient<IFollowerDedupeService, InMemoryFollowerDedupeService>();
@@ -95,7 +113,8 @@ namespace PixelBot.Orchestrator
 
 		}
 
-		public static IServiceCollection ConfigureActorModel(this IServiceCollection services) {
+		public static IServiceCollection ConfigureActorModel(this IServiceCollection services)
+		{
 
 			services.AddSingleton<ActorSystem>(_ => ActorSystem.Create("BotService"));
 

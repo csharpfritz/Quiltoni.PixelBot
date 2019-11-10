@@ -8,7 +8,8 @@ namespace Quiltoni.PixelBot.Core.Messages
 	public class BroadcastMessage
 	{
 
-		public BroadcastMessage(string message) {
+		public BroadcastMessage(string message)
+		{
 
 			this.Message = message;
 

@@ -21,12 +21,12 @@ namespace PixelBot.Orchestrator.Data
 				Currency =new CurrencyConfiguration {
 					Enabled=true,
 					MyCommand = "mypixels",
-					Name = "Pixels"				
+					Name = "Pixels"
 				}
 			}
 		};
 
-		public ChannelConfiguration GetConfigurationForChannel(string channelName) 
+		public ChannelConfiguration GetConfigurationForChannel(string channelName)
 		{
 
 			return _Configs.FirstOrDefault(c => c.ChannelName == channelName) ??

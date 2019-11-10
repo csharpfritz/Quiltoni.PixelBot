@@ -10,7 +10,8 @@ namespace PixelBot.ReplayLog
 {
 	class Program
 	{
-		static void Main(string[] args) {
+		static void Main(string[] args)
+		{
 
 			var records = ReadLogFile(@"c:\dev\Quiltoni.PixelBot\PixelBot.ReplayLog\log.csv");
 
@@ -20,8 +21,10 @@ namespace PixelBot.ReplayLog
 			var totalRecords = records.GroupBy(r => r.UpdatedUser)
 				.Select(r => (r.Key, r.Sum(l => l.Changed), "batch"));
 
-			var options = Options.Create<PixelBotConfig>(new PixelBotConfig {
-				Google = new PixelBotConfig.GoogleConfig {
+			var options = Options.Create<PixelBotConfig>(new PixelBotConfig
+			{
+				Google = new PixelBotConfig.GoogleConfig
+				{
 				}
 			});
 			var proxy = new DryadGoogleSheetProxy(options, NullLoggerFactory.Instance);
@@ -31,9 +34,11 @@ namespace PixelBot.ReplayLog
 
 		}
 
-		public static IEnumerable<LogRecord> ReadLogFile(string fileNameCsv) {
+		public static IEnumerable<LogRecord> ReadLogFile(string fileNameCsv)
+		{
 
-			var fileDesc = new CsvFileDescription {
+			var fileDesc = new CsvFileDescription
+			{
 				SeparatorChar = ',',
 				FirstLineHasColumnNames = true
 			};

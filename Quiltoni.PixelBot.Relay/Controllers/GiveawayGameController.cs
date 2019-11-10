@@ -32,7 +32,8 @@ namespace Quiltoni.PixelBot.Relay.Controllers
 	{
 		private IHubContext<NotificationHub, IOrderNotificationClient> _HubContext;
 
-		public GiveawayGameController(IHubContext<NotificationHub, IOrderNotificationClient> hubContext) {
+		public GiveawayGameController(IHubContext<NotificationHub, IOrderNotificationClient> hubContext)
+		{
 			_HubContext = hubContext;
 		}
 
@@ -42,7 +43,8 @@ namespace Quiltoni.PixelBot.Relay.Controllers
 		*/
 
 		[HttpPost()]
-		public async Task<IActionResult> Post([FromBody]string[] entrants) {
+		public async Task<IActionResult> Post([FromBody]string[] entrants)
+		{
 
 			var theWinner = RandomWinner(entrants.Count());
 			await _HubContext.Clients.All.RunRaffle(theWinner, entrants);
@@ -51,15 +53,19 @@ namespace Quiltoni.PixelBot.Relay.Controllers
 		}
 
 		[HttpPut]
-		public async Task<IActionResult> Put([FromBody]string[] newEntrant) {
+		public async Task<IActionResult> Put([FromBody]string[] newEntrant)
+		{
 
 			// Cheer 1950 phrakberg 09/4/19 
 			// Cheer 426 cpayette 11/4/19 
 			// Cheer 200 electrichavoc 11/4/19 
 
-			if (newEntrant.Count() > 1) {
+			if (newEntrant.Count() > 1)
+			{
 				await _HubContext.Clients.All.AddEntrants(newEntrant);
-			} else {
+			}
+			else
+			{
 				await _HubContext.Clients.All.AddEntrant(newEntrant[0]);
 			}
 			return Ok();
@@ -67,30 +73,35 @@ namespace Quiltoni.PixelBot.Relay.Controllers
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> Get() {
+		public async Task<IActionResult> Get()
+		{
 
 			await _HubContext.Clients.All.Reset(true);
 			return Ok();
 
 		}
 
-		public static int RandomWinner(int count) {
+		public static int RandomWinner(int count)
+		{
 
 			var list = Enumerable.Range(0, count).ToList();
 			var rdm = new Random((int)DateTime.Now.TimeOfDay.Ticks);
 
-			for (var i=0; i<10; i++) {
+			for (var i = 0; i < 10; i++)
+			{
 				list = Shuffle(list);
 				Debug.WriteLine(string.Join(',', list.ToArray()));
 			}
 
 			return list.First();
 
-			List<int> Shuffle(List<int> entries) {
+			List<int> Shuffle(List<int> entries)
+			{
 
 				var outList = new List<int>(entries.Count());
 
-				while(entries.Any()) { 
+				while (entries.Any())
+				{
 					var selected = entries.Skip(rdm.Next(entries.Count())).First();
 					outList.Add(selected);
 					entries.Remove(selected);

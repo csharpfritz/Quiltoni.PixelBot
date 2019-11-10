@@ -34,18 +34,20 @@ namespace Quiltoni.PixelBot.Core.Domain
 	}
 
 
-	public static class ChannelConfigurationExtensions {
+	public static class ChannelConfigurationExtensions
+	{
 
-		public static T GetConfigurationForFeature<T>(this Dictionary<string, BaseFeatureConfiguration> dictionary) where T : BaseFeatureConfiguration, new() {
+		public static T GetConfigurationForFeature<T>(this Dictionary<string, BaseFeatureConfiguration> dictionary) where T : BaseFeatureConfiguration, new()
+		{
 
 			if (dictionary.ContainsKey(typeof(T).Name))
 			{
 				return (T)(dictionary[typeof(T).Name]);
 			}
-				return new T();
+			return new T();
 
 		}
-	
+
 
 	}
 

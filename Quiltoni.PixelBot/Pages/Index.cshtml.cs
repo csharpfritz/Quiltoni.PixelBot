@@ -31,7 +31,10 @@ namespace Quiltoni.PixelBot.Pages
 
 		public PixelBotConfig Config { get; }
 
-		public IEnumerable<SelectListItem> AvailableGoogleProxy { get {
+		public IEnumerable<SelectListItem> AvailableGoogleProxy
+		{
+			get
+			{
 
 				var iProxyType = typeof(ISheetProxy);
 				return GetType().Assembly.GetTypes()
@@ -39,7 +42,8 @@ namespace Quiltoni.PixelBot.Pages
 					.OrderBy(t => t.Name)
 					.Select(t => new SelectListItem(t.Name, t.Name));
 
-			} }
+			}
+		}
 
 		[BindProperty]
 		[Required]
@@ -82,9 +86,11 @@ namespace Quiltoni.PixelBot.Pages
 
 		public void OnGet() { }
 
-		public async Task<IActionResult> OnPost() {
+		public async Task<IActionResult> OnPost()
+		{
 
-			if (ModelState.IsValid) {
+			if (ModelState.IsValid)
+			{
 
 				var jsonFile = JObject.Parse(System.IO.File.ReadAllText("appsettings.json"));
 				var myRoot = jsonFile["PixelBot"];

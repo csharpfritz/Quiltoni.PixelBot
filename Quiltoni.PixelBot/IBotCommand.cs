@@ -2,7 +2,7 @@
 
 namespace Quiltoni.PixelBot
 {
-	public interface IBotCommand 
+	public interface IBotCommand
 	{
 
 		bool Enabled { get; }

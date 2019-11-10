@@ -17,7 +17,8 @@ namespace Quiltoni.PixelBot.Core.Extensibility
 
 		protected IFeatureConfiguration Configuration { get; private set; }
 
-		public virtual void Configure(IFeatureConfiguration configuration) {
+		public virtual void Configure(IFeatureConfiguration configuration)
+		{
 			this.Configuration = configuration;
 			this.IsEnabled = Configuration.IsEnabled;
 			this.IsVisible = Configuration.IsVisible;

@@ -4,7 +4,8 @@ namespace Quiltoni.PixelBot.Core.Messages.Currency
 	[Serializable]
 	public class AddCurrencyMessage
 	{
-		public AddCurrencyMessage(string userName, int amount, string actingUser) {
+		public AddCurrencyMessage(string userName, int amount, string actingUser)
+		{
 
 			this.UserName = userName;
 			this.Amount = amount;

@@ -10,7 +10,8 @@ namespace Quiltoni.PixelBot.Core.Messages
 	public class GetFeatureForChannel
 	{
 
-		public GetFeatureForChannel(string channelName, Type featureType)  {
+		public GetFeatureForChannel(string channelName, Type featureType)
+		{
 
 			this.Channel = channelName;
 			this.FeatureType = featureType;

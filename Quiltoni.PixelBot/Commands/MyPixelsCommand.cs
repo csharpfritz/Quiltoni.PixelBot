@@ -10,7 +10,8 @@ namespace Quiltoni.PixelBot.Commands
 	public class MyPixelsCommand : IBotCommand, IRequiresSheet
 	{
 
-		public MyPixelsCommand(IOptions<PixelBotConfig> config) {
+		public MyPixelsCommand(IOptions<PixelBotConfig> config)
+		{
 			CommandText = config.Value.Currency.MyCommand;
 			_CurrencyName = config.Value.Currency.Name;
 		}
@@ -23,13 +24,16 @@ namespace Quiltoni.PixelBot.Commands
 
 		public bool Enabled => true;
 
-		public void Execute(ChatCommand command, IChatService twitch) {
+		public void Execute(ChatCommand command, IChatService twitch)
+		{
 
 			var pixels = GoogleSheet.FindPixelsForUser(command.ChatMessage.DisplayName);
-			if (pixels == 0) {
+			if (pixels == 0)
+			{
 				twitch.BroadcastMessageOnChannel($"{command.ChatMessage.DisplayName} does not currently have any {_CurrencyName}");
 			}
-			else {
+			else
+			{
 				twitch.BroadcastMessageOnChannel($"{command.ChatMessage.DisplayName} currently has {pixels} {_CurrencyName}");
 			}
 

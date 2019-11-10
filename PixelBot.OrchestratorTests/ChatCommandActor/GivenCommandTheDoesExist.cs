@@ -14,23 +14,27 @@ namespace PixelBot.OrchestratorTests.ChatCommandActor
 	public class GivenCommandTheDoesExist : BaseTestKit
 	{
 
-		public GivenCommandTheDoesExist() {
+		public GivenCommandTheDoesExist()
+		{
 
-			_Args = new OnChatCommandReceivedArgs {
+			_Args = new OnChatCommandReceivedArgs
+			{
 				Command = new ChatCommand(ChatMessageFromText("!tealoldman"))
 			};
 
 		}
 
 		[Fact]
-		public void WhenSubmittedShouldBroadcastMessage() {
+		public void WhenSubmittedShouldBroadcastMessage()
+		{
 
 			// Act
 			var sut = this.Sys.ActorOf(CORE.ChannelEvents.ChatCommandActor.Props(Config));
 			sut.Tell(_Args, this.TestActor);
 
 			// Assert
-			ExpectMsg<MSG.BroadcastMessage>(msg => {
+			ExpectMsg<MSG.BroadcastMessage>(msg =>
+			{
 				Assert.NotNull(msg.Message);
 				Assert.StartsWith("TealOldMan is blowing up chat! ", msg.Message);
 			});

@@ -7,10 +7,10 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Quiltoni.PixelBot.Pages
 {
-    public class AnimationsModel : PageModel
-    {
-        public void OnGet()
-        {
-        }
-    }
+	public class AnimationsModel : PageModel
+	{
+		public void OnGet()
+		{
+		}
+	}
 }

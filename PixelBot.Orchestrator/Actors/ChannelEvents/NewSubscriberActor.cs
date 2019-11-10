@@ -13,7 +13,8 @@ namespace PixelBot.Orchestrator.Actors.ChannelEvents
 	public class NewSubscriberActor : ReceiveActor
 	{
 
-		public NewSubscriberActor(ChannelConfiguration config, IEnumerable<IFeature> features, ICurrencyRepository currencyRepository) {
+		public NewSubscriberActor(ChannelConfiguration config, IEnumerable<IFeature> features, ICurrencyRepository currencyRepository)
+		{
 
 			this.Config = config;
 			this.CurrencyRepository = currencyRepository;
@@ -25,16 +26,19 @@ namespace PixelBot.Orchestrator.Actors.ChannelEvents
 		public ChannelConfiguration Config { get; }
 		public ICurrencyRepository CurrencyRepository { get; }
 
-		private void NewSubscriber(OnNewSubscriberArgs args) {
+		private void NewSubscriber(OnNewSubscriberArgs args)
+		{
 
 			if (Config.Currency.Enabled) HandleCurrency(args);
 
 		}
 
-		private void HandleCurrency(OnNewSubscriberArgs args) {
+		private void HandleCurrency(OnNewSubscriberArgs args)
+		{
 
 			var currencyToAward = 0;
-			switch (args.Subscriber.SubscriptionPlan) {
+			switch (args.Subscriber.SubscriptionPlan)
+			{
 				case TwitchLib.Client.Enums.SubscriptionPlan.Prime:
 					currencyToAward = Config.Currency.AwardForSub_Prime;
 					break;
