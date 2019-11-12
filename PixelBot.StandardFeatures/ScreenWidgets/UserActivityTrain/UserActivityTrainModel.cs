@@ -35,8 +35,6 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 		{
 
 			Counter = 0;
-			FirstEventTime = DateTime.MinValue;
-			LastEventTime = DateTime.MinValue;
 
 		}
 
@@ -111,7 +109,20 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 
 		public Timer TrainTimer { get; set; } = new Timer();
 
-		public int Counter { get; set; }
+		private int _Counter = 0;
+
+		public int Counter { 
+			get { return _Counter; }
+			set {
+
+				_Counter = value;
+				if (value == 0) {
+					FirstEventTime = DateTime.MinValue;
+					LastEventTime = DateTime.MinValue;
+				}
+				WidgetStateRepository.Save(ChannelName, WidgetName, CurrentState);
+			}
+		}
 
 		private async Task StartAnimation()
 		{
@@ -179,8 +190,6 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 			LastEventTime = DateTime.Now;
 			this.Counter++;
 			LatestFollower = newFollowerName;
-
-			await WidgetStateRepository.Save(ChannelName, WidgetName, CurrentState);
 
 			TrainTimer.Start();
 			await StartAnimation();
