@@ -74,22 +74,34 @@ namespace PixelBot.Orchestrator.Actors
 
 		}
 
-		private async Task RejoinChannels(RejoinChannels msg)
+		protected override void PreStart()
+		{
+			base.PreStart();
+
+			//RejoinChannels();
+
+		}
+
+
+		private async Task RejoinChannels(RejoinChannels msg = null)
 		{
 
 			var rejoinList = await _ChannelConfigurationActor.Ask<ChannelsToReconnect>(new GetChannelsToReconnect());
-			if (rejoinList == null && !rejoinList.Channels.Any()) return;
+			if (rejoinList == null || !rejoinList.Channels.Any()) return;
 
+			var taskList = new List<Task>();
 			foreach (var channel in rejoinList.Channels)
 			{
-				GetChannelActor(new JoinChannel(channel));
-			} 
+				taskList.Add(GetChannelActor(new JoinChannel(channel)));
+			}
+
+			await Task.WhenAll(taskList.ToArray());
 
 		}
 
 		private void ConfigureMessageReceiveStatements()
 		{
-			Receive<JoinChannel>(this.GetChannelActor);
+			ReceiveAsync<JoinChannel>(this.GetChannelActor);
 			ReceiveAsync<LeaveChannel>(this.LeaveChannel);
 
 			Receive<ReportCurrentChannels>(_ =>
@@ -144,7 +156,7 @@ namespace PixelBot.Orchestrator.Actors
 
 		private readonly IHttpClientFactory _HttpClientFactory;
 
-		private bool GetChannelActor(JoinChannel msg)
+		private async Task<bool> GetChannelActor(JoinChannel msg)
 		{
 
 			if (string.IsNullOrEmpty(msg.ChannelName)) return false;
@@ -155,7 +167,8 @@ namespace PixelBot.Orchestrator.Actors
 				return false;
 			}
 
-			var config = _ChannelConfigurationActor.Ask<ChannelConfiguration>(new GetConfigurationForChannel(msg.ChannelName)).GetAwaiter().GetResult();
+			var configObject = await _ChannelConfigurationActor.Ask(new GetConfigurationForChannel(msg.ChannelName));
+			var config = configObject as ChannelConfiguration;
 			if (!config.ConnectedToChannel)
 			{
 				config.ConnectedToChannel = true;

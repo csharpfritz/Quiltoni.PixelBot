@@ -64,7 +64,7 @@ namespace PixelBot.Orchestrator.Actors
 
 			}
 
-			Context.Sender.Tell(config);
+			Context.Sender.Tell(config, Self);
 
 		}
 
