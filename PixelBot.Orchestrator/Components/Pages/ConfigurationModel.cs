@@ -26,7 +26,7 @@ namespace PixelBot.Orchestrator.Components.Pages
 		public IActorRef ChannelManager { get; set; }
 
 		[Inject]
-		public ILoggerFactory LoggerFactory {get; set;}
+		public ILoggerFactory LoggerFactory { get; set; }
 
 		[CascadingParameter]
 		private Task<AuthenticationState> authenticationStateTask { get; set; }
@@ -89,14 +89,17 @@ namespace PixelBot.Orchestrator.Components.Pages
 			// cheer 500 roberttables 17/10/2019 - [containers, containers, containers]
 			// cheer 400 cpayette 18/10/2019
 			// cheer 374 cpayette 22/10/2019
-		
+
 			var User = (await authenticationStateTask).User;
 
 			IMessage msg;
 
-			if (IsConnected) {
+			if (IsConnected)
+			{
 				msg = new MSG.LeaveChannel(User.Identity.Name);
-			} else {
+			}
+			else
+			{
 				msg = new MSG.JoinChannel(User.Identity.Name);
 			}
 			ChannelManager.Tell(msg);

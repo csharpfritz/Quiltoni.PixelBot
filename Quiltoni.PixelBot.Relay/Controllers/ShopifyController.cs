@@ -40,7 +40,8 @@ namespace Quiltoni.PixelBot.Relay.Controllers
 		public async Task<IActionResult> Post([FromBody] Models.Order newOrder)
 		{
 
-			if (!ModelState.IsValid) {
+			if (!ModelState.IsValid)
+			{
 				Logger.LogError($"ModelBinding failed: {ControllerContext.ModelState.Values.First(v => v.Errors.Any()).Errors.First().ErrorMessage}");
 
 				var body = ControllerContext.HttpContext.Request.Body;
@@ -68,13 +69,15 @@ namespace Quiltoni.PixelBot.Relay.Controllers
 		{
 
 			var topicHeader = request.Headers["X-Shopify-Topic"].FirstOrDefault();
-			if (!topicHeader.StartsWith("orders/")) {
+			if (!topicHeader.StartsWith("orders/"))
+			{
 				Logger.LogError($"Topic was not an Order: {topicHeader}");
 				return false;
 			}
 
 			var domainHeader = request.Headers["X-Shopify-Shop-Domain"].FirstOrDefault();
-			if (!StoreConfigs.Any(s => (domainHeader == s.Name))) {
+			if (!StoreConfigs.Any(s => (domainHeader == s.Name)))
+			{
 				Logger.LogError($"Message was not sent from a domain we manage: {domainHeader}");
 				return false;
 			}

@@ -16,16 +16,20 @@ namespace PixelBot.Orchestrator.Actors.ChannelEvents
 		private readonly ChannelConfiguration _Config;
 		private readonly IEnumerable<IFeature> _Features;
 
-		public NewFollowerActor(ChannelConfiguration config, IEnumerable<IFeature> features) {
+		public NewFollowerActor(ChannelConfiguration config, IEnumerable<IFeature> features)
+		{
 
 			this._Config = config;
 			this._Features = features;
 
-			this.Receive<OnNewFollowersDetectedArgs>(args => {
+			this.Receive<OnNewFollowersDetectedArgs>(args =>
+			{
 
-				foreach (var f in _Features) {
+				foreach (var f in _Features)
+				{
 
-					foreach (var follower in args.NewFollowers) {
+					foreach (var follower in args.NewFollowers)
+					{
 
 						f.FeatureTriggered($"New Follower: {follower.FromUserId}");
 

@@ -10,7 +10,8 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 	public class UserActivityConfiguration : BaseFeatureConfiguration
 	{
 
-		public enum UserActivityTrainType  {
+		public enum UserActivityTrainType
+		{
 			Follow,
 			Subscription,
 			Cheer

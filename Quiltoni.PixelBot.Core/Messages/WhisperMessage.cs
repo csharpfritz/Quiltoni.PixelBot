@@ -9,7 +9,8 @@ namespace Quiltoni.PixelBot.Core.Messages
 	public sealed class WhisperMessage
 	{
 
-		public WhisperMessage(string userToWhisper, string message) {
+		public WhisperMessage(string userToWhisper, string message)
+		{
 
 			this.UserToWhisper = userToWhisper;
 			this.Message = message;

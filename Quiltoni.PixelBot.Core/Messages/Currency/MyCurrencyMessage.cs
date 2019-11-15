@@ -5,7 +5,8 @@ namespace Quiltoni.PixelBot.Core.Messages.Currency
 	public class MyCurrencyMessage
 	{
 
-		public MyCurrencyMessage(string userName) {
+		public MyCurrencyMessage(string userName)
+		{
 
 			this.UserName = userName;
 

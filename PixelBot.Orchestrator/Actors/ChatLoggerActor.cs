@@ -15,7 +15,8 @@ namespace PixelBot.Orchestrator.Actors
 		public const string Name = "chatlogger";
 		public static string Path;
 
-		public ChatLoggerActor(IHubContext<LoggerHub, IChatLogger> chatContext) {
+		public ChatLoggerActor(IHubContext<LoggerHub, IChatLogger> chatContext)
+		{
 
 			this.ChatLogger = chatContext;
 
@@ -27,7 +28,8 @@ namespace PixelBot.Orchestrator.Actors
 
 		public IHubContext<LoggerHub, IChatLogger> ChatLogger { get; }
 
-		public static IActorRef Create(IHubContext<LoggerHub, IChatLogger> hubContext) {
+		public static IActorRef Create(IHubContext<LoggerHub, IChatLogger> hubContext)
+		{
 
 			var props = Akka.Actor.Props.Create<ChatLoggerActor>(hubContext);
 			return Context.ActorOf(props, Name);

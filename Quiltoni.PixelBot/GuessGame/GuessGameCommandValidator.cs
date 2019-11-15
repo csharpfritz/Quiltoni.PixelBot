@@ -4,7 +4,8 @@ namespace Quiltoni.PixelBot.Commands
 {
 	public class GuessGameCommandValidator : AbstractValidator<GuessGameCommand>
 	{
-		public GuessGameCommandValidator() {
+		public GuessGameCommandValidator()
+		{
 			RuleFor(a => a.ArgumentsAsList).NotNull();
 			RuleFor(a => a.ChatUser).NotNull();
 			RuleFor(a => a.ChatUser).SetValidator(new ChatUserValidator());
@@ -13,7 +14,8 @@ namespace Quiltoni.PixelBot.Commands
 
 	public class ChatUserValidator : AbstractValidator<ChatUser>
 	{
-		public ChatUserValidator() {
+		public ChatUserValidator()
+		{
 			RuleFor(x => x.DisplayName).NotNull().NotEmpty();
 			RuleFor(x => x.Username).NotNull().NotEmpty();
 		}

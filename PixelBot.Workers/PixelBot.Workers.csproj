@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <OutputType>Exe</OutputType>
+    <Configurations>Debug;Release;CIChecks</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

@@ -8,26 +8,26 @@ using System.Threading.Tasks;
 
 namespace Quiltoni.PixelBot.Relay.Controllers
 {
-    public class NotificationHub : Hub<IOrderNotificationClient>
-    {
+	public class NotificationHub : Hub<IOrderNotificationClient>
+	{
 
-        public static int ConnectedCount = 0;
+		public static int ConnectedCount = 0;
 
-        public override Task OnConnectedAsync()
-        {
+		public override Task OnConnectedAsync()
+		{
 
-            Interlocked.Increment(ref ConnectedCount);
+			Interlocked.Increment(ref ConnectedCount);
 
-            return base.OnConnectedAsync();
-        }
+			return base.OnConnectedAsync();
+		}
 
-        public override Task OnDisconnectedAsync(Exception exception)
-        {
+		public override Task OnDisconnectedAsync(Exception exception)
+		{
 
-            Interlocked.Decrement(ref ConnectedCount);
+			Interlocked.Decrement(ref ConnectedCount);
 
-            return base.OnDisconnectedAsync(exception);
-        }
+			return base.OnDisconnectedAsync(exception);
+		}
 
-    }
+	}
 }

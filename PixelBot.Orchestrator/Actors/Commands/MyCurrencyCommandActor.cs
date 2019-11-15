@@ -7,8 +7,9 @@ namespace PixelBot.Orchestrator.Actors.Commands
 {
 	public class MyCurrencyCommandActor : ReceiveActor, IBotCommandActor
 	{
-		
-		public MyCurrencyCommandActor(DOMAIN.ChannelConfiguration config) {
+
+		public MyCurrencyCommandActor(DOMAIN.ChannelConfiguration config)
+		{
 
 			this.Config = config;
 
@@ -18,7 +19,8 @@ namespace PixelBot.Orchestrator.Actors.Commands
 
 		public string CommandText => Config.Currency.MyCommand.ToLowerInvariant();
 
-		private void Execute(OnChatCommandReceivedArgs args) {
+		private void Execute(OnChatCommandReceivedArgs args)
+		{
 
 			Sender.Tell(new MSG.Currency.MyCurrencyMessage(args.Command.ChatMessage.Username));
 
@@ -26,7 +28,8 @@ namespace PixelBot.Orchestrator.Actors.Commands
 
 		public DOMAIN.ChannelConfiguration Config { get; }
 
-		public static IActorRef CreateActor(DOMAIN.ChannelConfiguration config) {
+		public static IActorRef CreateActor(DOMAIN.ChannelConfiguration config)
+		{
 
 			var props = Akka.Actor.Props.Create<MyCurrencyCommandActor>(config);
 			return Context.ActorOf(props);

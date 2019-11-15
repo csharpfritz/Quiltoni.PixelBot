@@ -1,6 +1,7 @@
 ﻿namespace Quiltoni.PixelBot
 {
-	public interface IRequiresSheet {
+	public interface IRequiresSheet
+	{
 
 		ISheetProxy GoogleSheet { get; set; }
 

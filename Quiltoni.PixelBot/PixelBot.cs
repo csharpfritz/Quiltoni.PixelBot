@@ -30,9 +30,11 @@ namespace Quiltoni.PixelBot
 		private readonly ISheetProxy _GoogleSheet;
 
 		public PixelBot(IEnumerable<IBotCommand> commands, IOptions<PixelBotConfig> configuration, ILoggerFactory loggerFactory) :
-			this(commands, configuration, loggerFactory, null) { }
+			this(commands, configuration, loggerFactory, null)
+		{ }
 
-		public PixelBot(IEnumerable<IBotCommand> commands, IOptions<PixelBotConfig> configuration, ILoggerFactory loggerFactory, ISheetProxy sheetProxy) {
+		public PixelBot(IEnumerable<IBotCommand> commands, IOptions<PixelBotConfig> configuration, ILoggerFactory loggerFactory, ISheetProxy sheetProxy)
+		{
 
 			Config = configuration.Value;
 			Commands = commands.Where(c => c.Enabled);
@@ -74,7 +76,8 @@ namespace Quiltoni.PixelBot
 
 		}
 
-		private void _Client_OnMessageReceived(object sender, OnMessageReceivedArgs e) {
+		private void _Client_OnMessageReceived(object sender, OnMessageReceivedArgs e)
+		{
 
 			Debug.WriteLine($"User entering text: {e.ChatMessage.Username}");
 
@@ -83,7 +86,7 @@ namespace Quiltoni.PixelBot
 
 		}
 
-		private void _Client_OnChatCommandReceived(object sender, OnChatCommandReceivedArgs e) 
+		private void _Client_OnChatCommandReceived(object sender, OnChatCommandReceivedArgs e)
 		{
 
 			var cmd = Commands.FirstOrDefault(c => c.CommandText == e.Command.CommandText);
@@ -153,11 +156,13 @@ namespace Quiltoni.PixelBot
 			return Task.CompletedTask;
 		}
 
-		public void BroadcastMessageOnChannel(string message) {
+		public void BroadcastMessageOnChannel(string message)
+		{
 			_Client.SendMessage(Channel, message);
 		}
 
-		public void WhisperMessage(string userDisplayName, string message) {
+		public void WhisperMessage(string userDisplayName, string message)
+		{
 			_Client.SendWhisper(userDisplayName, message);
 		}
 

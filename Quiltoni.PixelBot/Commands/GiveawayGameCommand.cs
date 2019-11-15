@@ -28,7 +28,8 @@ namespace Quiltoni.PixelBot.Commands
 			};
 
 
-		public GiveawayGameCommand(GiveawayGame.GiveawayGame game, IConfiguration config) {
+		public GiveawayGameCommand(GiveawayGame.GiveawayGame game, IConfiguration config)
+		{
 
 			this.Game = game;
 			this.Configuration = config;
@@ -39,13 +40,15 @@ namespace Quiltoni.PixelBot.Commands
 
 		public IEnumerable<string> Arguments { get; private set; }
 
-		public void Execute(ChatCommand cmd, IChatService twitch) {
+		public void Execute(ChatCommand cmd, IChatService twitch)
+		{
 
 			this.ChatUser = cmd.ChatMessage.AsChatUser();
 			var theVerb = cmd.ArgumentsAsList.Any() ? cmd.ArgumentsAsList[0].ToLowerInvariant() : "";
 			Arguments = cmd.ArgumentsAsList;
 
-			if (!cmd.ArgumentsAsList.Any() || !_Verbs.ContainsKey(theVerb)) {
+			if (!cmd.ArgumentsAsList.Any() || !_Verbs.ContainsKey(theVerb))
+			{
 				Game.Help(twitch, this);
 				return;
 			}
@@ -54,7 +57,8 @@ namespace Quiltoni.PixelBot.Commands
 
 		}
 
-		public void MessageReceived(IChatService twitch, string userName) {
+		public void MessageReceived(IChatService twitch, string userName)
+		{
 
 			if (Game.State != GiveawayGameState.Open) return;
 

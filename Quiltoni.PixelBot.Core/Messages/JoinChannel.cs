@@ -4,11 +4,12 @@ using System.Text;
 
 namespace Quiltoni.PixelBot.Core.Messages
 {
-    [Serializable]
+	[Serializable]
 	public sealed class JoinChannel : IMessage
 	{
 
-		public JoinChannel(string channelName) {
+		public JoinChannel(string channelName)
+		{
 
 			this.ChannelName = channelName;
 
@@ -20,6 +21,6 @@ namespace Quiltoni.PixelBot.Core.Messages
 	}
 
 
-	public interface IMessage {}
+	public interface IMessage { }
 
 }

@@ -22,6 +22,8 @@ console.log("Created signalR connection");
 
 function StartLogging() {
 
+	if (connection.connectionState === "Connected") return;
+
 	connection.start().catch(function (err) {
 		return console.error(err.toString());
 	});

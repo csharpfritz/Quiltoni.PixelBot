@@ -2,18 +2,19 @@
 
 namespace Quiltoni.PixelBot.Core.Messages
 {
-    [Serializable]
+	[Serializable]
 	public class TrackNewFollowers
 	{
 
-		public TrackNewFollowers(string channelName, string channelId) {
+		public TrackNewFollowers(string channelName, string channelId)
+		{
 			ChannelName = channelName;
 			ChannelId = channelId;
 		}
 
 		public string ChannelName { get; }
-		
-        public string ChannelId { get; }
-    }
+
+		public string ChannelId { get; }
+	}
 
 }
