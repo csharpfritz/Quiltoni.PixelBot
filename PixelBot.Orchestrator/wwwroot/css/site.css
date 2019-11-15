@@ -245,3 +245,42 @@ ul.nav a {
 .components-reconnect-show {
 	display: block;
 }
+
+#aboutGrid {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-around;
+	align-items: start;
+	width: 100%;
+}
+
+.card {
+	/* Add shadows to create the "card" effect */
+	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+	border-radius: 3px;
+	transition: 0.3s;
+	margin: 4px;
+	min-width: 200px;
+	flex: 1 0 200px;
+}
+
+.card-body {
+padding: 10px;
+font-size: 0.9em;
+}
+
+	/* On mouse-over, add a deeper shadow */
+	.card:hover {
+		box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+	}
+
+.card > h5 {
+	width: 100%;
+	margin: 0px;
+	display: block;
+	background-color: lightgrey;
+	font-weight: bold;
+	padding: 4px;
+	box-sizing: border-box;
+}
+	 
