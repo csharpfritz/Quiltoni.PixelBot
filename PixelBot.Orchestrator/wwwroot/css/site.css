@@ -75,13 +75,21 @@ aside {
 	.navbar-toggler {
 		display: none;
 	}
+
+	/** ALWAYS show menu when presenting on a larger screen */
+	.collapse {
+		display: block;
+	}
+
 }
 
-@media only screen and (min-width : 320px) and (max-width : 480px) {
-	/* @media only screen and (max-device-width : 767.98px) { */
+/** Phone size layout */
+/*@media only screen and (min-width : 320px) and (max-width : 480px) {*/
+@media only screen and (max-width : 767.98px) {
 
 	app {
-		grid-template-rows: min(20em,0.5fr) 1fr 2em;
+		/*grid-template-rows: min(2.5em,0.5fr) 1fr 0.5em;*/
+		grid-template-rows: max-content 1fr 1.5em;
 	}
 
 	aside {
@@ -98,6 +106,10 @@ aside {
 
 	.main {
 		flex: 1;
+	}
+
+	.collapse {
+		display: none;
 	}
 }
 
@@ -144,6 +156,12 @@ main > article {
 
 .navbar-toggler {
 	background-color: rgba(255, 255, 255, 0.1);
+	color: #FFF;
+	position: absolute;
+	top: 2px;
+	right: 2px;
+	width: 2.3em;
+	height: 2.3em;
 }
 
 .valid.modified:not([type=checkbox]) {
@@ -178,41 +196,6 @@ main > article {
 		font-size: small;
 		color: lime;
 	}
-
-
-@media (max-width: 767.98px) {
-	.main .top-row {
-		display: none;
-	}
-}
-
-@media (min-width: 768px) {
-	app {
-		flex-direction: row;
-	}
-
-	.sidebar {
-		width: 250px;
-		height: 100vh;
-		position: sticky;
-		top: 0;
-	}
-
-	.main .top-row {
-		position: sticky;
-		top: 0;
-	}
-
-	.main > div {
-		padding-left: 2rem !important;
-		padding-right: 1.5rem !important;
-	}
-
-	.sidebar .collapse {
-		/* Never collapse the sidebar for wide screens */
-		display: block;
-	}
-}
 
 /** Style concerns */
 a.brand {
