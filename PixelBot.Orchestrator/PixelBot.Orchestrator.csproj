@@ -51,11 +51,5 @@
     <Folder Include="Configuration\" />
     <Folder Include="Pages\Account\" />
   </ItemGroup>
-
-  <Target Name="SetVersion" AfterTargets="MinVer">
-    <PropertyGroup>
-      <AssemblyVersion>$(MinVerVersion)</AssemblyVersion>
-    </PropertyGroup>
-  </Target>
-  
+ 
 </Project>
