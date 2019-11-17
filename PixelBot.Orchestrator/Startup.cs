@@ -34,12 +34,18 @@ namespace PixelBot.Orchestrator
 	{
 		public static IConfiguration Configuration { get; private set; }
 
+		public static string EnvironmentName { get; private set; }
+
 		public static BotConfiguration BotConfiguration { get; private set; }
 
-		public Startup(IConfiguration config)
+		public static bool MockEnabled { get; set; }
+
+		public Startup(IConfiguration config, IWebHostEnvironment env)
 		{
 
 			Configuration = config;
+			Startup.EnvironmentName = env.EnvironmentName;
+
 		}
 
 		// This method gets called by the runtime. Use this method to add services to the container.

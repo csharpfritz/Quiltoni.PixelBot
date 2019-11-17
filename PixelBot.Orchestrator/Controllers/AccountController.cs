@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace PixelBot.Orchestrator.Controllers
 {
 
+	[Route("Authenticate")]
 	public class AccountController : Controller
 	{
 

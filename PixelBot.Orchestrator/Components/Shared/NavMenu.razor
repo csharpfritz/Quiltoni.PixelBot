@@ -52,16 +52,16 @@
 		@if (CurrentUser.Identity.IsAuthenticated)
 		{
 			<li class="nav-item ">
-				<a href="" @onclick="@(() => NavManager.NavigateTo(" /Account/Profile"))">Hello @CurrentUser.Identity.Name!</a>
+				<a href="" @onclick="@(() => NavManager.NavigateTo(ProfileUrl))">Hello @CurrentUser.Identity.Name!</a>
 			</li>
 			<li class="nav-item ">
-				<a href="" @onclick="@(() => NavManager.NavigateTo(" /Account/Logout", true))">Logout</a>
+				<a href="" @onclick="@(() => NavManager.NavigateTo(LogoutUrl, true))">Logout</a>
 			</li>
 		}
 		else
 		{
 			<li class="nav-item ">
-				<a href="" @onclick="@(() => NavManager.NavigateTo(" /Account/Login", true))">Login</a>
+				<a href="" @onclick="@(() => NavManager.NavigateTo(LoginUrl, true))">Login</a>
 			</li>
 		}
 
@@ -70,12 +70,19 @@
 </div>
 
 @code {
-	bool collapseNavMenu = true;
+  bool collapseNavMenu = true;
 
-	string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+  string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
-	void ToggleNavMenu()
-	{
-		collapseNavMenu = !collapseNavMenu;
-	}
+  string ProfileUrl => Startup.MockEnabled ? "/Account/Profile" : "/Authenticate/Profile";
+
+  string LogoutUrl => Startup.MockEnabled ? "/Account/Logout" : "/Authenticate/Logout";
+
+  string LoginUrl => Startup.MockEnabled ? "/Account/Login" : "/Authenticate/Login";
+
+
+  void ToggleNavMenu()
+  {
+      collapseNavMenu = !collapseNavMenu;
+  }
 }

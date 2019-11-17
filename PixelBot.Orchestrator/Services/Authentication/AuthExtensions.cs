@@ -5,10 +5,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using PixelBot.Orchestrator.Areas.Identity.Data;
+using PixelBot.Orchestrator.Data;
 
 namespace PixelBot.Orchestrator.Services.Authentication
 {
@@ -16,6 +20,15 @@ namespace PixelBot.Orchestrator.Services.Authentication
 	{
 		public static AuthenticationBuilder AddAuth0OpenIdConnect(this AuthenticationBuilder builder, IConfiguration config)
 		{
+
+			if (Startup.EnvironmentName != "Production" && bool.Parse(config["MockTwitch"]) )
+			{
+				Startup.MockEnabled = true;
+				return builder; 
+			}
+
+			Startup.MockEnabled = false;
+
 			var domain = $"https://{config["Auth0:Domain"]}";
 			var clientId = config["Auth0:ClientId"];
 			var clientSecret = config["Auth0:ClientSecret"];
@@ -92,6 +105,25 @@ namespace PixelBot.Orchestrator.Services.Authentication
 
 			});
 		}
+
+		public static void AddLocalIdentity(this IServiceCollection services, IConfiguration config)
+		{
+
+			if (Startup.EnvironmentName == "Production" || !bool.Parse(config["MockTwitch"]))
+			{
+				return;
+			}
+
+			_ = services.AddDbContext<DbContext>(options => options.UseSqlite(SecurityDbContextFactory.SqliteConnectionString));
+
+			services.AddDefaultIdentity<BotUser>()
+				.AddEntityFrameworkStores<DbContext>();
+
+
+			return;
+
+		}  
+
 	}
 
 }

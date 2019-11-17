@@ -47,6 +47,8 @@ namespace PixelBot.Orchestrator
 			.AddCookie()
 			.AddAuth0OpenIdConnect(Startup.Configuration);
 
+			services.AddLocalIdentity(Startup.Configuration);
+
 			services.AddAuthorization(config =>
 			{
 
