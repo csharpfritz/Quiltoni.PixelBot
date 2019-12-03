@@ -1,46 +1,55 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-	<PropertyGroup>
-		<TargetFramework>netcoreapp3.0</TargetFramework>
-		<LangVersion>7.3</LangVersion>
-		<UserSecretsId>1ad99f97-2211-43ac-be53-530b52884e7a</UserSecretsId>
-		<AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-		<Configurations>Debug;Release;CIChecks</Configurations>
-	</PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <LangVersion>7.3</LangVersion>
+    <UserSecretsId>1ad99f97-2211-43ac-be53-530b52884e7a</UserSecretsId>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <Configurations>Debug;Release;CIChecks</Configurations>
+    
+    <MinVerTagPrefix>v</MinVerTagPrefix>
+    <MinVerVerbosity>normal</MinVerVerbosity>
+    <MinVerDefaultPreReleasePhase>preview</MinVerDefaultPreReleasePhase>
 
-	<ItemGroup>
-		<PackageReference Include="Akka" Version="1.3.15" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="$(AspNetCoreVersion)" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="$(AspNetCoreVersion)" />
-		<PackageReference Include="Microsoft.Azure.Cosmos.Table" Version="1.0.5" />
-		<PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.4">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="$(AspNetCoreCloseEnough)" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="$(AspNetCoreCloseEnough)">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="$(AspNetCoreCloseEnough)" />
-		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.5" />
-		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="$(AspNetCoreCloseEnough)" />
-		<PackageReference Include="Ngrok.AspNetCore" Version="1.0.6" />
-		<PackageReference Include="TwitchLib" Version="3.0.1" />
-	</ItemGroup>
+  </PropertyGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\PixelBot.Games.GuessGame\PixelBot.Games.GuessGame.csproj" />
-		<ProjectReference Include="..\PixelBot.StandardFeatures\PixelBot.StandardFeatures.csproj" />
-		<ProjectReference Include="..\Quiltoni.PixelBot.Core\Quiltoni.PixelBot.Core.csproj" />
-		<ProjectReference Include="..\PixelBot.Google\PixelBot.Google.csproj" />
-	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Akka" Version="1.3.15" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="$(AspNetCoreVersion)" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="$(AspNetCoreVersion)" />
+    <PackageReference Include="Microsoft.Azure.Cosmos.Table" Version="1.0.5" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="$(AspNetCoreCloseEnough)" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="$(AspNetCoreCloseEnough)">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="$(AspNetCoreCloseEnough)" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.5" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="$(AspNetCoreCloseEnough)" />
+    <PackageReference Include="minver" Version="2.0.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Ngrok.AspNetCore" Version="1.0.6" />
+    <PackageReference Include="TwitchLib" Version="3.0.1" />
+  </ItemGroup>
 
-	<ItemGroup>
-		<Folder Include="Configuration\" />
-		<Folder Include="Pages\Account\" />
-	</ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PixelBot.Games.GuessGame\PixelBot.Games.GuessGame.csproj" />
+    <ProjectReference Include="..\PixelBot.StandardFeatures\PixelBot.StandardFeatures.csproj" />
+    <ProjectReference Include="..\Quiltoni.PixelBot.Core\Quiltoni.PixelBot.Core.csproj" />
+    <ProjectReference Include="..\PixelBot.Google\PixelBot.Google.csproj" />
+  </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Configuration\" />
+    <Folder Include="Pages\Account\" />
+  </ItemGroup>
+ 
 </Project>
