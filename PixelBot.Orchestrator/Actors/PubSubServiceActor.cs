@@ -61,8 +61,10 @@ namespace PixelBot.Orchestrator.Actors
 		{
 
 			// Inspect the notified subscription and trigger a SignalR hub with information about the subscription
+			ChannelManagerActor.Instance.Tell(new ReportNewSubscriberForChannel(e.Subscription.ChannelName, e.Subscription.ChannelId, e.Subscription.RecipientName, e.Subscription.RecipientId, e.Subscription.SubMessage.Message, (short)e.Subscription.Months));
+			
 
-			//e.Subscription.
+
 		}
 
 
