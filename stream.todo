@@ -1,12 +1,12 @@
 Today on stream:
 ✔ Fix SignalR connections @done(19-11-12 12:30)
 ✔ Train reset to 1 @done(19-11-12 13:09)
-☐ Clean up CSS layout
+✔ Clean up CSS layout @done(19-11-15 11:51)
 ☐ Channel Config Save to Azure
 ☐ Offline development
-☐ Subscriber Train
+✔ Subscriber Train @done(19-12-10 10:58)
 ☐ Rename the bot to FritzBot
-☐ Install SSL Cert
+✔ Install SSL Cert @done(19-12-10 10:05)
 Completed:
   ✔ Train + CSS @done(19-10-31 11:22)
   ✔ Join channels #51 @done(19-11-01 12:12)

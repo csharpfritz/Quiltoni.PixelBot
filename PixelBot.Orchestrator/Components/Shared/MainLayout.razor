@@ -1,16 +1,36 @@
 ﻿@inherits LayoutComponentBase
+@using System.Reflection
 
 <aside>
-	<NavMenu />
+    <NavMenu />
 </aside>
 
 <main>
-	<article>
-		@Body
-	</article>
+    <article>
+        @Body
+    </article>
 </main>
 
 
 <footer>
-	Copyright &copy;2019
+    Copyright &copy;2019 - @($"v{Version}")
 </footer>
+
+@code {
+
+  string Version { get; set; }
+
+
+  protected override void OnInitialized()
+  {
+
+      var attr = Attribute
+            .GetCustomAttribute(
+                Assembly.GetEntryAssembly(),
+                typeof(AssemblyInformationalVersionAttribute))
+            as AssemblyInformationalVersionAttribute;
+      Version = attr.InformationalVersion;
+
+  }
+
+}

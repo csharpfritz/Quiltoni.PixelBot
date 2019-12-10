@@ -52,6 +52,8 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 
 		public string LatestFollower { get; set; } = "";
 
+		public string LatestSubscriber { get; set; } = "";
+
 		public UserActivityConfiguration Configuration { get; set; }
 
 		/// <summary>
@@ -87,7 +89,7 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 				RestorePositionOfTrain();
 				TrainTimer.Interval = TimeRemaining.TotalMilliseconds;
 				TrainTimer.Start();
-				await StartAnimation();
+				await InvokeAsync(StateHasChanged);
 			}
 
 		}
@@ -124,9 +126,26 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 			}
 		}
 
-		private async Task StartAnimation()
+		private async Task StartAnimation(Action preTimerAction)
 		{
 
+			// Cheer 700 codingbandit 10/12/19 
+
+			TrainTimer.Stop();
+			InitialPositionPct = 100;
+			await InvokeAsync(StateHasChanged);
+			await Task.Delay(500);
+
+			TrainTimer.Interval = TimeSpan.FromSeconds(Configuration.MaxTimeBetweenActionsInSeconds).TotalMilliseconds;
+			if (this.Counter == 0)
+			{
+				FirstEventTime = DateTime.Now;
+			}
+			LastEventTime = DateTime.Now;
+			this.Counter++;
+			preTimerAction();
+
+			TrainTimer.Start();
 			await InvokeAsync(StateHasChanged);
 
 		}
@@ -167,32 +186,12 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 			// Cheer 200 goranhal 15/9/19 
 			// Cheer 110 copperbeardy 20/9/19 
 
-			if (Configuration.Type != UserActivityConfiguration.UserActivityTrainType.Follow)
-			{
-
-				return;
-
-			}
+			if (Configuration.Type != UserActivityConfiguration.UserActivityTrainType.Follow) return;
 
 			// cheer 1000 jamesmontemagno 15/10/19
 			// cheer 1050 tbdgamer 15/10/19
 
-			TrainTimer.Stop();
-			InitialPositionPct = 100;
-			await StartAnimation();
-			await Task.Delay(500);
-
-			TrainTimer.Interval = TimeSpan.FromSeconds(Configuration.MaxTimeBetweenActionsInSeconds).TotalMilliseconds;
-			if (this.Counter == 0)
-			{
-				FirstEventTime = DateTime.Now;
-			}
-			LastEventTime = DateTime.Now;
-			this.Counter++;
-			LatestFollower = newFollowerName;
-
-			TrainTimer.Start();
-			await StartAnimation();
+			await StartAnimation(() => LatestFollower = newFollowerName);
 
 			/**
 			 * 
@@ -208,9 +207,11 @@ namespace PixelBot.StandardFeatures.ScreenWidgets.UserActivityTrain
 		}
 
 		[JSInvokable]
-		public Task NewSubscriber(string newSubscribedName, int numberOfMonths, int numberOfMonthsInRow, string message)
+		public async Task NewSubscriber(string newSubscriberName, int numberOfMonths, int numberOfMonthsInRow, string message)
 		{
-			throw new NotImplementedException();
+
+			await StartAnimation(() => LatestSubscriber = newSubscriberName);
+
 		}
 
 		[JSInvokable]

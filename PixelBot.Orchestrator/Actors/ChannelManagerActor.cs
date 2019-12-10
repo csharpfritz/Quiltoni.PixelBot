@@ -67,6 +67,8 @@ namespace PixelBot.Orchestrator.Actors
 
 			ConfigureMessageReceiveStatements();
 
+			CreateSubscriptionManagerActor();
+
 			//Receive<GetFeatureForChannel>(async f => {
 			//	var theChannelActor = _ChannelActors[f.Channel];
 			//	Sender.Tell(await theChannelActor.Ask(new GetFeatureFromChannel(f.FeatureType)));
@@ -128,6 +130,8 @@ namespace PixelBot.Orchestrator.Actors
 
 			ReceiveAsync<RejoinChannels>(RejoinChannels);
 
+			Receive<ReportNewSubscriberForChannel>(msg => SubscriptionManagerActor.Forward(msg));
+
 		}
 
 		private void UpdateChannelWithConfiguration(NotifyChannelOfConfigurationUpdate msg)
@@ -151,8 +155,19 @@ namespace PixelBot.Orchestrator.Actors
 
 		}
 
+		private void CreateSubscriptionManagerActor()
+		{
+
+			this.SubscriptionManagerActor = Context.ActorOf(Props.Create<SubscriptionManagerActor>(new object[] {
+				ServiceProvider
+			}));
+
+		}
+
+
 		public IServiceProvider ServiceProvider { get; }
 		public ILoggingAdapter Logger { get; }
+		public IActorRef SubscriptionManagerActor { get; private set; }
 
 		private readonly IHttpClientFactory _HttpClientFactory;
 
