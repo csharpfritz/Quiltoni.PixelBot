@@ -4,6 +4,9 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.0-alpine AS build
 WORKDIR /src
+
+RUN apk add --no-cache git
+
 COPY ["PixelBot.Orchestrator/PixelBot.Orchestrator.csproj", "PixelBot.Orchestrator/"]
 COPY ["PixelBot.Google/PixelBot.Google.csproj", "PixelBot.Google/"]
 COPY ["Quiltoni.PixelBot.Core/Quiltoni.PixelBot.Core.csproj", "Quiltoni.PixelBot.Core/"]
